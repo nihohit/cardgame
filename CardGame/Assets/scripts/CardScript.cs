@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class CardScript : MonoBehaviour {
   private TextMesh text;
+	public SceneManager Manager { get; set; }
+
+	private Card _model;
+	public Card CardModel { get {
+			return _model;
+		} set {
+			_model = value;
+			text.text = value.Name;
+		}
+	}
 
 	// Use this for initialization
 	void Awake() {
     text = GetComponentInChildren<TextMesh>();
 	}
 
-  void SetName(string name) {
-    text.text = name;
-  }
+	private void OnMouseDown() {
+		Manager.CardWasClicked(this);
+	}
 }

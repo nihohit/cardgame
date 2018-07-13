@@ -1,37 +1,97 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class SceneManager : MonoBehaviour {
-  public GameObject CardPrefab;
+	public GameObject CardPrefab;
 
-  private System.Random random = new System.Random();
-  private DeckScript deck;
-  private DeckScript discardPile;
-  private CardsState _cards;
-  private CardsState cards { get {
-      return _cards;
-    }  set {
-      _cards = value;
-      deck.SetCardNumber(value.CurrentDeck.Count());
-      discardPile.SetCardNumber(value.DiscardPile.Count());
-    }
-  }
+	private System.Random random = new System.Random();
+	private DeckScript deck;
+	private DeckScript discardPile;
+	private IEnumerable<CardScript> _hand = new List<CardScript>();
+	private IEnumerable<CardScript> hand { get {
+			return _hand;
+		} set {
+			_hand = value;
 
-  // Use this for initialization
-  void Start () {
-    deck = GameObject.Find("Deck").GetComponent<DeckScript>();
-    discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
-    cards = CardsState.NewState(new[] {
-      new Card("foo"),
-      new Card("bar"),
-      new Card("baz")
-    }).ShuffleCurrentDeck(random);
-  }
-	
-	// Update is called once per frame
-	void Update () {
-		
+			Vector3 nextPosition = deck.transform.position + Vector3.right * deck.GetComponent<BoxCollider2D>().size.x / 2 * deck.transform.localScale.x;
+			foreach(var card in value) {
+				card.Manager = this;
+				var size = card.GetComponent<BoxCollider2D>().size * card.transform.localScale.x;
+				card.transform.position = nextPosition + new Vector3(size.x / 2, 0, 0);
+				nextPosition += new Vector3(size.x, 0, 0);
+			}
+		}
+	}
+	private CardScriptPool cardPool;
+	private CardsState _cards;
+	private CardsState cards { get {
+			return _cards;
+		} set {
+			_cards = value;
+			deck.SetCardNumber(value.CurrentDeck.Count());
+			discardPile.SetCardNumber(value.DiscardPile.Count());
+			foreach (var card in _hand) {
+				cardPool.ReleaseCard(card);
+			}
+			hand = value.Hand.Select(cardModel => cardPool.CardForModel(cardModel)).ToList();
+		}
+	}
+
+	private bool blockDeckUpdates;
+
+	// Use this for initialization
+	void Start() {
+		cardPool = new CardScriptPool(CardPrefab, 10);
+		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
+		deck.Manager = this;
+		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
+		discardPile.Manager = this;
+		cards = CardsState.NewState(new[] {
+			new Card("foo"),
+			new Card("bar"),
+			new Card("baz"),
+			new Card("hi"),
+			new Card("ho"),
+			new Card("yo"),
+			new Card("what"),
+			new Card("is"),
+			new Card("baz2")
+		}).ShuffleCurrentDeck(random);
+	}
+
+	public void DeckWasClicked(DeckScript clickedDeck) {
+		if (blockDeckUpdates) {
+			return;
+		}
+
+		if (clickedDeck == deck) {
+			passCardsToDiscard();
+		} else {
+			passCardsToDeck();
+		}
+	}
+
+	private void passCardsToDeck() {
+		var sizeOfDiscard = cards.DiscardPile.Count();
+		if (sizeOfDiscard == 0) {
+			return;
+		}
+
+		cards = cards.ShuffleDiscardToDeck(random);
+	}
+
+	private void passCardsToDiscard() {
+		if (cards.CurrentDeck.Count() == 0) {
+			return;
+		}
+
+		cards = cards.DrawCardsToHand(1);
+	}
+
+	public void CardWasClicked(CardScript card) {
+		cards = cards.DiscardCardFromHand(card.CardModel);
 	}
 }

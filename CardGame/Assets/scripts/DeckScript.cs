@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DeckScript : MonoBehaviour {
   private TextMesh text;
+	public SceneManager Manager { get; set; }
 
   // Use this for initialization
   void Awake () {
@@ -13,4 +14,8 @@ public class DeckScript : MonoBehaviour {
   public void SetCardNumber(int cardNumber) {
     text.text = cardNumber.ToString();
   }
+
+	private void OnMouseDown() {
+		Manager.DeckWasClicked(this);
+	}
 }
