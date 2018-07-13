@@ -67,7 +67,7 @@ public class CardsState {
     var firstCards = currentDeckList.Take(numberOfCardsToDraw);
     var newHand = Hand.ToList();
     newHand.AddRange(firstCards);
-    currentDeckList.RemoveRange(0, currentDeckList.Count - 1);
+    currentDeckList.RemoveRange(0, numberOfCardsToDraw);
     return new CardsState(PersistentDeck, currentDeckList, DiscardPile, newHand);
   }
 
