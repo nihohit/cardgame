@@ -2,23 +2,11 @@
 using UnityEngine;
 
 public class Card {
-  public string Name { get; private set; }
-
-  public Card(string name) {
-    Name = name;
-  }
-
-  public override string ToString() {
-    return string.Format("name: {0}", Name);
-  }
-
-  public override bool Equals(object obj) {
-    var card = obj as Card;
-    return card != null &&
-           Name.Equals(card.Name);
-  }
-
-  public override int GetHashCode() {
-    return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
-  }
+  public string Name { get; set; }
+	public int GoldCost { get; set; }
+	public int IndustryCost { get; set; }
+	public int PopulationCost { get; set; }
+	public int GoldGain { get; set; }
+	public int IndustryGain { get; set; }
+	public int PopulationGain { get; set; }
 }

@@ -13,7 +13,9 @@ public class CardsStates {
   }
 
   private static Card cardWithName(string name) {
-    return new Card(name);
+    return new Card {
+			Name = name
+		};
   }
 
 

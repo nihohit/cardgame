@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SceneManager : MonoBehaviour {
 	public GameObject CardPrefab;
+	public GameObject stateDescription;
 
 	private System.Random random = new System.Random();
 	private DeckScript deck;
@@ -39,26 +41,63 @@ public class SceneManager : MonoBehaviour {
 			hand = value.Hand.Select(cardModel => cardPool.CardForModel(cardModel)).ToList();
 		}
 	}
+	private EmpireState _state;
+	private EmpireState state {
+		get {
+			return _state;
+		}
+		set {
+			_state = value;
+			stateDescription.GetComponent<Text>().text = state.ToString();
+		}
+	}
 
 	private bool blockDeckUpdates;
 
 	// Use this for initialization
 	void Start() {
+		state = new EmpireState(0, 0, 0);
 		cardPool = new CardScriptPool(CardPrefab, 10);
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		deck.Manager = this;
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		discardPile.Manager = this;
 		cards = CardsState.NewState(new[] {
-			new Card("foo"),
-			new Card("bar"),
-			new Card("baz"),
-			new Card("hi"),
-			new Card("ho"),
-			new Card("yo"),
-			new Card("what"),
-			new Card("is"),
-			new Card("baz2")
+			new Card{
+				Name = "Farms",
+				PopulationGain = 3
+			},
+			new Card{
+				Name = "Fishing Villages",
+				PopulationGain = 3
+			},
+			new Card{
+				Name = "Hunting Outposts",
+				PopulationGain = 3
+			},
+			new Card{
+				Name = "Migrate across sea",
+				PopulationCost = 2
+			},
+			new Card{
+				Name = "Migrate across plains",
+				PopulationCost = 1
+			},
+			new Card{
+				Name = "City",
+				PopulationGain = 1,
+				IndustryGain = 1,
+				GoldGain = 1
+			},
+			new Card{
+				Name = "Build Cities"
+			},
+			new Card{
+				Name = "Build Cities"
+			},
+			new Card{
+				Name = "Build Cities"
+			}
 		}).ShuffleCurrentDeck(random);
 	}
 
@@ -92,6 +131,12 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	public void CardWasClicked(CardScript card) {
+		if (!state.CanPlayCard(card.CardModel)) {
+			Debug.Log($"Can't play {card.CardModel.Name}");
+			return;
+		}
+
+		state = state.PlayCard(card.CardModel);
 		cards = cards.DiscardCardFromHand(card.CardModel);
 	}
 }
