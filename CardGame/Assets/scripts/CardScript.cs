@@ -11,7 +11,7 @@ public class CardScript : MonoBehaviour {
 			return _model;
 		} set {
 			_model = value;
-			text.text = value.Name;
+			text.text = value.ToString();
 		}
 	}
 

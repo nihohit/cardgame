@@ -7,9 +7,9 @@ using System.Linq;
 using UnityEngine;
 
 public class EmpireState {
-	public int Gold { get; private set; }
-	public int Industry { get; private set; }
-	public int Population { get; private set; }
+	public int Gold { get; }
+	public int Industry { get; }
+	public int Population { get; }
 
 	public EmpireState(int gold, int industry, int population) {
 		Gold = gold;

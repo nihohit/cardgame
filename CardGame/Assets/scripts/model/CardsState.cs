@@ -7,13 +7,13 @@ using System.Linq;
 using UnityEngine;
 
 public class CardsState {
-  public IEnumerable<Card> PersistentDeck { get; private set; }
+  public IEnumerable<Card> PersistentDeck { get; }
 
-  public IEnumerable<Card> CurrentDeck { get; private set; }
+  public IEnumerable<Card> CurrentDeck { get; }
 
-  public IEnumerable<Card> DiscardPile { get; private set; }
+  public IEnumerable<Card> DiscardPile { get; }
 
-  public IEnumerable<Card> Hand { get; private set; }
+  public IEnumerable<Card> Hand { get; }
 
   private void shuffle<T>(IList<T> list, System.Random random) {
     int n = list.Count;
