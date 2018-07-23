@@ -52,8 +52,6 @@ public class SceneManager : MonoBehaviour {
 		}
 	}
 
-	private bool blockDeckUpdates;
-
 	// Use this for initialization
 	void Start() {
 		state = new EmpireState(0, 0, 0);
@@ -62,50 +60,10 @@ public class SceneManager : MonoBehaviour {
 		deck.Manager = this;
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		discardPile.Manager = this;
-		cards = CardsState.NewState(new[] {
-			new Card{
-				Name = "Farms",
-				PopulationGain = 3
-			},
-			new Card{
-				Name = "Fishing Villages",
-				PopulationGain = 3
-			},
-			new Card{
-				Name = "Hunting Outposts",
-				PopulationGain = 3
-			},
-			new Card{
-				Name = "Migrate across sea",
-				PopulationCost = 2
-			},
-			new Card{
-				Name = "Migrate across plains",
-				PopulationCost = 1
-			},
-			new Card{
-				Name = "City",
-				PopulationGain = 1,
-				IndustryGain = 1,
-				GoldGain = 1
-			},
-			new Card{
-				Name = "Build Cities"
-			},
-			new Card{
-				Name = "Build Cities"
-			},
-			new Card{
-				Name = "Build Cities"
-			}
-		}).ShuffleCurrentDeck(random);
+		cards = CardsState.NewState(CardsCollection.Cards()).ShuffleCurrentDeck(random);
 	}
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
-		if (blockDeckUpdates) {
-			return;
-		}
-
 		if (clickedDeck == deck) {
 			passCardsToDiscard();
 		} else {
