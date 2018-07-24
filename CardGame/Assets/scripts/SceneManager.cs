@@ -54,7 +54,7 @@ public class SceneManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		state = new EmpireState(0, 0, 0);
+		state = new EmpireState(0, 0, 2);
 		cardPool = new CardScriptPool(CardPrefab, 10);
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		deck.Manager = this;

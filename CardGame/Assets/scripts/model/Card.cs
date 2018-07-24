@@ -10,14 +10,13 @@ public class Card {
 	public int GoldGain { get; set; }
 	public int IndustryGain { get; set; }
 	public int PopulationGain { get; set; }
-	public int NumberOfTimesPlayed { get; set; }
 
 	public override string ToString() {
 		var stringBuilder = new StringBuilder();
 		stringBuilder.AppendLine(Name);
 		addString(stringBuilder, GoldCost, "Gold-");
 		addString(stringBuilder, IndustryCost, "Ind-");
-		addString(stringBuilder, GoldCost, "Pop-");
+		addString(stringBuilder, PopulationCost, "Pop-");
 		addString(stringBuilder, GoldGain, "Gold+");
 		addString(stringBuilder, IndustryGain, "Ind+");
 		addString(stringBuilder, PopulationGain, "Pop+");

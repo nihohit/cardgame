@@ -10,41 +10,63 @@ public static class CardsCollection {
 	public static IEnumerable<Card> Cards() {
 		return new Card[] {
 			new Card{
-				Name = "Farm",
-				PopulationGain = 1,
-				IndustryGain = 1,
-			},
-			new Card{
-				Name = "Fishing Villages",
-				PopulationGain = 3
-			},
-			new Card{
-				Name = "Hunting Outposts",
-				PopulationGain = 3
-			},
-			new Card{
-				Name = "Migrate across sea",
-				PopulationCost = 2
-			},
-			new Card{
-				Name = "Migrate across plains",
+				Name = "Farming",
+				PopulationGain = 2,
 				PopulationCost = 1
 			},
 			new Card{
-				Name = "City",
+				Name = "Farming",
+				PopulationGain = 2,
+				PopulationCost = 1
+			},	
+			new Card{
+				Name = "Gather resources",
+				IndustryGain = 2,
 				PopulationGain = 1,
-				IndustryGain = 1,
-				GoldGain = 1
+				PopulationCost = 1
+			},	
+			new Card{
+				Name = "Gather resources",
+				IndustryGain = 2,
+				PopulationGain = 1,
+				PopulationCost = 1
 			},
 			new Card{
-				Name = "Build Cities"
+				Name = "Farming",
+				PopulationGain = 2,
+				PopulationCost = 1
 			},
 			new Card{
-				Name = "Build Cities"
-			},
+				Name = "Farming",
+				PopulationGain = 2,
+				PopulationCost = 1
+			},	
 			new Card{
-				Name = "Build Cities"
-			}
+				Name = "Gather resources",
+				IndustryGain = 2,
+				PopulationGain = 1,
+				PopulationCost = 1
+			},	
+			new Card{
+				Name = "Gather resources",
+				IndustryGain = 2,
+				PopulationGain = 2,
+				PopulationCost = 1
+			},	
+			new Card{
+				Name = "Sell resources",
+				IndustryCost = 1,
+				GoldGain = 1,
+				PopulationGain = 1,
+				PopulationCost = 1
+			},	
+			new Card{
+				Name = "Sell resources",
+				IndustryCost = 1,
+				GoldGain = 1,
+				PopulationGain = 1,
+				PopulationCost = 1
+			}				
 		};
 	}
 }
