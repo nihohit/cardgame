@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CardScript : MonoBehaviour {
-  private TextMesh text;
+  private TextMeshPro text;
 	public SceneManager Manager { get; set; }
 
 	private Card _model;
@@ -17,7 +18,7 @@ public class CardScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake() {
-    text = GetComponentInChildren<TextMesh>();
+    text = GetComponentInChildren<TextMeshPro>();
 	}
 
 	private void OnMouseDown() {
