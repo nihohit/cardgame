@@ -65,9 +65,10 @@ public class SceneManager : MonoBehaviour {
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
 		if (clickedDeck == deck) {
-			passCardsToDiscard();
+			drawCard();
 		} else {
 			passCardsToDeck();
+			state = state.NextTurnState();
 		}
 	}
 
@@ -80,7 +81,7 @@ public class SceneManager : MonoBehaviour {
 		cards = cards.ShuffleDiscardToDeck(random);
 	}
 
-	private void passCardsToDiscard() {
+	private void drawCard() {
 		if (cards.CurrentDeck.Count() == 0) {
 			return;
 		}
