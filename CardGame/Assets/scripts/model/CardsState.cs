@@ -47,12 +47,14 @@ public class CardsState {
   }
 
   public CardsState DiscardCardFromHand(Card card) {
+    return ExhaustCardFromHand(card).AddCardsToDiscard(new []{card});
+  }
+
+  public CardsState ExhaustCardFromHand(Card card) {
     var handList = Hand.ToList();
-    var discardedList = DiscardPile.ToList();
     Debug.AssertFormat(handList.Contains(card), "{0} is not present in {1}", card, string.Join(", ", handList.Select(cardInHand => cardInHand.ToString()).ToArray()));
     handList.Remove(card);
-    discardedList.Add(card);
-    return new CardsState(PersistentDeck, CurrentDeck, discardedList, handList);
+    return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, handList);
   }
 
   public CardsState DiscardHand() {
@@ -73,9 +75,20 @@ public class CardsState {
 
   public CardsState ShuffleDiscardToDeck(System.Random random) {
     var discardAsList = DiscardPile.ToList();
-    shuffle(discardAsList, random);
     var deckAsList = CurrentDeck.ToList();
     deckAsList.AddRange(discardAsList);
+    shuffle(deckAsList, random);
     return new CardsState(PersistentDeck, deckAsList, null, Hand);
+  }
+
+  public CardsState AddCardsToDiscard(IEnumerable<Card> cards) {
+    var discardAsList = DiscardPile.ToList();
+    discardAsList.AddRange(cards);
+    return new CardsState(PersistentDeck, CurrentDeck, discardAsList, Hand);
+  }
+
+  public CardsState PlayCard(Card card) {
+    var state = card.Exhaustible ? ExhaustCardFromHand(card) : DiscardCardFromHand(card);
+    return state.AddCardsToDiscard(CardsCollection.CardsForDeck(card.AddDeck));
   }
 }

@@ -10,6 +10,8 @@ public class Card {
 	public int GoldGain { get; set; }
 	public int IndustryGain { get; set; }
 	public int PopulationGain { get; set; }
+	public DeckType AddDeck { get; set; }
+	public bool Exhaustible { get; set; }
 
 	public override string ToString() {
 		var stringBuilder = new StringBuilder();
@@ -20,12 +22,26 @@ public class Card {
 		addString(stringBuilder, GoldGain, "Gold+");
 		addString(stringBuilder, IndustryGain, "Ind+");
 		addString(stringBuilder, PopulationGain, "Pop+");
+		if (AddDeck != DeckType.None) {
+			stringBuilder.AppendLine($"Add deck: {AddDeck}");
+		}
+		if (Exhaustible) {
+			stringBuilder.AppendLine("Exhaustible");
+		}
 		return stringBuilder.ToString();
 	}
 
 	private void addString(StringBuilder builder, int propertyValue, string propertyDescription) {
-		if (propertyValue != 0) {
-			builder.AppendLine($"{propertyDescription}: {propertyValue}");
+		addString(builder, propertyValue != 0 ? propertyValue.ToString() : null, propertyDescription);
+	}
+
+	private void addString(StringBuilder builder, string str, string propertyDescription) {
+		if (str != null) {
+			builder.AppendLine($"{propertyDescription}: {str}");
 		}
+	}
+
+	public Card ShallowClone() {
+		return (Card)MemberwiseClone();
 	}
 }

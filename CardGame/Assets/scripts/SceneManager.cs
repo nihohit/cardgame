@@ -96,6 +96,6 @@ public class SceneManager : MonoBehaviour {
 		}
 
 		state = state.PlayCard(card.CardModel);
-		cards = cards.DiscardCardFromHand(card.CardModel);
+		cards = cards.PlayCard(card.CardModel);
 	}
 }
