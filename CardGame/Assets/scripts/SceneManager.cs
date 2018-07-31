@@ -65,28 +65,19 @@ public class SceneManager : MonoBehaviour {
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
 		if (clickedDeck == deck) {
-			drawCard();
-		} else {
-			passCardsToDeck();
-			state = state.NextTurnState();
+			startTurn();
 		}
 	}
 
-	private void passCardsToDeck() {
-		var sizeOfDiscard = cards.DiscardPile.Count();
-		if (sizeOfDiscard == 0) {
-			return;
+	private void startTurn() {
+		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
+		cards = cards.DiscardHand()
+		  .DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
+		if (remainingCards > 0) {
+			cards = cards.ShuffleDiscardToDeck(random)
+			  .DrawCardsToHand(remainingCards);
 		}
-
-		cards = cards.ShuffleDiscardToDeck(random);
-	}
-
-	private void drawCard() {
-		if (cards.CurrentDeck.Count() == 0) {
-			return;
-		}
-
-		cards = cards.DrawCardsToHand(1);
+		state = state.NextTurnState();
 	}
 
 	public void CardWasClicked(CardScript card) {

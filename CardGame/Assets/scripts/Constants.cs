@@ -7,5 +7,5 @@ using System.Linq;
 using UnityEngine;
 
 public static class Constants {
-	static readonly int MAX_CARDS_IN_HAND = 6;
+	public static readonly int MAX_CARDS_IN_HAND = 5;
 }
