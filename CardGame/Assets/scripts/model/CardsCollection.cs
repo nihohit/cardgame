@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DeckType { None, Village }
+public enum DeckType { None, Village, Temple, VillageCenter, Town, PublicDiscourse1 }
 
 public static class CardsCollection {
 	public static IEnumerable<Card> Cards() {
@@ -28,7 +28,7 @@ public static class CardsCollection {
 				Name = "Build Village",
 				PopulationGain = 2,
 				PopulationCost = 1,
-				IndustryCost = 0,
+				IndustryCost = 1,
 				AddDeck = DeckType.Village
 			}, 1}
 		});	
@@ -47,37 +47,71 @@ public static class CardsCollection {
 	public static IEnumerable<Card> CardsForDeck(DeckType deckType) {
 		switch (deckType) {
 			case DeckType.Village: 
-				return cardsForDictionary(new Dictionary<Card, int>{
-					{new Card{
-						Name = "Granary",
-						PopulationGain = 1,
-						PopulationCost = 1,
-						IndustryCost = 3,
-						Exhaustible = true
-					}, 1},
-					{new Card{
-						Name = "Village center",
-						PopulationGain = 1,
-						PopulationCost = 1,
-						IndustryCost = 3,
-						Exhaustible = true
-					}, 1},
-					{new Card{
-						Name = "Town",
-						PopulationGain = 3,
-						PopulationCost = 2,
-						IndustryCost = 10,
-						Exhaustible = true
-					}, 1},
-					{new Card{
-						Name = "Farm",
-						PopulationGain = 1,
-						PopulationCost = 1,
-						IndustryGain = 2
-					}, 3}
-				});
+				return villageDeck();
+			case DeckType.VillageCenter: 
+				return villageCenterDeck();
 			default:
 				return new Card[0];
 		}
+	}
+
+	private static IEnumerable<Card> villageDeck() {
+		return cardsForDictionary(new Dictionary<Card, int>{
+			{new Card{
+				Name = "Temple",
+				PopulationGain = 1,
+				PopulationCost = 1,
+				IndustryCost = 4,
+				Exhaustible = true,
+				AddDeck = DeckType.Temple
+			}, 1},
+			{new Card{
+				Name = "Village center",
+				PopulationGain = 1,
+				PopulationCost = 1,
+				IndustryCost = 4,
+				Exhaustible = true,
+				AddDeck = DeckType.VillageCenter
+			}, 1},
+			{new Card{
+				Name = "Town",
+				PopulationGain = 3,
+				PopulationCost = 2,
+				IndustryCost = 10,
+				Exhaustible = true,
+				AddDeck = DeckType.Town
+			}, 1},
+			{new Card{
+				Name = "Farm",
+				PopulationGain = 1,
+				PopulationCost = 1,
+				IndustryGain = 2
+			}, 3}
+		});
+	}
+
+	private static IEnumerable<Card> villageCenterDeck() {
+		return cardsForDictionary(new Dictionary<Card, int>{
+			{new Card{
+				Name = "Market Day",
+				PopulationGain = 1,
+				PopulationCost = 1,
+				IndustryCost = 2,
+				GoldGain = 2,
+			}, 2},
+			{new Card{
+				Name = "Public Discussion",
+				PopulationGain = 2,
+				PopulationCost = 2,
+				GoldCost = 2,
+				AddDeck = DeckType.PublicDiscourse1
+			}, 1},
+			{new Card{
+				Name = "Buy Slaves",
+				PopulationGain = 2,
+				PopulationCost = 1,
+				GoldCost = 10
+			}, 1},
+		});
 	}
 }
