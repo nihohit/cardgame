@@ -16,12 +16,12 @@ public class Card {
 	public override string ToString() {
 		var stringBuilder = new StringBuilder();
 		stringBuilder.AppendLine(Name);
-		addString(stringBuilder, GoldCost, "Gold-");
-		addString(stringBuilder, IndustryCost, "Ind-");
-		addString(stringBuilder, PopulationCost, "Pop-");
-		addString(stringBuilder, GoldGain, "Gold+");
-		addString(stringBuilder, IndustryGain, "Ind+");
-		addString(stringBuilder, PopulationGain, "Pop+");
+		//addString(stringBuilder, GoldCost, "Gold-");
+		//addString(stringBuilder, IndustryCost, "Ind-");
+		//addString(stringBuilder, PopulationCost, "Pop-");
+		//addString(stringBuilder, GoldGain, "Gold+");
+		//addString(stringBuilder, IndustryGain, "Ind+");
+		//addString(stringBuilder, PopulationGain, "Pop+");
 		if (AddDeck != DeckType.None) {
 			stringBuilder.AppendLine($"Add deck: {AddDeck}");
 		}

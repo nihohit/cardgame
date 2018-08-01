@@ -5,6 +5,12 @@ using TMPro;
 
 public class CardScript : MonoBehaviour {
   private TextMeshPro text;
+	private CardValueScript goldCost;
+	private CardValueScript populationCost;
+	private CardValueScript industryCost;
+	private CardValueScript goldGain;
+	private CardValueScript industryGain;
+	private CardValueScript populationGain;
 	public SceneManager Manager { get; set; }
 
 	private Card _model;
@@ -13,12 +19,24 @@ public class CardScript : MonoBehaviour {
 		} set {
 			_model = value;
 			text.text = value.ToString();
+			goldCost.SetValue(value.GoldCost);
+			populationCost.SetValue(value.PopulationCost);
+			industryCost.SetValue(value.IndustryCost);
+			goldGain.SetValue(value.GoldGain);
+			industryGain.SetValue(value.IndustryGain);
+			populationGain.SetValue(value.PopulationGain - value.PopulationCost);
 		}
 	}
 
 	// Use this for initialization
 	void Awake() {
     text = GetComponentInChildren<TextMeshPro>();
+		goldCost = transform.Find("GoldCost").GetComponent< CardValueScript>();
+		populationCost = transform.Find("PopulationCost").GetComponent<CardValueScript>();
+		industryCost = transform.Find("IndustryCost").GetComponent<CardValueScript>();
+		goldGain = transform.Find("GoldGain").GetComponent<CardValueScript>();
+		industryGain = transform.Find("IndustryGain").GetComponent<CardValueScript>();
+		populationGain = transform.Find("PopulationGain").GetComponent<CardValueScript>();
 	}
 
 	private void OnMouseDown() {
