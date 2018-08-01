@@ -11,7 +11,6 @@ public class CardValueScript : MonoBehaviour {
 	void Awake () {
 		text = GetComponentInChildren<TextMeshPro>();
 		innerRenderer = GetComponentInChildren<Renderer>();
-		Debug.Log("Started: " + name);
 	}
 	
 	public void SetValue(int value) {
