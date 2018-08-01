@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DeckType { None, Village, Temple, VillageCenter, Town, PublicDiscourse1 }
+public enum DeckType { None, Test, Village, Temple, VillageCenter, Town, PublicDiscourse1 }
 
 public static class CardsCollection {
 	public static IEnumerable<Card> Cards() {
@@ -50,6 +50,8 @@ public static class CardsCollection {
 				return villageDeck();
 			case DeckType.VillageCenter: 
 				return villageCenterDeck();
+			case DeckType.Test:
+				return testDeck();
 			default:
 				return new Card[0];
 		}
@@ -112,6 +114,14 @@ public static class CardsCollection {
 				PopulationCost = 1,
 				GoldCost = 10
 			}, 1},
+		});
+	}
+
+	private static IEnumerable<Card> testDeck() {
+		return cardsForDictionary(new Dictionary<Card, int>{
+			{new Card{
+				Name = "test"
+			}, 1}
 		});
 	}
 }

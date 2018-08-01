@@ -4,12 +4,27 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class CardsStates {
-  private static List<Card> initialDeck = new List<Card>() { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
+  private static Card[] initialDeck = new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
-  private static System.Random newRandom() {
-    return new System.Random(1);
+	private class TestRandom : System.Random {
+		private int counter = 4;
+		public TestRandom(int i) : base(0) {
+			counter = i;
+		}
+
+		public override int Next(int i) {
+			if (counter == 1) {
+				counter = 4;
+			}
+			return --counter;
+		}
+	}
+
+  private static System.Random newRandom(int count) {
+    return new TestRandom(count);
   }
 
   private static Card cardWithName(string name) {
@@ -31,74 +46,74 @@ public class CardsStates {
 
   [Test]
   public void ShuffleCardsToDeck() {
-    var random = newRandom();
+    var random = newRandom(4);
     var state = CardsState.NewState(initialDeck);
     state = state.ShuffleCurrentDeck(random);
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("baz"), cardWithName("bro"), cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
+    CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
     CollectionAssert.AreEqual(new Card[0], state.Hand);
     CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
   }
 
   [Test]
   public void DrawCardsToHand() {
-    var random = newRandom();
+    var random = newRandom(4);
     var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck(random)
       .DrawCardsToHand(2);
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("baz"), cardWithName("bro") }, state.Hand);
+    CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+    CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar") }, state.Hand);
     CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
   }
 
 	[Test]
 	public void MultipleDrawCardsToHand() {
-		var random = newRandom();
+		var random = newRandom(4);
 		var state = CardsState.NewState(initialDeck)
 			.ShuffleCurrentDeck(random)
 			.DrawCardsToHand(1)
 			.DrawCardsToHand(1);
 
 		CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-		CollectionAssert.AreEqual(new List<Card>() { cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new List<Card>() { cardWithName("baz"), cardWithName("bro") }, state.Hand);
+		CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar") }, state.Hand);
 		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
 	}
 
 	[Test]
   public void DiscardCardsFromHand() {
-    var random = newRandom();
+    var random = newRandom(4);
     var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck(random)
       .DrawCardsToHand(2)
-      .DiscardCardFromHand(cardWithName("bro"));
+      .DiscardCardFromHand(cardWithName("bar"));
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("baz") }, state.Hand);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("bro") }, state.DiscardPile);
+		CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new [] { cardWithName("foo") }, state.Hand);
+    CollectionAssert.AreEqual(new [] { cardWithName("bar") }, state.DiscardPile);
   }
 
   [Test]
   public void DiscardHand() {
-    var random = newRandom();
+    var random = newRandom(4);
     var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck(random)
       .DrawCardsToHand(2)
       .DiscardHand();
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { }, state.Hand);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("baz"), cardWithName("bro") }, state.DiscardPile);
-  }
+		CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar") }, state.DiscardPile);
+	}
 
   [Test]
-  public void shuffleDiscardToDeck() {
-    var random = newRandom();
+  public void ShuffleDiscardToDeck() {
+    var random = newRandom(4);
     var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck(random)
       .DrawCardsToHand(2)
@@ -106,8 +121,56 @@ public class CardsStates {
       .ShuffleDiscardToDeck(random);
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { cardWithName("foo"), cardWithName("bar"), cardWithName("bro"), cardWithName("baz") }, state.CurrentDeck);
-    CollectionAssert.AreEqual(new List<Card>() { }, state.Hand);
-    CollectionAssert.AreEqual(new List<Card>() { }, state.DiscardPile);
+    CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro"), cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
+    CollectionAssert.AreEqual(new Card[0], state.Hand);
+    CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
   }
+
+	[Test]
+	public void AddCardsToDiscard() {
+		var random = newRandom(4);
+		var state = CardsState.NewState(initialDeck)
+			.ShuffleCurrentDeck(random)
+			.AddCardsToDiscard(new[] { cardWithName("Hey") });
+
+		CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new [] { cardWithName("Hey") }, state.DiscardPile);
+	}
+
+	[Test]
+	public void PlayExhaustibleCard() {
+		var playedCard = new Card {
+			Name = "card",
+			AddDeck = DeckType.Test,
+			Exhaustible = true
+		};
+		var random = newRandom(5);
+		var state = CardsState.NewState(new[] { playedCard }.Union(initialDeck))
+			.ShuffleCurrentDeck(random)
+			.DrawCardsToHand(1)
+			.PlayCard(playedCard);
+
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new[] { cardWithName("test") }, state.DiscardPile);
+	}
+
+	[Test]
+	public void PlayNonExhaustibleCard() {
+		var playedCard = new Card {
+			Name = "card",
+			AddDeck = DeckType.Test
+		};
+		var random = newRandom(5);
+		var state = CardsState.NewState(new[] { playedCard }.Union(initialDeck))
+			.ShuffleCurrentDeck(random)
+			.DrawCardsToHand(1)
+			.PlayCard(playedCard);
+
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new[] { playedCard, cardWithName("test") }, state.DiscardPile);
+	}
 }
