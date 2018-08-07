@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class SceneManager : MonoBehaviour {
 	public GameObject CardPrefab;
 	public GameObject stateDescription;
+	public GameObject eventDisplay;
 
 	private System.Random random = new System.Random();
 	private DeckScript deck;
@@ -63,6 +64,7 @@ public class SceneManager : MonoBehaviour {
 		cards = CardsState.NewState(CardsCollection.Cards())
 			.ShuffleCurrentDeck(random)
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
+		eventDisplay.GetComponent<EventScript>().SetSceneManager(this);
 	}
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
