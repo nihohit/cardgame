@@ -40,15 +40,23 @@ public class EmpireState {
 	}
 
 	public EmpireState ChangeGold(int goldChange) {
-		return new EmpireState(Gold + goldChange, Industry, Population, AddGold, AddIndustry, AddPopulation);
+		return new EmpireState(Gold + goldChange, Industry, Population, Army, 
+			AddGold, AddIndustry, AddPopulation, AddArmy);
 	}
 
 	public EmpireState ChangeIndustry(int changeIndustry) {
-		return new EmpireState(Gold, Industry + changeIndustry, Population, AddGold, AddIndustry, AddPopulation);
+		return new EmpireState(Gold, Industry + changeIndustry, Population, Army,
+			AddGold, AddIndustry, AddPopulation, AddArmy);
 	}
 
 	public EmpireState ChangePopulation(int populationChange) {
-		return new EmpireState(Gold, Industry, Population + populationChange, AddGold, AddIndustry, AddPopulation);
+		return new EmpireState(Gold, Industry, Population + populationChange, Army,
+			AddGold, AddIndustry, AddPopulation, AddArmy);
+	}
+
+	public EmpireState ChangeArmy(int armyChange) {
+		return new EmpireState(Gold, Industry, Population, Army + armyChange,
+			AddGold, AddIndustry, AddPopulation, AddArmy);
 	}
 
 	public bool CanPlayCard(Card card) {
