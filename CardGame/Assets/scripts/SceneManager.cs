@@ -52,6 +52,8 @@ public class SceneManager : MonoBehaviour {
 			stateDescription.GetComponent<Text>().text = state.ToString();
 		}
 	}
+	private List<EventCard> events;
+	private bool handlingEvent;
 
 	// Use this for initialization
 	void Start() {
@@ -65,9 +67,14 @@ public class SceneManager : MonoBehaviour {
 			.ShuffleCurrentDeck(random)
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
 		eventDisplay.GetComponent<EventScript>().SetSceneManager(this);
+		events = EventCardsCollections.Cards().ToList();
 	}
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
+		if (handlingEvent) {
+			return;
+		}
+
 		if (clickedDeck == deck) {
 			tryDrawCard();
 		}
@@ -95,21 +102,36 @@ public class SceneManager : MonoBehaviour {
 		}
 
 		state = state.PlayCard(card.CardModel);
-		cards = cards.PlayCard(card.CardModel);
+		if (handlingEvent) {
+			state = state.NextTurnState();
+			handlingEvent = false;
+			startTurn();
+		} else {
+			cards = cards.PlayCard(card.CardModel);
+		}
 	}
 
 	public void EndTurnPressed() {
-		startTurn();
+		endTurn();
+	}
+
+	private void endTurn() {
+		state = state.NextTurnState();
+		handlingEvent = true;
+		cards = cards.DiscardHand();
+		eventDisplay.SetActive(true);
+		eventDisplay.GetComponent<EventScript>().Event = events.First();
+		events.RemoveAt(0);
 	}
 
 	private void startTurn() {
 		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
-		cards = cards.DiscardHand()
-			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
+		cards = cards.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
 		if (remainingCards > 0) {
 			cards = cards.ShuffleDiscardToDeck(random)
 				.DrawCardsToHand(remainingCards);
 		}
 		state = state.NextTurnState();
+		eventDisplay.SetActive(false);
 	}
 }

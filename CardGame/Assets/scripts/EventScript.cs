@@ -28,6 +28,7 @@ public class EventScript : MonoBehaviour {
 		option1 = transform.Find("Option1").GetComponent<CardScript>();
 		option2 = transform.Find("Option2").GetComponent<CardScript>();
 		defaultCard = transform.Find("Default").GetComponent<CardScript>();
+		text = GetComponentInChildren<TextMeshPro>();
 		option1.Manager = manager;
 		option2.Manager = manager;
 		defaultCard.Manager = manager;

@@ -23,7 +23,22 @@ public static class EventCardsCollections {
           Name = "They attack",
           PopulationCost = 1
         },
-			}, 1},
+			}, 2},
+			{ new EventCard {
+				Name = "Wild animals",
+				Option1 = new Card {
+					Name = "Scare them",
+					IndustryCost = 2
+				},
+				Option2 = new Card {
+					Name = "Fight them",
+					ArmyCost = 1
+				},
+				Default = new Card {
+					Name = "They attack",
+					PopulationCost = 1
+				},
+			}, 2},
 		});	
 	}
 
