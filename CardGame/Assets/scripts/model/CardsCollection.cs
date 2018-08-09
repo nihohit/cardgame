@@ -21,7 +21,7 @@ public static class CardsCollection {
 				Name = "Barter",
 				PopulationGain = 1,
 				PopulationCost = 1,
-				IndustryCost = 2,
+				IndustryCost = 1,
 				GoldGain = 1
 			}, 2},
 			{new Card{
@@ -98,7 +98,7 @@ public static class CardsCollection {
 				Name = "Market Day",
 				PopulationGain = 1,
 				PopulationCost = 1,
-				IndustryCost = 2,
+				IndustryCost = 1,
 				GoldGain = 2,
 			}, 2},
 			{new Card{

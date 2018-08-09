@@ -31,6 +31,18 @@ public class EmpireState {
 		return new EmpireState(Gold + AddGold, Industry + AddIndustry, Population + AddPopulation);
 	}
 
+	public EmpireState ChangeGold(int goldChange) {
+		return new EmpireState(Gold + goldChange, Industry, Population, AddGold, AddIndustry, AddPopulation);
+	}
+
+	public EmpireState ChangeIndustry(int changeIndustry) {
+		return new EmpireState(Gold, Industry + changeIndustry, Population, AddGold, AddIndustry, AddPopulation);
+	}
+
+	public EmpireState ChangePopulation(int populationChange) {
+		return new EmpireState(Gold, Industry, Population + populationChange, AddGold, AddIndustry, AddPopulation);
+	}
+
 	public bool CanPlayCard(Card card) {
 		return Gold >= card.GoldCost &&
 			Industry >= card.IndustryCost &&
