@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 public class SceneManager : MonoBehaviour {
@@ -54,6 +55,7 @@ public class SceneManager : MonoBehaviour {
 	}
 	private List<EventCard> events;
 	private bool handlingEvent;
+	private List<Card> playedCards = new List<Card>();
 
 	// Use this for initialization
 	void Start() {
@@ -68,6 +70,7 @@ public class SceneManager : MonoBehaviour {
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
 		eventDisplay.GetComponent<EventScript>().SetSceneManager(this);
 		events = EventCardsCollections.Cards().ToList();
+		EventUtils.LogStartTurnEvent(eventCardName(), state.ToString(), cards.Hand);
 	}
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
@@ -104,10 +107,12 @@ public class SceneManager : MonoBehaviour {
 		state = state.PlayCard(card.CardModel);
 		if (handlingEvent) {
 			state = state.NextTurnState();
+			EventUtils.LogEventCardPlayed(card.CardModel, eventCardName(), state.ToString(), cards.Hand);
 			handlingEvent = false;
 			startTurn();
 		} else {
 			cards = cards.PlayCard(card.CardModel);
+			playedCards.Add(card.CardModel);
 		}
 	}
 
@@ -117,21 +122,32 @@ public class SceneManager : MonoBehaviour {
 
 	private void endTurn() {
 		state = state.NextTurnState();
+		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), state.ToString(), cards.Hand);
 		handlingEvent = true;
-		cards = cards.DiscardHand();
 		eventDisplay.SetActive(true);
 		eventDisplay.GetComponent<EventScript>().Event = events.First();
 		events.RemoveAt(0);
+		cards = cards.DiscardHand();
 	}
 
 	private void startTurn() {
+		drawNewHand();
+		state = state.NextTurnState();
+		eventDisplay.SetActive(false);
+		EventUtils.LogStartTurnEvent(eventCardName(), state.ToString(), cards.Hand);
+		playedCards.Clear();
+	}
+
+	private void drawNewHand() {
 		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
 		cards = cards.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
 		if (remainingCards > 0) {
 			cards = cards.ShuffleDiscardToDeck(random)
 				.DrawCardsToHand(remainingCards);
 		}
-		state = state.NextTurnState();
-		eventDisplay.SetActive(false);
+	}
+
+	private string eventCardName() {
+		return eventDisplay?.GetComponent<EventScript>()?.Event?.Name;
 	}
 }
