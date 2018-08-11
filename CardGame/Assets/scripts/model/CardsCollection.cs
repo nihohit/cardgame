@@ -21,7 +21,7 @@ public static class CardsCollection {
 				Name = "Barter",
 				PopulationGain = 1,
 				PopulationCost = 1,
-				IndustryCost = 2,
+				IndustryCost = 1,
 				GoldGain = 1
 			}, 2},
 			{new Card{
@@ -84,11 +84,18 @@ public static class CardsCollection {
 				AddDeck = DeckType.Town
 			}, 1},
 			{new Card{
-				Name = "Farm",
+				Name = "Farming",
 				PopulationGain = 1,
 				PopulationCost = 1,
 				IndustryGain = 2
-			}, 3}
+			}, 3},
+			{new Card{
+				Name = "Arm Militia",
+				PopulationGain = 1,
+				PopulationCost = 1,
+				IndustryCost = 1,
+				ArmyGain = 1
+			}, 1}
 		});
 	}
 
@@ -98,7 +105,7 @@ public static class CardsCollection {
 				Name = "Market Day",
 				PopulationGain = 1,
 				PopulationCost = 1,
-				IndustryCost = 2,
+				IndustryCost = 1,
 				GoldGain = 2,
 			}, 2},
 			{new Card{

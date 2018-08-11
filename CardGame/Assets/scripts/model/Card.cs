@@ -7,21 +7,17 @@ public class Card {
 	public int GoldCost { get; set; }
 	public int IndustryCost { get; set; }
 	public int PopulationCost { get; set; }
+	public int ArmyCost { get; set; }
 	public int GoldGain { get; set; }
 	public int IndustryGain { get; set; }
 	public int PopulationGain { get; set; }
+	public int ArmyGain { get; set; }
 	public DeckType AddDeck { get; set; }
 	public bool Exhaustible { get; set; }
 
 	public override string ToString() {
 		var stringBuilder = new StringBuilder();
 		stringBuilder.AppendLine(Name);
-		//addString(stringBuilder, GoldCost, "Gold-");
-		//addString(stringBuilder, IndustryCost, "Ind-");
-		//addString(stringBuilder, PopulationCost, "Pop-");
-		//addString(stringBuilder, GoldGain, "Gold+");
-		//addString(stringBuilder, IndustryGain, "Ind+");
-		//addString(stringBuilder, PopulationGain, "Pop+");
 		if (AddDeck != DeckType.None) {
 			stringBuilder.AppendLine($"Add deck: {AddDeck}");
 		}
@@ -53,9 +49,11 @@ public class Card {
 			card.GoldCost == GoldCost &&
 			card.IndustryCost == IndustryCost &&
 			card.PopulationCost == PopulationCost &&
+			card.ArmyCost == ArmyCost &&
 			card.GoldGain == GoldGain &&
 			card.IndustryGain == IndustryGain &&
 			card.PopulationGain == PopulationGain &&
+			card.ArmyGain == ArmyGain &&
 			card.AddDeck == AddDeck &&
 			card.Exhaustible == Exhaustible;
 	}

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class SceneManager : MonoBehaviour {
 	public GameObject CardPrefab;
 	public GameObject stateDescription;
+	public GameObject eventDisplay;
 
 	private System.Random random = new System.Random();
 	private DeckScript deck;
@@ -51,33 +52,47 @@ public class SceneManager : MonoBehaviour {
 			stateDescription.GetComponent<Text>().text = state.ToString();
 		}
 	}
+	private List<EventCard> events;
+	private bool handlingEvent;
 
 	// Use this for initialization
 	void Start() {
-		state = new EmpireState(0, 0, 2);
+		state = new EmpireState(1, 1, 2, 0);
 		cardPool = new CardScriptPool(CardPrefab, 10);
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		deck.Manager = this;
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		discardPile.Manager = this;
-		cards = CardsState.NewState(CardsCollection.Cards()).ShuffleCurrentDeck(random);
+		cards = CardsState.NewState(CardsCollection.Cards())
+			.ShuffleCurrentDeck(random)
+			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
+		eventDisplay.GetComponent<EventScript>().SetSceneManager(this);
+		events = EventCardsCollections.Cards().ToList();
 	}
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
+		if (handlingEvent) {
+			return;
+		}
+
 		if (clickedDeck == deck) {
-			startTurn();
+			tryDrawCard();
 		}
 	}
 
-	private void startTurn() {
-		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
-		cards = cards.DiscardHand()
-		  .DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
-		if (remainingCards > 0) {
-			cards = cards.ShuffleDiscardToDeck(random)
-			  .DrawCardsToHand(remainingCards);
+	private void tryDrawCard() {
+		if (!canDrawCard()) {
+			return;
 		}
-		state = state.NextTurnState();
+
+		cards = cards.DrawCardsToHand(1);
+		state = state.ChangeGold(-1);
+	}
+
+	private bool canDrawCard() {
+		return state.Gold > 0 &&
+			cards.Hand.Count() < Constants.MAX_CARDS_IN_HAND &&
+			cards.CurrentDeck.Count() > 0;
 	}
 
 	public void CardWasClicked(CardScript card) {
@@ -87,6 +102,36 @@ public class SceneManager : MonoBehaviour {
 		}
 
 		state = state.PlayCard(card.CardModel);
-		cards = cards.PlayCard(card.CardModel);
+		if (handlingEvent) {
+			state = state.NextTurnState();
+			handlingEvent = false;
+			startTurn();
+		} else {
+			cards = cards.PlayCard(card.CardModel);
+		}
+	}
+
+	public void EndTurnPressed() {
+		endTurn();
+	}
+
+	private void endTurn() {
+		state = state.NextTurnState();
+		handlingEvent = true;
+		cards = cards.DiscardHand();
+		eventDisplay.SetActive(true);
+		eventDisplay.GetComponent<EventScript>().Event = events.First();
+		events.RemoveAt(0);
+	}
+
+	private void startTurn() {
+		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
+		cards = cards.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
+		if (remainingCards > 0) {
+			cards = cards.ShuffleDiscardToDeck(random)
+				.DrawCardsToHand(remainingCards);
+		}
+		state = state.NextTurnState();
+		eventDisplay.SetActive(false);
 	}
 }
