@@ -24,6 +24,15 @@ public class EventScript : MonoBehaviour {
 		defaultCard.CardModel = value.Default;
 	}}
 
+	public void Start() {
+		foreach (var text in GetComponentsInChildren<TextMeshPro>()) {
+			text.sortingLayerID = SortingLayer.NameToID("event card");
+		}
+		foreach (var internalRenderer in GetComponentsInChildren<Renderer>()) {
+			internalRenderer.sortingLayerID = SortingLayer.NameToID("event card");
+		}
+	}
+
 	public void SetSceneManager(SceneManager manager) {
 		option1 = transform.Find("Option1").GetComponent<CardScript>();
 		option2 = transform.Find("Option2").GetComponent<CardScript>();
