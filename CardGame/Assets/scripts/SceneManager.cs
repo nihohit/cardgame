@@ -126,7 +126,7 @@ public class SceneManager : MonoBehaviour {
 		handlingEvent = true;
 		eventDisplay.SetActive(true);
 		eventDisplay.GetComponent<EventScript>().Event = events.First();
-		events.RemoveAt(0);
+		if (events.Count > 1)	events.RemoveAt(0);
 		cards = cards.DiscardHand();
 	}
 
