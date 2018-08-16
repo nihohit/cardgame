@@ -57,4 +57,8 @@ public class Card {
 			card.AddDeck == AddDeck &&
 			card.Exhaustible == Exhaustible;
 	}
+
+	public override int GetHashCode() {
+		return Name.GetHashCode();
+	}
 }
