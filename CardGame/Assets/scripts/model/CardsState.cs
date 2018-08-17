@@ -15,17 +15,6 @@ public class CardsState {
 
   public IEnumerable<Card> Hand { get; }
 
-  private void shuffle<T>(IList<T> list, System.Random random) {
-    int n = list.Count;
-    while (n > 1) {
-      n--;
-      int k = random.Next(n + 1);
-      T value = list[k];
-      list[k] = list[n];
-      list[n] = value;
-    }
-  }
-
   private CardsState(IEnumerable<Card> presistentDeck, 
     IEnumerable<Card> currentDeck = null,
     IEnumerable<Card> discardPile = null,
@@ -40,10 +29,9 @@ public class CardsState {
     return new CardsState(deck);
   }
 
-  public CardsState ShuffleCurrentDeck(System.Random random) {
+  public CardsState ShuffleCurrentDeck() {
     var deckAsList = PersistentDeck.ToList();
-    shuffle(deckAsList, random);
-    return new CardsState(PersistentDeck, deckAsList);
+    return new CardsState(PersistentDeck, deckAsList.Shuffle());
   }
 
   public CardsState DiscardCardFromHand(Card card) {
@@ -73,12 +61,11 @@ public class CardsState {
     return new CardsState(PersistentDeck, currentDeckList, DiscardPile, newHand);
   }
 
-  public CardsState ShuffleDiscardToDeck(System.Random random) {
+  public CardsState ShuffleDiscardToDeck() {
     var discardAsList = DiscardPile.ToList();
     var deckAsList = CurrentDeck.ToList();
     deckAsList.AddRange(discardAsList);
-    shuffle(deckAsList, random);
-    return new CardsState(PersistentDeck, deckAsList, null, Hand);
+    return new CardsState(PersistentDeck, deckAsList.Shuffle(), null, Hand);
   }
 
   public CardsState AddCardsToDiscard(IEnumerable<Card> cards) {
