@@ -23,8 +23,8 @@ public class CardsStates {
 		}
 	}
 
-  private static System.Random newRandom(int count) {
-    return new TestRandom(count);
+  private static void setNewRandom(int count) {
+		Randomizer.SetRandom(new TestRandom(count));
   }
 
   private static Card cardWithName(string name) {
@@ -46,9 +46,8 @@ public class CardsStates {
 
   [Test]
   public void ShuffleCardsToDeck() {
-    var random = newRandom(4);
     var state = CardsState.NewState(initialDeck);
-    state = state.ShuffleCurrentDeck(random);
+    state = state.ShuffleCurrentDeck();
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
     CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
@@ -58,9 +57,9 @@ public class CardsStates {
 
   [Test]
   public void DrawCardsToHand() {
-    var random = newRandom(4);
+    setNewRandom(4);
     var state = CardsState.NewState(initialDeck)
-      .ShuffleCurrentDeck(random)
+      .ShuffleCurrentDeck()
       .DrawCardsToHand(2);
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
@@ -71,9 +70,9 @@ public class CardsStates {
 
 	[Test]
 	public void MultipleDrawCardsToHand() {
-		var random = newRandom(4);
+		setNewRandom(4);
 		var state = CardsState.NewState(initialDeck)
-			.ShuffleCurrentDeck(random)
+			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.DrawCardsToHand(1);
 
@@ -85,9 +84,9 @@ public class CardsStates {
 
 	[Test]
   public void DiscardCardsFromHand() {
-    var random = newRandom(4);
-    var state = CardsState.NewState(initialDeck)
-      .ShuffleCurrentDeck(random)
+		setNewRandom(4);
+		var state = CardsState.NewState(initialDeck)
+      .ShuffleCurrentDeck()
       .DrawCardsToHand(2)
       .DiscardCardFromHand(cardWithName("bar"));
 
@@ -99,9 +98,9 @@ public class CardsStates {
 
   [Test]
   public void DiscardHand() {
-    var random = newRandom(4);
-    var state = CardsState.NewState(initialDeck)
-      .ShuffleCurrentDeck(random)
+		setNewRandom(4);
+		var state = CardsState.NewState(initialDeck)
+      .ShuffleCurrentDeck()
       .DrawCardsToHand(2)
       .DiscardHand();
 
@@ -113,12 +112,12 @@ public class CardsStates {
 
   [Test]
   public void ShuffleDiscardToDeck() {
-    var random = newRandom(4);
-    var state = CardsState.NewState(initialDeck)
-      .ShuffleCurrentDeck(random)
+		setNewRandom(4);
+		var state = CardsState.NewState(initialDeck)
+      .ShuffleCurrentDeck()
       .DrawCardsToHand(2)
       .DiscardHand()
-      .ShuffleDiscardToDeck(random);
+      .ShuffleDiscardToDeck();
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
     CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro"), cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
@@ -128,9 +127,9 @@ public class CardsStates {
 
 	[Test]
 	public void AddCardsToDiscard() {
-		var random = newRandom(4);
+		setNewRandom(4);
 		var state = CardsState.NewState(initialDeck)
-			.ShuffleCurrentDeck(random)
+			.ShuffleCurrentDeck()
 			.AddCardsToDiscard(new[] { cardWithName("Hey") });
 
 		CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
@@ -146,9 +145,9 @@ public class CardsStates {
 			AddDeck = DeckType.Test,
 			Exhaustible = true
 		};
-		var random = newRandom(5);
+		setNewRandom(5);
 		var state = CardsState.NewState(new[] { playedCard }.Union(initialDeck))
-			.ShuffleCurrentDeck(random)
+			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.PlayCard(playedCard);
 
@@ -163,9 +162,9 @@ public class CardsStates {
 			Name = "card",
 			AddDeck = DeckType.Test
 		};
-		var random = newRandom(5);
+		setNewRandom(5);
 		var state = CardsState.NewState(new[] { playedCard }.Union(initialDeck))
-			.ShuffleCurrentDeck(random)
+			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.PlayCard(playedCard);
 

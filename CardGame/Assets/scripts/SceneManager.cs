@@ -11,7 +11,6 @@ public class SceneManager : MonoBehaviour {
 	public GameObject stateDescription;
 	public GameObject eventDisplay;
 
-	private System.Random random = new System.Random();
 	private DeckScript deck;
 	private DeckScript discardPile;
 	private IEnumerable<CardScript> _hand = new List<CardScript>();
@@ -66,7 +65,7 @@ public class SceneManager : MonoBehaviour {
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		discardPile.Manager = this;
 		cards = CardsState.NewState(CardsCollection.Cards())
-			.ShuffleCurrentDeck(random)
+			.ShuffleCurrentDeck()
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
 		eventDisplay.GetComponent<EventScript>().SetSceneManager(this);
 		events = EventCardsCollections.Cards().ToList();
@@ -142,7 +141,7 @@ public class SceneManager : MonoBehaviour {
 		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
 		cards = cards.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
 		if (remainingCards > 0) {
-			cards = cards.ShuffleDiscardToDeck(random)
+			cards = cards.ShuffleDiscardToDeck()
 				.DrawCardsToHand(remainingCards);
 		}
 	}
