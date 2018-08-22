@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DeckType { None, Test, Village, Temple, VillageCenter, Town, PublicDiscourse1 }
+public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town }
 
 public static class CardsCollection {
 	private static Dictionary<string, Card> cards = new Card[] {
@@ -79,16 +79,44 @@ public static class CardsCollection {
 		},
 		new Card{
 			Name = "Public Discussion",
-			PopulationGain = 2,
-			PopulationCost = 2,
+			PopulationGain = 1,
+			PopulationCost = 1,
 			GoldCost = 2,
-			AddDeck = DeckType.PublicDiscourse1
+			NumberOfCardsToChooseToReplace = 1
+		},
+		new Card{
+			Name = "Ostracize",
+			PopulationGain = 1,
+			PopulationCost = 1,
+			GoldCost = 2,
+			NumberOfCardsToChooseToExhaust = 1
 		},
 		new Card{
 			Name = "Buy Slaves",
 			PopulationGain = 2,
 			PopulationCost = 1,
 			GoldCost = 10
+		},
+		new Card{
+			Name = "Fishing Village",
+			PopulationGain = 2,
+			PopulationCost = 1,
+			IndustryCost = 2,
+			AddDeck = DeckType.FishingVillage
+		},
+		new Card{
+			Name = "Fishing",
+			PopulationGain = 1,
+			PopulationCost = 1,
+			IndustryGain = 1,
+			GoldGain = 1
+		},
+		new Card{
+			Name = "Port Town",
+			PopulationGain = 2,
+			PopulationCost = 1,
+			IndustryCost = 10,
+			AddDeck = DeckType.PortTown
 		}
 	}.ToDictionary(card => card.Name, card => card);
 
@@ -97,7 +125,8 @@ public static class CardsCollection {
 		return cardsForDictionary(new Dictionary<string, int>{
 			{"Manual Labour", 4},
 			{"Barter", 2},
-			{"Build Village", 1}
+			{"Build Village", 1},
+			{"Fishing Village", 1}
 		});	
 	}
 
@@ -106,7 +135,7 @@ public static class CardsCollection {
 	}
 
 	private static IEnumerable<Card> createCopies(string cardName, int copies) {
-		var card = cards[cardName];
+		var card = cards.Get(cardName, "created cards");
 		for(int i = 0; i <  copies; i++) {
 			yield return card.ShallowClone();
 		}
@@ -118,6 +147,8 @@ public static class CardsCollection {
 				return villageDeck();
 			case DeckType.VillageCenter: 
 				return villageCenterDeck();
+			case DeckType.FishingVillage:
+				return fishingVillageDeck();
 			case DeckType.Test:
 				return testDeck();
 			default:
@@ -135,11 +166,22 @@ public static class CardsCollection {
 		});
 	}
 
+	private static IEnumerable<Card> fishingVillageDeck() {
+		return cardsForDictionary(new Dictionary<string, int>{
+			{"Temple", 1},
+			{"Village center", 1},
+			{"Port Town", 1},
+			{"Fishing", 3},
+			{"Arm Militia", 1}
+		});
+	}
+
 	private static IEnumerable<Card> villageCenterDeck() {
 		return cardsForDictionary(new Dictionary<string, int>{
 			{"Market Day", 2},
 			{"Public Discussion", 1},
 			{"Buy Slaves", 1},
+			{"Ostracize", 1},
 		});
 	}
 

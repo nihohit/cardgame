@@ -14,6 +14,8 @@ public class Card {
 	public int ArmyGain { get; set; }
 	public DeckType AddDeck { get; set; }
 	public bool Exhaustible { get; set; }
+	public int NumberOfCardsToChooseToExhaust { get; set; }
+	public int NumberOfCardsToChooseToReplace { get; set; }
 
 	public override string ToString() {
 		var stringBuilder = new StringBuilder();
@@ -24,6 +26,8 @@ public class Card {
 		if (Exhaustible) {
 			stringBuilder.AppendLine("Exhaustible");
 		}
+		addString(stringBuilder, NumberOfCardsToChooseToExhaust, "Remove cards");
+		addString(stringBuilder, NumberOfCardsToChooseToReplace, "Replace cards");
 		return stringBuilder.ToString();
 	}
 

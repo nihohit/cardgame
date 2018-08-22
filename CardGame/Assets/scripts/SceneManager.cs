@@ -7,10 +7,12 @@ using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 public class SceneManager : MonoBehaviour {
+	private enum CardHandlingMode {Regular, Event, Replace, Exhaust}
+
 	public GameObject CardPrefab;
 	public GameObject stateDescription;
-	public GameObject eventDisplay;
 
+	private MultiCardDisplayScript multiCardDisplay;
 	private DeckScript deck;
 	private DeckScript discardPile;
 	private IEnumerable<CardScript> _hand = new List<CardScript>();
@@ -53,13 +55,15 @@ public class SceneManager : MonoBehaviour {
 		}
 	}
 	private List<EventCard> events;
-	private bool handlingEvent;
 	private List<Card> playedCards = new List<Card>();
+	private CardHandlingMode handlingMode;
+	private Button doneButton;
+	private int cardsToHandle;
 
 	// Use this for initialization
 	void Start() {
 		state = new EmpireState(1, 1, 2, 0);
-		cardPool = new CardScriptPool(CardPrefab, 10);
+		cardPool = new CardScriptPool(CardPrefab, 15);
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		deck.Manager = this;
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
@@ -67,13 +71,15 @@ public class SceneManager : MonoBehaviour {
 		cards = CardsState.NewState(CardsCollection.Cards())
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
-		eventDisplay.GetComponent<EventScript>().SetSceneManager(this);
+		multiCardDisplay = Resources.FindObjectsOfTypeAll<MultiCardDisplayScript>()[0];
+		multiCardDisplay.InitialSetup(this, cardPool);
 		events = EventCardsCollections.Cards().ToList();
 		EventUtils.LogStartTurnEvent(eventCardName(), state.ToString(), cards.Hand);
+		doneButton = GameObject.Find("DoneButton").GetComponent<Button>();
 	}
 
 	public void DeckWasClicked(DeckScript clickedDeck) {
-		if (handlingEvent) {
+		if (handlingMode != CardHandlingMode.Regular) {
 			return;
 		}
 
@@ -98,41 +104,119 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	public void CardWasClicked(CardScript card) {
-		if (!state.CanPlayCard(card.CardModel)) {
-			Debug.Log($"Can't play {card.CardModel.Name}");
-			return;
-		}
-
-		state = state.PlayCard(card.CardModel);
-		if (handlingEvent) {
-			state = state.NextTurnState();
-			EventUtils.LogEventCardPlayed(card.CardModel, eventCardName(), state.ToString(), cards.Hand);
-			handlingEvent = false;
-			startTurn();
-		} else {
-			cards = cards.PlayCard(card.CardModel);
-			playedCards.Add(card.CardModel);
+		switch(handlingMode) {
+			case CardHandlingMode.Regular:
+				playCard(card.CardModel);
+				break;
+			case CardHandlingMode.Event:
+				playEventCard(card.CardModel);
+				break;
+			case CardHandlingMode.Replace:
+				replaceCard(card.CardModel);
+				break;
+			case CardHandlingMode.Exhaust:
+				exhaustCard(card.CardModel);
+				break;
 		}
 	}
 
+	private void playCard(Card card) {
+		if (!state.CanPlayCard(card)) {
+			Debug.Log($"Can't play {card.Name}");
+			return;
+		}
+		state = state.PlayCard(card);
+		cards = cards.PlayCard(card);
+		playedCards.Add(card);
+		switchModeIfNecessary(card);
+	}
+
+	private void playEventCard(Card card) {
+		if (!state.CanPlayCard(card)) {
+			Debug.Log($"Can't play {card.Name}");
+			return;
+		}
+		state = state.PlayCard(card);
+		state = state.NextTurnState();
+		EventUtils.LogEventCardPlayed(card, eventCardName(), state.ToString(), cards.Hand);
+		handlingMode = CardHandlingMode.Regular;
+		multiCardDisplay.FinishWork();
+		startTurn();
+	}
+
+	private void switchModeIfNecessary(Card card) {
+		if (card.NumberOfCardsToChooseToExhaust > 0) {
+			cardsToHandle = card.NumberOfCardsToChooseToExhaust;
+			multiCardDisplay.setup(cards.Hand, "Choose cards to exhaust");
+			doneButton.GetComponentInChildren<Text>().text = "Done";
+			handlingMode = CardHandlingMode.Exhaust;
+		} else if (card.NumberOfCardsToChooseToReplace > 0) {
+			cardsToHandle = card.NumberOfCardsToChooseToReplace;
+			multiCardDisplay.setup(cards.Hand, "Choose cards to replace");
+			doneButton.GetComponentInChildren<Text>().text = "Done";
+			handlingMode = CardHandlingMode.Replace;
+		}
+	}
+
+	private void replaceCard(Card card) {
+		cards = cards
+			.DiscardCardFromHand(card)
+			.DrawCardsToHand(1);
+		closeOrUpdateMultiCardDisplay();
+	}
+
+	private void exhaustCard(Card card) {
+		cards = cards.ExhaustCardFromHand(card);
+		closeOrUpdateMultiCardDisplay();
+	}
+
+	private void closeOrUpdateMultiCardDisplay() {
+		cardsToHandle--;
+		if (cardsToHandle == 0) {
+			doneButton.GetComponentInChildren<Text>().text = "End Turn";
+			closeMultiCardDisplay();
+			return;
+		} 
+		multiCardDisplay.setup(cards.Hand, multiCardDisplay.Description);
+	}
+
 	public void EndTurnPressed() {
-		endTurn();
+		switch (handlingMode) {
+			case CardHandlingMode.Event:
+				break;
+			case CardHandlingMode.Exhaust:
+				closeMultiCardDisplay();
+				break;
+			case CardHandlingMode.Regular:
+				endTurn();
+				break;
+			case CardHandlingMode.Replace:
+				closeMultiCardDisplay();
+				break;
+		}
+	}
+
+	private void closeMultiCardDisplay() {
+		handlingMode = CardHandlingMode.Regular;
+		cardsToHandle = 0;
+		multiCardDisplay.FinishWork();
 	}
 
 	private void endTurn() {
 		state = state.NextTurnState();
 		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), state.ToString(), cards.Hand);
-		handlingEvent = true;
-		eventDisplay.SetActive(true);
-		eventDisplay.GetComponent<EventScript>().Event = events.First();
+		handlingMode = CardHandlingMode.Event;
+		var currentEvent = events.First();
+		multiCardDisplay.setup(currentEvent.Options, currentEvent.Name);
 		if (events.Count > 1)	events.RemoveAt(0);
 		cards = cards.DiscardHand();
+		doneButton.gameObject.SetActive(false);
 	}
 
 	private void startTurn() {
+		doneButton.gameObject.SetActive(true);
 		drawNewHand();
 		state = state.NextTurnState();
-		eventDisplay.SetActive(false);
 		EventUtils.LogStartTurnEvent(eventCardName(), state.ToString(), cards.Hand);
 		playedCards.Clear();
 	}
@@ -147,6 +231,6 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	private string eventCardName() {
-		return eventDisplay?.GetComponent<EventScript>()?.Event?.Name;
+		return events[0].Name;
 	}
 }
