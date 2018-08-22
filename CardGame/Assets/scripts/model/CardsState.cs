@@ -40,7 +40,8 @@ public class CardsState {
 
   public CardsState ExhaustCardFromHand(Card card) {
     var handList = Hand.ToList();
-    Debug.AssertFormat(handList.Contains(card), "{0} is not present in {1}", card, string.Join(", ", handList.Select(cardInHand => cardInHand.ToString()).ToArray()));
+    Debug.AssertFormat(handList.Contains(card), "{0} is not present in {1}", 
+		                   card, handList.ToJoinedString(", "));
     handList.Remove(card);
     return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, handList);
   }
@@ -53,7 +54,9 @@ public class CardsState {
 
   public CardsState DrawCardsToHand(int numberOfCardsToDraw) {
     var currentDeckList = CurrentDeck.ToList();
-    Debug.AssertFormat(currentDeckList.Count >= numberOfCardsToDraw, "Tried to draw {0} cards from {1} unused cards", numberOfCardsToDraw, currentDeckList.Count);
+    Debug.AssertFormat(currentDeckList.Count >= numberOfCardsToDraw, 
+		                   "Tried to draw {0} cards from {1} unused cards", 
+		                   numberOfCardsToDraw, currentDeckList.Count);
     var firstCards = currentDeckList.Take(numberOfCardsToDraw);
     var newHand = Hand.ToList();
     newHand.AddRange(firstCards);
