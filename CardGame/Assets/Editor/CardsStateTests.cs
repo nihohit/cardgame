@@ -21,6 +21,10 @@ public class CardsStates {
 			}
 			return --counter;
 		}
+
+		public override int Next(int j, int i) {
+			return j;
+		}
 	}
 
   private static void setNewRandom(int count) {
@@ -46,7 +50,8 @@ public class CardsStates {
 
   [Test]
   public void ShuffleCardsToDeck() {
-    var state = CardsState.NewState(initialDeck);
+		setNewRandom(4);
+		var state = CardsState.NewState(initialDeck);
     state = state.ShuffleCurrentDeck();
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
