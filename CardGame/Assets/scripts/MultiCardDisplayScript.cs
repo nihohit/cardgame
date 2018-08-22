@@ -1,0 +1,77 @@
+using UnityEngine;
+using System.Collections;
+using TMPro;
+using System.Collections.Generic;
+using System.Linq;
+
+public class MultiCardDisplayScript : MonoBehaviour {
+	public string Description { get { return textMesh.text; } }
+	private TextMeshPro textMesh;
+	private readonly List<CardScript> cardScripts = new List<CardScript>();
+	private SceneManager sceneManager;
+	private CardScriptPool cardPool;
+
+	private void Awake() {
+		textMesh = GetComponentInChildren<TextMeshPro>();
+		foreach (var text in GetComponentsInChildren<TextMeshPro>()) {
+			text.sortingLayerID = SortingLayer.NameToID("MultiCardDisplay");
+		}
+		foreach (var internalRenderer in GetComponentsInChildren<Renderer>()) {
+			internalRenderer.sortingLayerID = SortingLayer.NameToID("MultiCardDisplay");
+		}
+
+	}
+
+	public void InitialSetup(SceneManager manager, CardScriptPool cardScriptPool) {
+		sceneManager = manager;
+		cardPool = cardScriptPool;
+	}
+
+	public void setup(IEnumerable<Card> cards, string description) {
+		gameObject.SetActive(true);
+		textMesh.text = description;
+		setupCardScripts(cards);
+	}
+
+	private void setupCardScripts(IEnumerable<Card> cards) {
+		cardScripts.AddRange(cards.Select(card => cardPool.CardForModel(card)));
+		foreach (var cardScript in cardScripts) {
+			setupCardScriptLayers(cardScript, "MultiCardDisplay");
+			cardScript.Manager = sceneManager;
+		}
+		adjustCardsLocations();
+	}
+
+	private void adjustCardsLocations() {
+		Camera cam = Camera.main;
+		float camWindowHeight = 2f * cam.orthographicSize;
+		float camWindowWidth = camWindowHeight * cam.aspect;
+		var halfCamWidth = camWindowWidth / 2;
+		var cardSize = cardScripts[0].GetComponent<BoxCollider2D>().size;
+		var widthPerCard = camWindowWidth / cardScripts.Count;
+		Assert.Greater(widthPerCard, cardSize.x);
+
+		for (int i = 0; i < cardScripts.Count; i++) {
+			var cardScript = cardScripts[i];
+			cardScript.transform.position = new Vector3(-halfCamWidth + (widthPerCard / 2) + (i * widthPerCard), -camWindowHeight / 3, 0);
+		}
+	}
+
+	public void FinishWork() {
+		foreach (var cardScript in cardScripts) {
+			setupCardScriptLayers(cardScript, "Default");
+			cardPool.ReleaseCard(cardScript);
+		}
+		cardScripts.Clear();
+		gameObject.SetActive(false);
+	}
+
+	private void setupCardScriptLayers(CardScript script, string layerName) {
+		foreach (var text in script.GetComponentsInChildren<TextMeshPro>()) {
+			text.sortingLayerID = SortingLayer.NameToID(layerName);
+		}
+		foreach (var internalRenderer in script.GetComponentsInChildren<Renderer>()) {
+			internalRenderer.sortingLayerID = SortingLayer.NameToID(layerName);
+		}
+	}
+}

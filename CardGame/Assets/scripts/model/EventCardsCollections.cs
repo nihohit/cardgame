@@ -7,46 +7,56 @@ using System.Linq;
 using UnityEngine;
 
 public static class EventCardsCollections {
-	public static IEnumerable<EventCard> Cards() {
-		return cardsForDictionary(new Dictionary<EventCard, int> {
-			{ new EventCard {
-				Name = "Raiders",
-        Option1 = new Card {
-          Name = "Pay them off",
-          GoldCost = 1
-        },
-        Option2 = new Card {
-          Name = "Fight them",
-          ArmyCost = 2
-        },
-        Default = new Card {
-          Name = "They attack",
-          PopulationCost = 1
-        },
-			}, 2},
-			{ new EventCard {
-				Name = "Wild animals",
-				Option1 = new Card {
+	private static Dictionary<string, EventCard> events = new EventCard[] {
+		new EventCard {
+			Name = "Raiders",
+			Options = new Card[] {
+				new Card {
+					Name = "Pay them off",
+					GoldCost = 1
+				},
+				new Card {
+					Name = "Fight them",
+					ArmyCost = 2
+				},
+				new Card {
+					Name = "They attack",
+					PopulationCost = 1
+				}
+			}
+		},
+		new EventCard {
+			Name = "Wild animals",
+			Options = new Card[] {
+				new Card {
 					Name = "Scare them",
 					IndustryCost = 2
 				},
-				Option2 = new Card {
+				new Card {
 					Name = "Fight them",
 					ArmyCost = 1
 				},
-				Default = new Card {
+				new Card {
 					Name = "They attack",
 					PopulationCost = 1
-				},
-			}, 2},
+				}
+			}
+		}
+	}.ToDictionary(card => card.Name, card => card);
+
+	public static IEnumerable<EventCard> Cards() {
+		return cardsForDictionary(new Dictionary<string, int> {
+			{ "Raiders", 2},
+			{ "Wild animals", 2},
 		});	
 	}
 
-	private static IEnumerable<EventCard> cardsForDictionary(Dictionary<EventCard, int> cardDictionary) {
+	private static IEnumerable<EventCard> cardsForDictionary(Dictionary<string, int> cardDictionary) {
 		return cardDictionary.SelectMany(pair => createCopies(pair.Key, pair.Value));	
 	}
 
-	private static IEnumerable<EventCard> createCopies(EventCard card, int copies) {
+	private static IEnumerable<EventCard> createCopies(string eventName, int copies) {
+		var card = events.Get(eventName, "created events");
 		for(int i = 0; i <  copies; i++) {
 			yield return card.ShallowClone();
 		}
@@ -66,17 +76,17 @@ public static class EventCardsCollections {
 	}
 
 	private static IEnumerable<EventCard> villageDeck() {
-		return cardsForDictionary(new Dictionary<EventCard, int>{
+		return cardsForDictionary(new Dictionary<string, int>{
 		});
 	}
 
 	private static IEnumerable<EventCard> villageCenterDeck() {
-		return cardsForDictionary(new Dictionary<EventCard, int>{
+		return cardsForDictionary(new Dictionary<string, int>{
 		});
 	}
 
 	private static IEnumerable<EventCard> testDeck() {
-		return cardsForDictionary(new Dictionary<EventCard, int>{
+		return cardsForDictionary(new Dictionary<string, int>{
 		});
 	}
 }
