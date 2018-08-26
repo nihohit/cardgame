@@ -3,12 +3,13 @@ using System.Collections;
 using TMPro;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using UniRx;
 
 public class MultiCardDisplayScript : MonoBehaviour {
 	public string Description { get { return textMesh.text; } }
 	private TextMeshPro textMesh;
 	private readonly List<CardScript> cardScripts = new List<CardScript>();
-	private SceneManager sceneManager;
 	private CardScriptPool cardPool;
 
 	private void Awake() {
@@ -22,24 +23,24 @@ public class MultiCardDisplayScript : MonoBehaviour {
 
 	}
 
-	public void InitialSetup(SceneManager manager, CardScriptPool cardScriptPool) {
-		sceneManager = manager;
+	public void InitialSetup(CardScriptPool cardScriptPool) {
 		cardPool = cardScriptPool;
 	}
 
-	public void setup(IEnumerable<Card> cards, string description) {
+	public IObservable<Card> setup(IEnumerable<Card> cards, string description) {
 		gameObject.SetActive(true);
 		textMesh.text = description;
-		setupCardScripts(cards);
+		return setupCardScripts(cards);
 	}
 
-	private void setupCardScripts(IEnumerable<Card> cards) {
+	private IObservable<Card> setupCardScripts(IEnumerable<Card> cards) {
+		AssertUtils.IsEmpty(cardScripts, "cardScripts");
 		cardScripts.AddRange(cards.Select(card => cardPool.CardForModel(card)));
 		foreach (var cardScript in cardScripts) {
 			setupCardScriptLayers(cardScript, "MultiCardDisplay");
-			cardScript.Manager = sceneManager;
 		}
 		adjustCardsLocations();
+		return cardScripts.Select(cardScript => cardScript.ClickObservation()).Merge();
 	}
 
 	private void adjustCardsLocations() {
@@ -49,7 +50,7 @@ public class MultiCardDisplayScript : MonoBehaviour {
 		var halfCamWidth = camWindowWidth / 2;
 		var cardSize = cardScripts[0].GetComponent<BoxCollider2D>().size;
 		var widthPerCard = camWindowWidth / cardScripts.Count;
-		Assert.Greater(widthPerCard, cardSize.x);
+		AssertUtils.Greater(widthPerCard, cardSize.x);
 
 		for (int i = 0; i < cardScripts.Count; i++) {
 			var cardScript = cardScripts[i];

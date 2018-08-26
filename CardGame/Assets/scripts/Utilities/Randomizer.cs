@@ -38,14 +38,14 @@ public static class Randomizer {
 
 	// See if random sample comes lower than the given chance
 	public static bool ProbabilityCheck(double chance) {
-		Assert.EqualOrLesser(chance, 1, "we can't have a probablity higher than 1");
-		Assert.EqualOrGreater(chance, 0, "we can't have a probablity lower than 0");
+		AssertUtils.EqualOrLesser(chance, 1, "we can't have a probablity higher than 1");
+		AssertUtils.EqualOrGreater(chance, 0, "we can't have a probablity lower than 0");
 		return NextDouble() <= chance;
 	}
 
 	// choose a single value out of a collection
 	public static T ChooseValue<T>(IEnumerable<T> group) {
-		Assert.NotNull(group, "group");
+		AssertUtils.NotNull(group, "group");
 		T current = default(T);
 		int count = 0;
 		foreach (T element in group) {
@@ -76,7 +76,7 @@ public static class Randomizer {
 	}
 
 	public static IEnumerable<T> Shuffle<T>(IEnumerable<T> group) {
-		Assert.NotNull(group, "group");
+		AssertUtils.NotNull(group, "group");
 		var buffer = group.ToList();
 
 		for (int i = 0; i < buffer.Count; i++) {
