@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
+using UniRx.Triggers;
+using UniRx;
 
 public class CardScript : MonoBehaviour {
   private TextMeshPro text;
@@ -13,8 +16,8 @@ public class CardScript : MonoBehaviour {
 	private CardValueScript industryGain;
 	private CardValueScript populationGain;
 	private CardValueScript armyGain;
-	public SceneManager Manager { get; set; }
 
+	private Subject<Unit> modelSetSubject = new Subject<Unit>();
 	private Card _model;
 	public Card CardModel { get {
 			return _model;
@@ -29,10 +32,10 @@ public class CardScript : MonoBehaviour {
 			industryGain.SetValue(value.IndustryGain);
 			populationGain.SetValue(value.PopulationGain - value.PopulationCost);
 			armyGain.SetValue(value.ArmyGain);
+			modelSetSubject.OnNext(Unit.Default);
 		}
 	}
 
-	// Use this for initialization
 	void Awake() {
     text = GetComponentInChildren<TextMeshPro>();
 		goldCost = transform.Find("GoldCost").GetComponent< CardValueScript>();
@@ -45,7 +48,9 @@ public class CardScript : MonoBehaviour {
 		armyGain = transform.Find("ArmyGain").GetComponent<CardValueScript>();
 	}
 
-	private void OnMouseDown() {
-		Manager.CardWasClicked(this);
+	public IObservable<Card> ClickObservation() {
+		return this.OnMouseDownAsObservable()
+			.Select(_ => CardModel)
+			.TakeUntil(modelSetSubject);
 	}
 }
