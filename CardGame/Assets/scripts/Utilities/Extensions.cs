@@ -12,10 +12,10 @@ public interface IIdentifiable<out T> {
 /// </summary>
 public static class MyExtensions {
 	public static T SafeCast<T>(this object obj, string name) where T : class {
-		Assert.NotNull(obj, name, "Tried to cast null to {0}".FormatWith(typeof(T)));
+		AssertUtils.NotNull(obj, name, "Tried to cast null to {0}".FormatWith(typeof(T)));
 		var result = obj as T;
 
-		Assert.NotNull(result, name, "Tried to cast {0} to {1}".FormatWith(obj, typeof(T)), 3);
+		AssertUtils.NotNull(result, name, "Tried to cast {0} to {1}".FormatWith(obj, typeof(T)), 3);
 
 		return result;
 	}
@@ -69,7 +69,7 @@ public static class MyExtensions {
 	}
 
 	public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> group) {
-		Assert.NotNull(group, "group");
+		AssertUtils.NotNull(group, "group");
 		return Randomizer.Shuffle(group);
 	}
 
@@ -92,33 +92,33 @@ public static class MyExtensions {
 	}
 
 	public static bool None<T>(this IEnumerable<T> enumerable, Func<T, bool> op) {
-		Assert.NotNull(enumerable, "enumerable");
+		AssertUtils.NotNull(enumerable, "enumerable");
 		return !enumerable.Any(op);
 	}
 
 	public static bool None<T>(this IEnumerable<T> enumerable) {
-		Assert.NotNull(enumerable, "enumerable");
+		AssertUtils.NotNull(enumerable, "enumerable");
 		return !enumerable.Any();
 	}
 
 	public static T ChooseRandomValue<T>(this IEnumerable<T> group) {
-		Assert.NotNull(group, "group");
+		AssertUtils.NotNull(group, "group");
 		return Randomizer.ChooseValue(group);
 	}
 
 	public static IEnumerable<T> ChooseRandomValuesWithoutRepetitions<T>(this IEnumerable<T> group, int amount) {
-		Assert.NotNull(group, "group");
+		AssertUtils.NotNull(group, "group");
 		return Randomizer.ChooseValuesWithoutRepetitions(group, amount);
 	}
 
 	public static IEnumerable<T> ChooseRandomValuesWithRepetitions<T>(this IEnumerable<T> group, int amount) {
-		Assert.NotNull(group, "group");
+		AssertUtils.NotNull(group, "group");
 		return Randomizer.ChooseValuesWithRepetitions(group, amount);
 	}
 
 	public static TVal Get<TKey, TVal>(this IDictionary<TKey, TVal> dict, TKey key, string dictionaryName = "") {
 		TVal value;
-		Assert.AssertConditionMet(dict.TryGetValue(key, out value), "{0} not found in {1}".FormatWith(key, dictionaryName), 2);
+		AssertUtils.AssertConditionMet(dict.TryGetValue(key, out value), "{0} not found in {1}".FormatWith(key, dictionaryName), 2);
 
 		return value;
 	}
