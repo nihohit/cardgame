@@ -155,4 +155,27 @@ public class CardsStates {
 		CollectionAssert.AreEqual(new Card[0], state.Hand);
 		CollectionAssert.AreEqual(new[] { playedCard, cardWithName("test") }, state.DiscardPile);
 	}
+
+	[Test]
+	public void RemoveCardFromCorrectIndex() {
+		var addedCard = initialDeck[1].ShallowClone();
+		Randomizer.SetTestableRandom(5);
+		var state = CardsState.NewState(new[] { addedCard }.Concat(initialDeck))
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(5)
+			.PlayCard(addedCard);
+
+		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
+		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
+
+		state = CardsState.NewState(initialDeck.Concat(new[] { addedCard }))
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(5)
+			.PlayCard(addedCard);
+
+		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
+		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
+	}
 }
