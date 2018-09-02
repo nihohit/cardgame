@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EmpireState {
+public class EmpireState : BaseValueClass {
 	public int Gold { get; }
 	public int Industry { get; }
 	public int Population { get; }
@@ -85,22 +85,5 @@ public class EmpireState {
 		  $"Industry: {Industry}, next turn:{Industry + AddIndustry}\n" +
 		  $"Population: {Population}, next turn:{Population + AddPopulation}\n" +
 		  $"Army: {Army}, next turn:{Army + AddArmy}\n";
-	}
-
-	public override bool Equals(object obj) {
-		var state = obj as EmpireState;
-		return state != null &&
-			state.Gold == Gold &&
-			state.AddGold == AddGold &&
-			state.Industry == Industry &&
-			state.AddIndustry == AddIndustry &&
-			state.Population == Population &&
-			state.AddPopulation == AddPopulation &&
-			state.Army == Army &&
-			state.AddArmy == AddArmy;
-	}
-
-	public override int GetHashCode() {
-		return base.GetHashCode();
 	}
 }

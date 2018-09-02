@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CardsState {
+public class CardsState : BaseValueClass {
   public IEnumerable<Card> PersistentDeck { get; }
 
   public IEnumerable<Card> CurrentDeck { get; }
