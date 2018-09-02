@@ -9,28 +9,6 @@ using System.Linq;
 public class CardsStates {
   private static Card[] initialDeck = new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
-	private class TestRandom : System.Random {
-		private int counter = 4;
-		public TestRandom(int i) : base(0) {
-			counter = i;
-		}
-
-		public override int Next(int i) {
-			if (counter == 1) {
-				counter = 4;
-			}
-			return --counter;
-		}
-
-		public override int Next(int j, int i) {
-			return j;
-		}
-	}
-
-  private static void setNewRandom(int count) {
-		Randomizer.SetRandom(new TestRandom(count));
-  }
-
   private static Card cardWithName(string name) {
     return new Card {
 			Name = name
@@ -50,7 +28,7 @@ public class CardsStates {
 
   [Test]
   public void ShuffleCardsToDeck() {
-		setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
 		var state = CardsState.NewState(initialDeck);
     state = state.ShuffleCurrentDeck();
 
@@ -62,7 +40,7 @@ public class CardsStates {
 
   [Test]
   public void DrawCardsToHand() {
-    setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
     var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck()
       .DrawCardsToHand(2);
@@ -75,7 +53,7 @@ public class CardsStates {
 
 	[Test]
 	public void MultipleDrawCardsToHand() {
-		setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
 		var state = CardsState.NewState(initialDeck)
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
@@ -89,11 +67,11 @@ public class CardsStates {
 
 	[Test]
   public void DiscardCardsFromHand() {
-		setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
 		var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck()
       .DrawCardsToHand(2)
-      .DiscardCardFromHand(cardWithName("bar"));
+      .DiscardCardFromHand(initialDeck[1]);
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
 		CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
@@ -103,7 +81,7 @@ public class CardsStates {
 
   [Test]
   public void DiscardHand() {
-		setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
 		var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck()
       .DrawCardsToHand(2)
@@ -117,7 +95,7 @@ public class CardsStates {
 
   [Test]
   public void ShuffleDiscardToDeck() {
-		setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
 		var state = CardsState.NewState(initialDeck)
       .ShuffleCurrentDeck()
       .DrawCardsToHand(2)
@@ -132,7 +110,7 @@ public class CardsStates {
 
 	[Test]
 	public void AddCardsToDiscard() {
-		setNewRandom(4);
+		Randomizer.SetTestableRandom(4);
 		var state = CardsState.NewState(initialDeck)
 			.ShuffleCurrentDeck()
 			.AddCardsToDiscard(new[] { cardWithName("Hey") });
@@ -150,8 +128,8 @@ public class CardsStates {
 			AddDeck = DeckType.Test,
 			Exhaustible = true
 		};
-		setNewRandom(5);
-		var state = CardsState.NewState(new[] { playedCard }.Union(initialDeck))
+		Randomizer.SetTestableRandom(5);
+		var state = CardsState.NewState(new[] { playedCard }.Concat(initialDeck))
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.PlayCard(playedCard);
@@ -167,8 +145,8 @@ public class CardsStates {
 			Name = "card",
 			AddDeck = DeckType.Test
 		};
-		setNewRandom(5);
-		var state = CardsState.NewState(new[] { playedCard }.Union(initialDeck))
+		Randomizer.SetTestableRandom(5);
+		var state = CardsState.NewState(new[] { playedCard }.Concat(initialDeck))
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.PlayCard(playedCard);
