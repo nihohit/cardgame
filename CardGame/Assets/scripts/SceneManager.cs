@@ -15,7 +15,7 @@ public class SceneManager : MonoBehaviour {
 	private DeckScript discardPile;
 	private Button doneButton;
 	private MultiCardDisplayScript multiCardDisplay;
-	private IEnumerable<CardScript> currentHand = new List<CardScript>();
+	private CardScript[] currentHand = new CardScript[9];
 
 	private CardScriptPool cardPool;
 	private ISceneViewModel viewModel;
@@ -26,7 +26,7 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	private void setPrivateGameObjects() {
-		cardPool = new CardScriptPool(CardPrefab, 15);
+		cardPool = new CardScriptPool(CardPrefab, 100);
 		doneButton = GameObject.Find("DoneButton").GetComponent<Button>();
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
@@ -58,36 +58,89 @@ public class SceneManager : MonoBehaviour {
 		viewModel.DisplayDoneButton.Subscribe(active => {
 			doneButton.gameObject.SetActive(active);
 		});
-		viewModel.Hand.Subscribe(setNewHand);
+		viewModel.CardMovementInstructions
+			.Subscribe(moveCards);
 		viewModel.TextForDoneButton.Subscribe(setDoneButtonText);
 		viewModel.HideMultiDisplay.Subscribe(_ => multiCardDisplay.FinishWork());
 		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair).Subscribe(setMultiCardDisplayCardSelectionObservation);
 	}
 
-	private void setNewHand(IEnumerable<Card> hand) {
-		releaseCurrentHand();
-		currentHand = hand.Select(cardModel => cardPool.CardForModel(cardModel)).ToList();
-		setupHandCardsLocations();
-		setHandCardSelectionObservation();
+
+	private void moveCards(CardMovementInstruction instruction) {
+		CardScript cardScript;
+		if (locationInHand(instruction.From)) {
+			var fromIndex = handIndexForLocation(instruction.From);
+			cardScript = currentHand[fromIndex];
+			currentHand[fromIndex] = null;
+		} else {
+			cardScript = cardPool.CardForModel(instruction.Card);
+			cardScript.transform.position = positionForLocation(instruction.From);
+		}
+
+		StartCoroutine(cardScript.gameObject.MoveOverSpeed(
+			positionForLocation(instruction.To),
+			30,
+			() => {
+				if (!locationInHand(instruction.To)) {
+					cardPool.ReleaseCard(cardScript);
+				} else {
+					if (!locationInHand(instruction.From)) {
+						viewModel.setSelectedCardObservation(cardScript.ClickObservation());
+					}
+					currentHand[handIndexForLocation(instruction.To)] = cardScript;
+				}
+			}));
 	}
 
-	private void releaseCurrentHand() {
-		foreach (var cardScript in currentHand) {
-			cardPool.ReleaseCard(cardScript);
+	private bool locationInHand(ScreenLocation location) {
+		return location != ScreenLocation.Center &&
+			location != ScreenLocation.Deck &&
+			location != ScreenLocation.DiscardPile;
+	}
+
+	private Vector3 positionForLocation(ScreenLocation location) {
+		switch(location) {
+			case ScreenLocation.Center:
+				return Vector3.zero;
+			case ScreenLocation.Deck:
+				return deck.transform.position;
+			case ScreenLocation.DiscardPile:
+				return discardPile.transform.position;
+			case ScreenLocation.Hand1:
+			case ScreenLocation.Hand2:
+			case ScreenLocation.Hand3:
+			case ScreenLocation.Hand4:
+			case ScreenLocation.Hand5:
+			case ScreenLocation.Hand6:
+			case ScreenLocation.Hand7:
+			case ScreenLocation.Hand8:
+			case ScreenLocation.Hand9:
+				return handLocationForIndex(handIndexForLocation(location));
+			default:
+				throw new ArgumentException($"Received {location} as position");
 		}
 	}
 
-	private void setupHandCardsLocations() {
-		Vector3 nextPosition = deck.transform.position + Vector3.right * deck.GetComponent<BoxCollider2D>().size.x / 2 * deck.transform.localScale.x;
-		foreach (var card in currentHand) {
-			var size = card.GetComponent<BoxCollider2D>().size * card.transform.localScale.x;
-			card.transform.position = nextPosition + new Vector3(size.x / 2, 0, 0);
-			nextPosition += new Vector3(size.x, 0, 0);
+	private int handIndexForLocation(ScreenLocation location) {
+		switch (location) {
+			case ScreenLocation.Hand1: return 0;
+			case ScreenLocation.Hand2: return 1;
+			case ScreenLocation.Hand3: return 2;
+			case ScreenLocation.Hand4: return 3;
+			case ScreenLocation.Hand5: return 4;
+			case ScreenLocation.Hand6: return 5;
+			case ScreenLocation.Hand7: return 6;
+			case ScreenLocation.Hand8: return 7;
+			case ScreenLocation.Hand9: return 8;
+			default:
+				throw new ArgumentException($"Received {location} as hand location");
 		}
 	}
 
-	private void setHandCardSelectionObservation() {
-		viewModel.setSelectedCardObservation(currentHand.Select(cardScript => cardScript.ClickObservation()).Merge());
+	private Vector3 handLocationForIndex(int index) {
+		Vector3 deckRight = deck.transform.position + Vector3.right * deck.GetComponent<BoxCollider2D>().size.x / 2 * deck.transform.localScale.x;
+		var size = CardPrefab.GetComponent<BoxCollider2D>().size * CardPrefab.transform.localScale.x;
+		return deckRight + new Vector3((size.x * index) + (size.x / 2), 0, 0);
 	}
 
 	private void setDoneButtonText(string text) {

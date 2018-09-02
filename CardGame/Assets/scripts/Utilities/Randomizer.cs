@@ -103,6 +103,28 @@ public static class Randomizer {
 		return chooser.ChooseWeightedValues(dictionary, amount);
 	}
 
+	private class TestRandom : System.Random {
+		private int counter = 4;
+		public TestRandom(int i) : base(0) {
+			counter = i;
+		}
+
+		public override int Next(int i) {
+			if (counter == 1) {
+				counter = 4;
+			}
+			return --counter;
+		}
+
+		public override int Next(int j, int i) {
+			return j;
+		}
+	}
+
+	public static void SetTestableRandom(int count) {
+		SetRandom(new TestRandom(count));
+	}
+
 	#region WeightedValuesChooser
 
 	/// This is taken from here https://stackoverflow.com/questions/11775946/select-x-random-elements-from-a-weighted-list-in-c-sharp-without-replacement

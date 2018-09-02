@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CardsState {
+public class CardsState : BaseValueClass {
   public IEnumerable<Card> PersistentDeck { get; }
 
   public IEnumerable<Card> CurrentDeck { get; }
@@ -40,9 +40,7 @@ public class CardsState {
 
   public CardsState ExhaustCardFromHand(Card card) {
     var handList = Hand.ToList();
-    Debug.AssertFormat(handList.Contains(card), "{0} is not present in {1}", 
-		                   card, handList.ToJoinedString(", "));
-    handList.Remove(card);
+    handList.RemoveIdentical(card);
     return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, handList);
   }
 

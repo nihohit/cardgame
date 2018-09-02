@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System.Collections;
 using System;
 using UniRx;
+using System.Collections.Generic;
 
 public class SceneViewModelTests {
 	private static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
@@ -144,23 +145,91 @@ public class SceneViewModelTests {
 	}
 
 	[Test]
-	public void PassHand() {
-		var hand = viewModel.Hand.ToReactiveProperty();
+	public void PassCardMovementsToAndFromHand() {
+		Randomizer.SetTestableRandom(4);
+		var sentInstructions = new List<CardMovementInstruction>();
+		viewModel.CardMovementInstructions.Subscribe(sentInstructions.Add);
 
 		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new Card[0], hand.Value);
-
-		cards = cards.DrawCardsToHand(4);
+		sentInstructions.Clear();
+		cards = cards.DrawCardsToHand(2);
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		Assert.AreEqual(initialDeck, hand.Value);
+		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+			new CardMovementInstruction(initialDeck[0], ScreenLocation.Deck, ScreenLocation.Hand1),
+			new CardMovementInstruction(initialDeck[1], ScreenLocation.Deck, ScreenLocation.Hand2)
+		}, sentInstructions);
 
-		cards = cards.DiscardHand();
+		sentInstructions.Clear();
+		cards = cards.DiscardHand().DrawCardsToHand(2);
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		Assert.AreEqual(new Card[0], hand.Value);
+		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+			new CardMovementInstruction(initialDeck[0], ScreenLocation.Hand1, ScreenLocation.DiscardPile),
+			new CardMovementInstruction(initialDeck[1], ScreenLocation.Hand2, ScreenLocation.DiscardPile),
+			new CardMovementInstruction(initialDeck[2], ScreenLocation.Deck, ScreenLocation.Hand1),
+			new CardMovementInstruction(initialDeck[3], ScreenLocation.Deck, ScreenLocation.Hand2)
+		}, sentInstructions);
+
+		sentInstructions.Clear();
+		cards = cards.PlayCard(initialDeck[2]);
+		fakeModel.StateSubject.OnNext(scene(cards: cards));
+
+		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+			new CardMovementInstruction(initialDeck[2], ScreenLocation.Hand1, ScreenLocation.DiscardPile),
+			new CardMovementInstruction(initialDeck[3], ScreenLocation.Hand2, ScreenLocation.Hand1)
+		}, sentInstructions);
+	}
+
+	[Test]
+	public void PassCardMovementsToDeck() {
+		Randomizer.SetTestableRandom(4);
+		var sentInstructions = new List<CardMovementInstruction>();
+		viewModel.CardMovementInstructions.Subscribe(sentInstructions.Add);
+
+		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
+		fakeModel.StateSubject.OnNext(scene(cards: cards));
+
+		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+			new CardMovementInstruction(initialDeck[0], ScreenLocation.Center, ScreenLocation.Deck),
+			new CardMovementInstruction(initialDeck[1], ScreenLocation.Center, ScreenLocation.Deck),
+			new CardMovementInstruction(initialDeck[2], ScreenLocation.Center, ScreenLocation.Deck),
+			new CardMovementInstruction(initialDeck[3], ScreenLocation.Center, ScreenLocation.Deck)
+		}, sentInstructions);
+
+		
+		cards = cards.DrawCardsToHand(2).DiscardHand();
+		fakeModel.StateSubject.OnNext(scene(cards: cards));
+		sentInstructions.Clear();
+		cards = cards.ShuffleDiscardToDeck();
+		fakeModel.StateSubject.OnNext(scene(cards: cards));
+
+		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+			new CardMovementInstruction(initialDeck[0], ScreenLocation.DiscardPile, ScreenLocation.Deck),
+			new CardMovementInstruction(initialDeck[1], ScreenLocation.DiscardPile, ScreenLocation.Deck)
+		}, sentInstructions);
+	}
+
+	[Test]
+	public void PassCardMovementsToDiscard() {
+		Randomizer.SetTestableRandom(4);
+		var sentInstructions = new List<CardMovementInstruction>();
+		viewModel.CardMovementInstructions.Subscribe(sentInstructions.Add);
+		
+		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
+		fakeModel.StateSubject.OnNext(scene(cards: cards));
+		sentInstructions.Clear();
+		cards = cards.AddCardsToDiscard(initialDeck);
+		fakeModel.StateSubject.OnNext(scene(cards: cards));
+
+		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+			new CardMovementInstruction(initialDeck[0], ScreenLocation.Center, ScreenLocation.DiscardPile),
+			new CardMovementInstruction(initialDeck[1], ScreenLocation.Center, ScreenLocation.DiscardPile),
+			new CardMovementInstruction(initialDeck[2], ScreenLocation.Center, ScreenLocation.DiscardPile),
+			new CardMovementInstruction(initialDeck[3], ScreenLocation.Center, ScreenLocation.DiscardPile)
+		}, sentInstructions);
 	}
 
 	[Test]

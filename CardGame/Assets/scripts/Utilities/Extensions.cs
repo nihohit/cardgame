@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public interface IIdentifiable<out T> {
 	T Name { get; }
@@ -18,6 +19,31 @@ public static class MyExtensions {
 		AssertUtils.NotNull(result, name, "Tried to cast {0} to {1}".FormatWith(obj, typeof(T)), 3);
 
 		return result;
+	}
+
+	public static int GetHashCodeFromProperties(this object obj) {
+		return Hasher.GetHashCode(obj
+			.GetType()
+			.GetProperties()
+			.Select(propertyInfo => propertyInfo.GetValue(obj))
+			.ToArray());
+	}
+
+	public static bool EqualityFromProperties(this object obj, object other) {
+		var type = obj.GetType();
+		return (other.GetType().Equals(type)) &&
+			type.GetProperties()
+			.All(info => info.GetValue(obj).Equals(info.GetValue(other)));
+	}
+
+	public static string ToStringFromProperties(this object obj) {
+		var stringBuilder = new StringBuilder();
+		var type = obj.GetType();
+		stringBuilder.AppendLine($"{type}:");
+		foreach(var property in type.GetProperties()) {
+			stringBuilder.AppendLine($"{property.Name}: {property.GetValue(obj)}");
+		}
+		return stringBuilder.ToString();
 	}
 
 	public static string FormatWith(this string str, params object[] formattingInfo) {
@@ -146,6 +172,16 @@ public static class MyExtensions {
 	}
 
 	#endregion IEnumerable
+
+	public static void RemoveIdentical<T>(this IList<T> list, T item) where T : class {
+		for (int i = 0; i < list.Count; i++) {
+			if (list[i] == item) {
+				list.RemoveAt(i);
+				return;
+			}
+		}
+		AssertUtils.UnreachableCode($"{item} not found in {list.ToJoinedString(",")}");
+	}
 }
 
 /// <summary>

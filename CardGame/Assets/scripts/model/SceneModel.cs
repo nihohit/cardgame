@@ -165,7 +165,7 @@ public class SceneModel : ISceneModel {
 				endTurn();
 				break;
 			default:
-				AssertUtils.UnreachableCode();
+				AssertUtils.UnreachableCode($"Illegal mode: {mode}");
 				break;
 		}
 		sendCompletedState();

@@ -2,7 +2,7 @@
 using System.Text;
 using UnityEngine;
 
-public class Card {
+public class Card : BaseValueClass {
   public string Name { get; set; }
 	public int GoldCost { get; set; }
 	public int IndustryCost { get; set; }
@@ -43,26 +43,5 @@ public class Card {
 
 	public Card ShallowClone() {
 		return (Card)MemberwiseClone();
-	}
-
-	public override bool Equals(object obj) {
-		var card = obj as Card;
-		return card != null &&
-			card.GetType() == this.GetType() &&
-			card.Name.Equals(Name) &&
-			card.GoldCost == GoldCost &&
-			card.IndustryCost == IndustryCost &&
-			card.PopulationCost == PopulationCost &&
-			card.ArmyCost == ArmyCost &&
-			card.GoldGain == GoldGain &&
-			card.IndustryGain == IndustryGain &&
-			card.PopulationGain == PopulationGain &&
-			card.ArmyGain == ArmyGain &&
-			card.AddDeck == AddDeck &&
-			card.Exhaustible == Exhaustible;
-	}
-
-	public override int GetHashCode() {
-		return Name.GetHashCode();
 	}
 }
