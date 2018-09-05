@@ -127,9 +127,14 @@ public class SceneManager : MonoBehaviour {
 				return;
 			}
 			currentCardAnimationsInProgress = nextOrders.Count;
-			foreach(var action in nextOrders) {
-				action();
-			}
+			StartCoroutine(animateNextRound(nextOrders));
+		}
+	}
+
+	private IEnumerator animateNextRound(List<Action> nextOrders) {
+		foreach (var action in nextOrders) {
+			action();
+			yield return new WaitForSeconds(0.03f);
 		}
 	}
 
