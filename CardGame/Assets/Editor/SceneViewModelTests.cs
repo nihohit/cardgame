@@ -147,7 +147,7 @@ public class SceneViewModelTests {
 	[Test]
 	public void PassCardMovementsToAndFromHand() {
 		Randomizer.SetTestableRandom(4);
-		var sentInstructions = new List<CardMovementInstruction>();
+		var sentInstructions = new List<IEnumerable<CardMovementInstruction>>();
 		viewModel.CardMovementInstructions.Subscribe(sentInstructions.Add);
 
 		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
@@ -157,47 +157,51 @@ public class SceneViewModelTests {
 		cards = cards.DrawCardsToHand(2);
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+		CollectionAssert.AreEquivalent(new List<IEnumerable<CardMovementInstruction>> { new [] {
 			new CardMovementInstruction(initialDeck[0], ScreenLocation.Deck, ScreenLocation.Hand1),
 			new CardMovementInstruction(initialDeck[1], ScreenLocation.Deck, ScreenLocation.Hand2)
-		}, sentInstructions);
+		} }, sentInstructions);
 
 		sentInstructions.Clear();
 		cards = cards.DiscardHand().DrawCardsToHand(2);
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
-			new CardMovementInstruction(initialDeck[0], ScreenLocation.Hand1, ScreenLocation.DiscardPile),
-			new CardMovementInstruction(initialDeck[1], ScreenLocation.Hand2, ScreenLocation.DiscardPile),
-			new CardMovementInstruction(initialDeck[2], ScreenLocation.Deck, ScreenLocation.Hand1),
-			new CardMovementInstruction(initialDeck[3], ScreenLocation.Deck, ScreenLocation.Hand2)
+		CollectionAssert.AreEquivalent(new List<IEnumerable<CardMovementInstruction>> {
+			new [] {
+				new CardMovementInstruction(initialDeck[0], ScreenLocation.Hand1, ScreenLocation.DiscardPile),
+				new CardMovementInstruction(initialDeck[1], ScreenLocation.Hand2, ScreenLocation.DiscardPile),
+			}, 
+			new [] {
+				new CardMovementInstruction(initialDeck[2], ScreenLocation.Deck, ScreenLocation.Hand1),
+				new CardMovementInstruction(initialDeck[3], ScreenLocation.Deck, ScreenLocation.Hand2)
+			}
 		}, sentInstructions);
 
 		sentInstructions.Clear();
 		cards = cards.PlayCard(initialDeck[2]);
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+		CollectionAssert.AreEquivalent(new List<IEnumerable<CardMovementInstruction>> { new [] {
 			new CardMovementInstruction(initialDeck[2], ScreenLocation.Hand1, ScreenLocation.DiscardPile),
 			new CardMovementInstruction(initialDeck[3], ScreenLocation.Hand2, ScreenLocation.Hand1)
-		}, sentInstructions);
+		}}, sentInstructions);
 	}
 
 	[Test]
 	public void PassCardMovementsToDeck() {
 		Randomizer.SetTestableRandom(4);
-		var sentInstructions = new List<CardMovementInstruction>();
+		var sentInstructions = new List<IEnumerable<CardMovementInstruction>>();
 		viewModel.CardMovementInstructions.Subscribe(sentInstructions.Add);
 
 		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+		CollectionAssert.AreEquivalent(new List<IEnumerable<CardMovementInstruction>> { new [] {
 			new CardMovementInstruction(initialDeck[0], ScreenLocation.Center, ScreenLocation.Deck),
 			new CardMovementInstruction(initialDeck[1], ScreenLocation.Center, ScreenLocation.Deck),
 			new CardMovementInstruction(initialDeck[2], ScreenLocation.Center, ScreenLocation.Deck),
 			new CardMovementInstruction(initialDeck[3], ScreenLocation.Center, ScreenLocation.Deck)
-		}, sentInstructions);
+		} }, sentInstructions);
 
 		
 		cards = cards.DrawCardsToHand(2).DiscardHand();
@@ -206,16 +210,16 @@ public class SceneViewModelTests {
 		cards = cards.ShuffleDiscardToDeck();
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+		CollectionAssert.AreEquivalent(new List<IEnumerable<CardMovementInstruction>> { new[] {
 			new CardMovementInstruction(initialDeck[0], ScreenLocation.DiscardPile, ScreenLocation.Deck),
 			new CardMovementInstruction(initialDeck[1], ScreenLocation.DiscardPile, ScreenLocation.Deck)
-		}, sentInstructions);
+		}}, sentInstructions);
 	}
 
 	[Test]
 	public void PassCardMovementsToDiscard() {
 		Randomizer.SetTestableRandom(4);
-		var sentInstructions = new List<CardMovementInstruction>();
+		var sentInstructions = new List<IEnumerable<CardMovementInstruction>>();
 		viewModel.CardMovementInstructions.Subscribe(sentInstructions.Add);
 		
 		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
@@ -224,12 +228,12 @@ public class SceneViewModelTests {
 		cards = cards.AddCardsToDiscard(initialDeck);
 		fakeModel.StateSubject.OnNext(scene(cards: cards));
 
-		CollectionAssert.AreEquivalent(new List<CardMovementInstruction> {
+		CollectionAssert.AreEquivalent(new List<IEnumerable<CardMovementInstruction>> { new[] {
 			new CardMovementInstruction(initialDeck[0], ScreenLocation.Center, ScreenLocation.DiscardPile),
 			new CardMovementInstruction(initialDeck[1], ScreenLocation.Center, ScreenLocation.DiscardPile),
 			new CardMovementInstruction(initialDeck[2], ScreenLocation.Center, ScreenLocation.DiscardPile),
 			new CardMovementInstruction(initialDeck[3], ScreenLocation.Center, ScreenLocation.DiscardPile)
-		}, sentInstructions);
+		}}, sentInstructions);
 	}
 
 	[Test]

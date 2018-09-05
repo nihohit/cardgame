@@ -19,6 +19,9 @@ public class SceneManager : MonoBehaviour {
 
 	private CardScriptPool cardPool;
 	private ISceneViewModel viewModel;
+	private List<List<Action>> animationOrders = new List<List<Action>>();
+	private object cardAnimationsLock = new object();
+	private int currentCardAnimationsInProgress;
 
 	void Start() {
 		setPrivateGameObjects();
@@ -65,31 +68,69 @@ public class SceneManager : MonoBehaviour {
 		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair).Subscribe(setMultiCardDisplayCardSelectionObservation);
 	}
 
-
-	private void moveCards(CardMovementInstruction instruction) {
-		CardScript cardScript;
-		if (locationInHand(instruction.From)) {
-			var fromIndex = handIndexForLocation(instruction.From);
-			cardScript = currentHand[fromIndex];
-			currentHand[fromIndex] = null;
-		} else {
-			cardScript = cardPool.CardForModel(instruction.Card);
-			cardScript.transform.position = positionForLocation(instruction.From);
+	private void moveCards(IEnumerable<CardMovementInstruction> instructions) {
+		lock(cardAnimationsLock) {
+			animationOrders.Add(instructions.Select(animateInstruction).ToList());
+			if (animationOrders.Count == 1) {
+				startNextOrdersRound(animationOrders[0]);
+			}
 		}
+	}
 
-		StartCoroutine(cardScript.gameObject.MoveOverSpeed(
-			positionForLocation(instruction.To),
-			30,
-			() => {
-				if (!locationInHand(instruction.To)) {
-					cardPool.ReleaseCard(cardScript);
-				} else {
-					if (!locationInHand(instruction.From)) {
-						viewModel.setSelectedCardObservation(cardScript.ClickObservation());
-					}
-					currentHand[handIndexForLocation(instruction.To)] = cardScript;
-				}
-			}));
+	private Action animateInstruction(CardMovementInstruction instruction) {
+		return () => {
+			CardScript cardScript;
+			if (locationInHand(instruction.From)) {
+				var fromIndex = handIndexForLocation(instruction.From);
+				cardScript = currentHand[fromIndex];
+				currentHand[fromIndex] = null;
+			} else {
+				cardScript = cardPool.CardForModel(instruction.Card);
+				cardScript.transform.position = positionForLocation(instruction.From);
+			}
+
+			StartCoroutine(cardScript.gameObject.MoveOverSpeed(
+			 positionForLocation(instruction.To),
+			 30,
+			 () => {
+				 if (!locationInHand(instruction.To)) {
+					 cardPool.ReleaseCard(cardScript);
+				 } else {
+					 if (!locationInHand(instruction.From)) {
+						 viewModel.setSelectedCardObservation(cardScript.ClickObservation());
+					 }
+					 currentHand[handIndexForLocation(instruction.To)] = cardScript;
+				 }
+				 markCardAnimationEnded();
+			 }));
+		};
+	}
+
+	private void markCardAnimationEnded() {
+		lock (cardAnimationsLock) {
+			--currentCardAnimationsInProgress;
+			if (currentCardAnimationsInProgress > 0) {
+				return;
+			}
+			animationOrders.RemoveAt(0);
+			var nextOrders = animationOrders.FirstOrDefault();
+			if (nextOrders != null) {
+				startNextOrdersRound(nextOrders);
+			}
+		}
+	}
+
+	private void startNextOrdersRound(List<Action> nextOrders) {
+		lock(cardAnimationsLock) {
+			if (nextOrders.Count == 0) {
+				markCardAnimationEnded();
+				return;
+			}
+			currentCardAnimationsInProgress = nextOrders.Count;
+			foreach(var action in nextOrders) {
+				action();
+			}
+		}
 	}
 
 	private bool locationInHand(ScreenLocation location) {
