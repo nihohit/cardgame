@@ -9,9 +9,7 @@ public class SceneModelTests {
 	private static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
 	private static Card cardWithName(string name) {
-		return new Card {
-			Name = name
-		};
+		return new Card(name);
 	}
 
 	[Test]
@@ -30,11 +28,10 @@ public class SceneModelTests {
 
 	[Test]
 	public void ShouldEndTurnWhenUserFinishedModeIsCalledInRegularMode() {
-		var deck = new Card[] { new Card {
-			Name = "foo",
-			GoldCost = 1,
-			GoldGain = 5
-		}};
+		var deck = new Card[] { new Card("foo",
+			goldCost: 1,
+			goldGain: 5
+		)};
 		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
 			new EmpireState(1, 0, 0, 0), CardHandlingMode.Regular);
 		var state = model.State.ToReactiveProperty();
@@ -69,11 +66,10 @@ public class SceneModelTests {
 
 	[Test]
 	public void ShouldPlayCardFromHand() {
-		var deck = new Card[] { new Card {
-			Name = "foo",
-			GoldCost = 1,
-			GoldGain = 5
-		}};
+		var deck = new Card[] { new Card("foo",
+			goldCost: 1,
+			goldGain: 5
+		)};
 		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
 			new EmpireState(1, 0, 0, 0), CardHandlingMode.Regular);
 		var state = model.State.ToReactiveProperty();
@@ -89,11 +85,10 @@ public class SceneModelTests {
 
 	[Test]
 	public void ShouldFailToPlayExpensiveCardFromHand() {
-		var deck = new Card[] { new Card {
-			Name = "foo",
-			GoldCost = 2,
-			GoldGain = 5
-		}};
+		var deck = new Card[] { new Card("foo",
+			goldCost: 2,
+			goldGain: 5
+		)};
 		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
 			new EmpireState(1, 0, 0, 0), CardHandlingMode.Regular);
 		var state = model.State.ToReactiveProperty();

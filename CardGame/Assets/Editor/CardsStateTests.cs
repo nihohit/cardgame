@@ -10,9 +10,7 @@ public class CardsStates {
   private static Card[] initialDeck = new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
   private static Card cardWithName(string name) {
-    return new Card {
-			Name = name
-		};
+    return new Card(name);
   }
 
 
@@ -123,11 +121,10 @@ public class CardsStates {
 
 	[Test]
 	public void PlayExhaustibleCard() {
-		var playedCard = new Card {
-			Name = "card",
-			AddDeck = DeckType.Test,
-			Exhaustible = true
-		};
+		var playedCard = new Card("card",
+			addDeck: DeckType.Test,
+			exhaustible: true
+		);
 		Randomizer.SetTestableRandom(5);
 		var state = CardsState.NewState(new[] { playedCard }.Concat(initialDeck))
 			.ShuffleCurrentDeck()
@@ -141,10 +138,9 @@ public class CardsStates {
 
 	[Test]
 	public void PlayNonExhaustibleCard() {
-		var playedCard = new Card {
-			Name = "card",
-			AddDeck = DeckType.Test
-		};
+		var playedCard = new Card("card",
+			addDeck: DeckType.Test
+		);
 		Randomizer.SetTestableRandom(5);
 		var state = CardsState.NewState(new[] { playedCard }.Concat(initialDeck))
 			.ShuffleCurrentDeck()

@@ -11,35 +11,29 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Raiders",
 			Options = new Card[] {
-				new Card {
-					Name = "Pay them off",
-					GoldCost = 1
-				},
-				new Card {
-					Name = "Fight them",
-					ArmyCost = 2
-				},
-				new Card {
-					Name = "They attack",
-					PopulationCost = 1
-				}
+				new Card("Pay them off",
+					goldCost: 1
+				),
+				new Card("Fight them",
+					armyCost: 2
+				),
+				new Card("They attack",
+					populationCost: 1
+				)
 			}
 		},
 		new EventCard {
 			Name = "Wild animals",
 			Options = new Card[] {
-				new Card {
-					Name = "Scare them",
-					IndustryCost = 2
-				},
-				new Card {
-					Name = "Fight them",
-					ArmyCost = 1
-				},
-				new Card {
-					Name = "They attack",
-					PopulationCost = 1
-				}
+				new Card("Scare them",
+					industryCost: 2
+				),
+				new Card("Fight them",
+					armyCost: 1
+				),
+				new Card("They attack",
+					populationCost: 1
+				)
 			}
 		}
 	}.ToDictionary(card => card.Name, card => card);

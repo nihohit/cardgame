@@ -10,114 +10,97 @@ public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, Vil
 
 public static class CardsCollection {
 	private static Dictionary<string, Card> cards = new Card[] {
-		new Card{
-			Name = "test"
-		},
-		new Card{
-			Name = "Manual Labour",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryGain = 1
-		},
-		new Card{
-			Name = "Barter",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			GoldGain = 1
-		},
-		new Card{
-			Name = "Build Village",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			AddDeck = DeckType.Village
-		},
-		new Card{
-			Name = "Temple",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 4,
-			Exhaustible = true,
-			AddDeck = DeckType.Temple
-		},
-		new Card{
-			Name = "Village center",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 4,
-			Exhaustible = true,
-			AddDeck = DeckType.VillageCenter
-		},
-		new Card{
-			Name = "Town",
-			PopulationGain = 3,
-			PopulationCost = 2,
-			IndustryCost = 10,
-			Exhaustible = true,
-			AddDeck = DeckType.Town
-		},
-		new Card{
-			Name = "Farming",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryGain = 2
-		},
-		new Card{
-			Name = "Arm Militia",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			ArmyGain = 1
-		},
-		new Card{
-			Name = "Market Day",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			GoldGain = 2,
-		},
-		new Card{
-			Name = "Public Discussion",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			GoldCost = 2,
-			NumberOfCardsToChooseToReplace = 1
-		},
-		new Card{
-			Name = "Ostracize",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			GoldCost = 2,
-			NumberOfCardsToChooseToExhaust = 1
-		},
-		new Card{
-			Name = "Buy Slaves",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			GoldCost = 10
-		},
-		new Card{
-			Name = "Fishing Village",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			IndustryCost = 2,
-			AddDeck = DeckType.FishingVillage
-		},
-		new Card{
-			Name = "Fishing",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryGain = 1,
-			GoldGain = 1
-		},
-		new Card{
-			Name = "Port Town",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			IndustryCost = 10,
-			AddDeck = DeckType.PortTown
-		}
+		new Card("test"),
+		new Card("Manual Labour",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 1
+		),
+		new Card("Barter",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			goldGain: 1
+		),
+		new Card("Build Village",
+			populationGain: 2,
+			populationCost: 1,
+			industryCost: 1,
+			addDeck: DeckType.Village
+		),
+		new Card("Temple",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 4,
+			exhaustible: true,
+			addDeck: DeckType.Temple
+		),
+		new Card("Village center",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 4,
+			exhaustible: true,
+			addDeck: DeckType.VillageCenter
+		),
+		new Card("Town",
+			populationGain: 3,
+			populationCost: 2,
+			industryCost: 10,
+			exhaustible: true,
+			addDeck: DeckType.Town
+		),
+		new Card("Farming",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 2
+		),
+		new Card("Arm Militia",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			armyGain: 1
+		),
+		new Card("Market Day",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			goldGain: 2
+		),
+		new Card("Public Discussion",
+			populationGain: 1,
+			populationCost: 1,
+			goldCost: 2,
+			numberOfCardsToChooseToReplace: 1
+		),
+		new Card("Ostracize",
+			populationGain: 1,
+			populationCost: 1,
+			goldCost: 2,
+			numberOfCardsToChooseToExhaust: 1
+		),
+		new Card("Buy Slaves",
+			populationGain: 2,
+			populationCost: 1,
+			goldCost: 10
+		),
+		new Card("Fishing Village",
+			populationGain: 2,
+			populationCost: 1,
+			industryCost: 2,
+			addDeck: DeckType.FishingVillage
+		),
+		new Card("Fishing",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 1,
+			goldGain: 1
+		),
+		new Card("Port Town",
+			populationGain: 2,
+			populationCost: 1,
+			industryCost: 10,
+			addDeck: DeckType.PortTown
+		)
 	}.ToDictionary(card => card.Name, card => card);
 
 

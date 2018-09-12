@@ -10,9 +10,7 @@ public class SceneViewModelTests {
 	private static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
 	private static Card cardWithName(string name) {
-		return new Card {
-			Name = name
-		};
+		return new Card(name);
 	}
 
 	private class FakeModel : ISceneModel {
@@ -81,7 +79,7 @@ public class SceneViewModelTests {
 	[Test]
 	public void PassSelectedCardModel() {
 		var subject = new Subject<Card>();
-		var card = new Card();
+		var card = new Card("");
 		viewModel.setSelectedCardObservation(subject);
 
 		Assert.IsNull(fakeModel.PlayedCard);
