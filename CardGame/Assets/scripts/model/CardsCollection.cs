@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town }
+public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town, Explore, Mine }
 
 public static class CardsCollection {
 	private static Dictionary<string, Card> cards = new Card[] {
@@ -26,7 +26,8 @@ public static class CardsCollection {
 			populationGain: 2,
 			populationCost: 1,
 			industryCost: 1,
-			addDeck: DeckType.Village
+			addDeck: DeckType.Village,
+			exhaustible:true
 		),
 		new Card("Temple",
 			populationGain: 1,
@@ -87,7 +88,8 @@ public static class CardsCollection {
 			populationGain: 2,
 			populationCost: 1,
 			industryCost: 2,
-			addDeck: DeckType.FishingVillage
+			addDeck: DeckType.FishingVillage,
+			exhaustible:true
 		),
 		new Card("Fishing",
 			populationGain: 1,
@@ -99,17 +101,41 @@ public static class CardsCollection {
 			populationGain: 2,
 			populationCost: 1,
 			industryCost: 10,
-			addDeck: DeckType.PortTown
+			addDeck: DeckType.PortTown,
+			exhaustible:true
+		),
+		new Card("Explore",
+			populationGain: 1,
+			populationCost: 1,
+			addDeck: DeckType.Explore
+		),
+		new Card("Hire Mercenaries",
+			populationGain: 1,
+			populationCost: 1,
+			goldCost: 1,
+			armyGain: 1
+		),
+		new Card("Build Mine",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			addDeck: DeckType.Mine,
+			exhaustible:true
+		),
+		new Card("Mine",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 3
 		)
 	}.ToDictionary(card => card.Name, card => card);
 
 
 	public static IEnumerable<Card> Cards() {
 		return cardsForDictionary(new Dictionary<string, int>{
-			{"Manual Labour", 4},
-			{"Barter", 2},
-			{"Build Village", 1},
-			{"Fishing Village", 1}
+			{"Manual Labour", 2},
+			{"Barter", 1},
+			{"Explore", 1},
+			{"Hire Mercenaries", 1}
 		});	
 	}
 
@@ -132,6 +158,10 @@ public static class CardsCollection {
 				return villageCenterDeck();
 			case DeckType.FishingVillage:
 				return fishingVillageDeck();
+			case DeckType.Explore:
+				return exploreDeck();
+			case DeckType.Mine:
+				return mineDeck();
 			case DeckType.Test:
 				return testDeck();
 			default:
@@ -165,6 +195,20 @@ public static class CardsCollection {
 			{"Public Discussion", 1},
 			{"Buy Slaves", 1},
 			{"Ostracize", 1},
+		});
+	}
+
+	private static IEnumerable<Card> exploreDeck() {
+		return cardsForDictionary(new Dictionary<string, int>{
+			{"Build Village", 1},
+			{"Fishing Village", 1},
+			{"Build Mine", 1},
+		}).Shuffle().Take(1);
+	}
+
+	private static IEnumerable<Card> mineDeck() {
+		return cardsForDictionary(new Dictionary<string, int>{
+			{"Mine", 1}
 		});
 	}
 
