@@ -30,10 +30,18 @@ public static class MyExtensions {
 	}
 
 	public static bool EqualityFromProperties(this object obj, object other) {
+		if (other == null) {
+			return false;
+		}
 		var type = obj.GetType();
 		return (other.GetType().Equals(type)) &&
 			type.GetProperties()
-			.All(info => info.GetValue(obj).Equals(info.GetValue(other)));
+				.All(info => {
+					var thisValue = info.GetValue(obj);
+					var otherValue = info.GetValue(other);
+					return thisValue == otherValue || 
+						(thisValue != null && thisValue.Equals(otherValue));
+				});
 	}
 
 	public static string ToStringFromProperties(this object obj) {

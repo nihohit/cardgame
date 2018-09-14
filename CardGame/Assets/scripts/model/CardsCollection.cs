@@ -6,127 +6,136 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town }
+public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town, Explore, Mine }
 
 public static class CardsCollection {
 	private static Dictionary<string, Card> cards = new Card[] {
-		new Card{
-			Name = "test"
-		},
-		new Card{
-			Name = "Manual Labour",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryGain = 1
-		},
-		new Card{
-			Name = "Barter",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			GoldGain = 1
-		},
-		new Card{
-			Name = "Build Village",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			AddDeck = DeckType.Village
-		},
-		new Card{
-			Name = "Temple",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 4,
-			Exhaustible = true,
-			AddDeck = DeckType.Temple
-		},
-		new Card{
-			Name = "Village center",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 4,
-			Exhaustible = true,
-			AddDeck = DeckType.VillageCenter
-		},
-		new Card{
-			Name = "Town",
-			PopulationGain = 3,
-			PopulationCost = 2,
-			IndustryCost = 10,
-			Exhaustible = true,
-			AddDeck = DeckType.Town
-		},
-		new Card{
-			Name = "Farming",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryGain = 2
-		},
-		new Card{
-			Name = "Arm Militia",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			ArmyGain = 1
-		},
-		new Card{
-			Name = "Market Day",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryCost = 1,
-			GoldGain = 2,
-		},
-		new Card{
-			Name = "Public Discussion",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			GoldCost = 2,
-			NumberOfCardsToChooseToReplace = 1
-		},
-		new Card{
-			Name = "Ostracize",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			GoldCost = 2,
-			NumberOfCardsToChooseToExhaust = 1
-		},
-		new Card{
-			Name = "Buy Slaves",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			GoldCost = 10
-		},
-		new Card{
-			Name = "Fishing Village",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			IndustryCost = 2,
-			AddDeck = DeckType.FishingVillage
-		},
-		new Card{
-			Name = "Fishing",
-			PopulationGain = 1,
-			PopulationCost = 1,
-			IndustryGain = 1,
-			GoldGain = 1
-		},
-		new Card{
-			Name = "Port Town",
-			PopulationGain = 2,
-			PopulationCost = 1,
-			IndustryCost = 10,
-			AddDeck = DeckType.PortTown
-		}
+		new Card("test"),
+		new Card("Manual Labour",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 1
+		),
+		new Card("Barter",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			goldGain: 1
+		),
+		new Card("Build Village",
+			populationGain: 2,
+			populationCost: 1,
+			industryCost: 1,
+			addDeck: DeckType.Village,
+			exhaustible:true
+		),
+		new Card("Temple",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 4,
+			exhaustible: true,
+			addDeck: DeckType.Temple
+		),
+		new Card("Village center",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 4,
+			exhaustible: true,
+			addDeck: DeckType.VillageCenter
+		),
+		new Card("Town",
+			populationGain: 3,
+			populationCost: 2,
+			industryCost: 10,
+			exhaustible: true,
+			addDeck: DeckType.Town
+		),
+		new Card("Farming",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 2
+		),
+		new Card("Arm Militia",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			armyGain: 1
+		),
+		new Card("Market Day",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			goldGain: 2
+		),
+		new Card("Public Discussion",
+			populationGain: 1,
+			populationCost: 1,
+			goldCost: 2,
+			numberOfCardsToChooseToReplace: 1
+		),
+		new Card("Ostracize",
+			populationGain: 1,
+			populationCost: 1,
+			goldCost: 2,
+			numberOfCardsToChooseToExhaust: 1
+		),
+		new Card("Buy Slaves",
+			populationGain: 2,
+			populationCost: 1,
+			goldCost: 10
+		),
+		new Card("Fishing Village",
+			populationGain: 2,
+			populationCost: 1,
+			industryCost: 2,
+			addDeck: DeckType.FishingVillage,
+			exhaustible:true
+		),
+		new Card("Fishing",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 1,
+			goldGain: 1
+		),
+		new Card("Port Town",
+			populationGain: 2,
+			populationCost: 1,
+			industryCost: 10,
+			addDeck: DeckType.PortTown,
+			exhaustible:true
+		),
+		new Card("Explore",
+			populationGain: 1,
+			populationCost: 1,
+			addDeck: DeckType.Explore
+		),
+		new Card("Hire Mercenaries",
+			populationGain: 1,
+			populationCost: 1,
+			goldCost: 1,
+			armyGain: 1
+		),
+		new Card("Build Mine",
+			populationGain: 1,
+			populationCost: 1,
+			industryCost: 1,
+			addDeck: DeckType.Mine,
+			exhaustible:true
+		),
+		new Card("Mine",
+			populationGain: 1,
+			populationCost: 1,
+			industryGain: 3
+		)
 	}.ToDictionary(card => card.Name, card => card);
 
 
 	public static IEnumerable<Card> Cards() {
 		return cardsForDictionary(new Dictionary<string, int>{
-			{"Manual Labour", 4},
-			{"Barter", 2},
-			{"Build Village", 1},
-			{"Fishing Village", 1}
+			{"Manual Labour", 2},
+			{"Barter", 1},
+			{"Explore", 1},
+			{"Hire Mercenaries", 1}
 		});	
 	}
 
@@ -149,6 +158,10 @@ public static class CardsCollection {
 				return villageCenterDeck();
 			case DeckType.FishingVillage:
 				return fishingVillageDeck();
+			case DeckType.Explore:
+				return exploreDeck();
+			case DeckType.Mine:
+				return mineDeck();
 			case DeckType.Test:
 				return testDeck();
 			default:
@@ -182,6 +195,20 @@ public static class CardsCollection {
 			{"Public Discussion", 1},
 			{"Buy Slaves", 1},
 			{"Ostracize", 1},
+		});
+	}
+
+	private static IEnumerable<Card> exploreDeck() {
+		return cardsForDictionary(new Dictionary<string, int>{
+			{"Build Village", 1},
+			{"Fishing Village", 1},
+			{"Build Mine", 1},
+		}).Shuffle().Take(1);
+	}
+
+	private static IEnumerable<Card> mineDeck() {
+		return cardsForDictionary(new Dictionary<string, int>{
+			{"Mine", 1}
 		});
 	}
 
