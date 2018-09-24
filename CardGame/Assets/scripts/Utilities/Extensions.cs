@@ -21,39 +21,6 @@ public static class MyExtensions {
 		return result;
 	}
 
-	public static int GetHashCodeFromProperties(this object obj) {
-		return Hasher.GetHashCode(obj
-			.GetType()
-			.GetProperties()
-			.Select(propertyInfo => propertyInfo.GetValue(obj))
-			.ToArray());
-	}
-
-	public static bool EqualityFromProperties(this object obj, object other) {
-		if (other == null) {
-			return false;
-		}
-		var type = obj.GetType();
-		return (other.GetType().Equals(type)) &&
-			type.GetProperties()
-				.All(info => {
-					var thisValue = info.GetValue(obj);
-					var otherValue = info.GetValue(other);
-					return thisValue == otherValue || 
-						(thisValue != null && thisValue.Equals(otherValue));
-				});
-	}
-
-	public static string ToStringFromProperties(this object obj) {
-		var stringBuilder = new StringBuilder();
-		var type = obj.GetType();
-		stringBuilder.AppendLine($"{type}:");
-		foreach(var property in type.GetProperties()) {
-			stringBuilder.AppendLine($"{property.Name}: {property.GetValue(obj)}");
-		}
-		return stringBuilder.ToString();
-	}
-
 	public static string FormatWith(this string str, params object[] formattingInfo) {
 		return string.Format(str, formattingInfo);
 	}
