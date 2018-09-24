@@ -68,8 +68,4 @@ public class Card : BaseValueClass {
 			builder.AppendLine($"{propertyDescription}: {str}");
 		}
 	}
-
-	public Card ShallowClone() {
-		return (Card)MemberwiseClone();
-	}
 }

@@ -22,6 +22,7 @@ public class SceneManager : MonoBehaviour {
 	private List<List<Action>> animationOrders = new List<List<Action>>();
 	private object cardAnimationsLock = new object();
 	private int currentCardAnimationsInProgress;
+	private TraditionScript[] traditionScripts;
 
 	void Start() {
 		setPrivateGameObjects();
@@ -35,6 +36,9 @@ public class SceneManager : MonoBehaviour {
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		multiCardDisplay = Resources.FindObjectsOfTypeAll<MultiCardDisplayScript>()[0];
 		multiCardDisplay.InitialSetup(cardPool);
+		traditionScripts = FindObjectsOfType<TraditionScript>()
+			.OrderBy(traditionScript => traditionScript.transform.position.x)
+			.ToArray();
 	}
 
 	private void setupViewModel() {
@@ -65,7 +69,12 @@ public class SceneManager : MonoBehaviour {
 			.Subscribe(moveCards);
 		viewModel.TextForDoneButton.Subscribe(setDoneButtonText);
 		viewModel.HideMultiDisplay.Subscribe(_ => multiCardDisplay.FinishWork());
-		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair).Subscribe(setMultiCardDisplayCardSelectionObservation);
+		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair)
+			.Subscribe(setMultiCardDisplayCardSelectionObservation);
+		viewModel.Traditions
+			.DistinctUntilChanged()
+			.Subscribe(updateTraditions);
+
 	}
 
 	private void moveCards(IEnumerable<CardMovementInstruction> instructions) {
@@ -199,5 +208,16 @@ public class SceneManager : MonoBehaviour {
 
 	private void setMultiCardDisplayCardSelectionObservation(KeyValuePair<IEnumerable<Card>, string> pair) {
 		viewModel.setSelectedCardObservation(multiCardDisplay.setup(pair.Key, pair.Value));
+	}
+
+	private void updateTraditions(IEnumerable<Tradition> traditions) {
+		var traditionsAsList = traditions.ToList();
+		AssertUtils.EqualOrLesser(traditionsAsList.Count, traditionScripts.Length);
+		for (int i = 0; i < traditionsAsList.Count; i++) {
+			traditionScripts[i].setTradition(traditionsAsList[i]);
+		}
+		for (int i = traditionsAsList.Count; i < traditionScripts.Length; i++) {
+			traditionScripts[i].setTradition(null);
+		}
 	}
 }

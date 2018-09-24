@@ -7,7 +7,7 @@ using UniRx;
 using System.Collections.Generic;
 
 public class SceneViewModelTests {
-	private static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
+	private readonly static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
 	private static Card cardWithName(string name) {
 		return new Card(name);
