@@ -22,6 +22,7 @@ public class CardsStates {
     CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
     CollectionAssert.AreEqual(new Card[0], state.Hand);
     CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+		CollectionAssert.AreEqual(new Tradition[0], state.Traditions);
   }
 
   [Test]
@@ -154,7 +155,7 @@ public class CardsStates {
 
 	[Test]
 	public void RemoveCardFromCorrectIndex() {
-		var addedCard = initialDeck[1].ShallowClone();
+		var addedCard = initialDeck[1].ShallowClone<Card>();
 		Randomizer.SetTestableRandom(5);
 		var state = CardsState.NewState(new[] { addedCard }.Concat(initialDeck))
 			.ShuffleCurrentDeck()
@@ -173,5 +174,130 @@ public class CardsStates {
 		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
 		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
+	}
+
+	[Test]
+	public void AddTradition() {
+		var tradition = new Tradition("foo");
+		var state = CardsState.NewState(new Card[0])
+			.AddTradition(tradition);
+
+		CollectionAssert.AreEqual(new[] { tradition }, state.Traditions);
+	}
+
+	[Test]
+	public void RemoveTradition() {
+		var tradition = new Tradition("foo");
+		var state = CardsState.NewState(new Card[0])
+			.AddTradition(tradition)
+			.RemoveTradition(tradition);
+
+		CollectionAssert.AreEqual(new Tradition[0], state.Traditions);
+	}
+
+	[Test]
+	public void ModifyCardInDeckWithTradition() {
+		Randomizer.SetTestableRandom(2);
+		var state = CardsState.NewState(new[] {
+			new Card("bar"),
+			new Card("foo")
+		}).ShuffleCurrentDeck()
+			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance:"GoldGain", increaseInValue:2));
+
+		CollectionAssert.AreEqual(new[] {
+			new Card("bar", goldGain: 2),
+			new Card("foo")
+		}, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+	}
+
+	[Test]
+	public void ModifyCardInHandWithTradition() {
+		Randomizer.SetTestableRandom(2);
+		var state = CardsState.NewState(new[] {
+			new Card("bar"),
+			new Card("foo")
+		}).ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "GoldGain", increaseInValue: 2));
+
+		CollectionAssert.AreEqual(new[] { new Card("foo"), }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new[] { new Card("bar", goldGain: 2), }, state.Hand);
+		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+	}
+
+	[Test]
+	public void ModifyCardInDiscardPileWithTradition() {
+		Randomizer.SetTestableRandom(2);
+		var state = CardsState.NewState(new[] {
+			new Card("bar"),
+			new Card("foo")
+		}).ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.DiscardHand()
+			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "GoldGain", increaseInValue: 2));
+
+		CollectionAssert.AreEqual(new[] { new Card("foo"), }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new[] { new Card("bar", goldGain: 2), }, state.DiscardPile);
+	}
+
+	[Test]
+	public void ModifyAddedCardsWithTradition() {
+		Randomizer.SetTestableRandom(1);
+		var card = new Card("card",
+			addDeck: DeckType.Test
+		);
+		var tradition = new Tradition("foo", "test", "GoldGain", 1);
+		Randomizer.SetTestableRandom(1);
+		var state = CardsState.NewState(new[] { card })
+			.AddTradition(tradition)
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new[] { card, new Card("test", goldGain: 1), }, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldApplyTraditionOnlyOnce() {
+		Randomizer.SetTestableRandom(1);
+		var card = new Card("card",
+			addDeck: DeckType.Test
+		);
+		var tradition = new Tradition("foo", "test", "GoldGain", 1);
+		Randomizer.SetTestableRandom(1);
+		var state = CardsState.NewState(new[] { card })
+			.AddTradition(tradition)
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card)
+			.ShuffleDiscardToDeck()
+			.DrawCardsToHand(2);
+		state = state.PlayCard(state.Hand.ToList()[1]);
+
+		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(new[] { card }, state.Hand);
+		CollectionAssert.AreEqual(new[] { new Card("test", goldGain: 1), }, state.DiscardPile);
+	}
+
+	[Test]
+	public void ModifyCardsWithRemovedTradition() {
+		Randomizer.SetTestableRandom(2);
+		var state = CardsState.NewState(new[] {
+			new Card("foo"),
+			new Card("bar")
+		}).ShuffleCurrentDeck()
+			.RemoveTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "GoldGain", increaseInValue: 2));
+
+		CollectionAssert.AreEqual(new[] {
+			new Card("foo"),
+			new Card("bar", goldGain: -2)
+		}, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
 	}
 }

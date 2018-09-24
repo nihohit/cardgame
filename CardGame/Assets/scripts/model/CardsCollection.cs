@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town, Explore, Mine }
+public enum DeckType { None, Test, Village,FishingVillage, PortTown, BaseTraditions, VillageCenter, Town, Explore, Mine }
 
 public static class CardsCollection {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
@@ -34,7 +34,7 @@ public static class CardsCollection {
 			populationCost: 1,
 			industryCost: 4,
 			exhaustible: true,
-			addDeck: DeckType.Temple
+			addDeck: DeckType.BaseTraditions
 		),
 		new Card("Village center",
 			populationGain: 1,
