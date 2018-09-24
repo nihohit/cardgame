@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 
 public static class EventCardsCollections {
-	private static Dictionary<string, EventCard> events = new EventCard[] {
+	private static BaseCollection<EventCard> events = new BaseCollection<EventCard>(new EventCard[] {
 		new EventCard {
 			Name = "Raiders",
 			Options = new Card[] {
@@ -36,24 +36,13 @@ public static class EventCardsCollections {
 				)
 			}
 		}
-	}.ToDictionary(card => card.Name, card => card);
+	}.ToDictionary(card => card.Name, card => card));
 
 	public static IEnumerable<EventCard> Cards() {
-		return cardsForDictionary(new Dictionary<string, int> {
+		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "Raiders", 2},
 			{ "Wild animals", 2},
 		});	
-	}
-
-	private static IEnumerable<EventCard> cardsForDictionary(Dictionary<string, int> cardDictionary) {
-		return cardDictionary.SelectMany(pair => createCopies(pair.Key, pair.Value));	
-	}
-
-	private static IEnumerable<EventCard> createCopies(string eventName, int copies) {
-		var card = events.Get(eventName, "created events");
-		for(int i = 0; i <  copies; i++) {
-			yield return card.ShallowClone();
-		}
 	}
 
 	public static IEnumerable<EventCard> CardsForDeck(DeckType deckType) {
@@ -70,17 +59,17 @@ public static class EventCardsCollections {
 	}
 
 	private static IEnumerable<EventCard> villageDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return events.objectForDictionary(new Dictionary<string, int>{
 		});
 	}
 
 	private static IEnumerable<EventCard> villageCenterDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return events.objectForDictionary(new Dictionary<string, int>{
 		});
 	}
 
 	private static IEnumerable<EventCard> testDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return events.objectForDictionary(new Dictionary<string, int>{
 		});
 	}
 }

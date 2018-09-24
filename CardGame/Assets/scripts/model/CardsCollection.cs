@@ -9,7 +9,7 @@ using UnityEngine;
 public enum DeckType { None, Test, Village,FishingVillage, PortTown, Temple, VillageCenter, Town, Explore, Mine }
 
 public static class CardsCollection {
-	private static Dictionary<string, Card> cards = new Card[] {
+	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
 		new Card("test"),
 		new Card("Manual Labour",
 			populationGain: 1,
@@ -127,27 +127,16 @@ public static class CardsCollection {
 			populationCost: 1,
 			industryGain: 3
 		)
-	}.ToDictionary(card => card.Name, card => card);
+	}.ToDictionary(card => card.Name, card => card));
 
 
 	public static IEnumerable<Card> Cards() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Manual Labour", 2},
 			{"Barter", 1},
 			{"Explore", 1},
 			{"Hire Mercenaries", 1}
 		});	
-	}
-
-	private static IEnumerable<Card> cardsForDictionary(Dictionary<string, int> cardDictionary) {
-		return cardDictionary.SelectMany(pair => createCopies(pair.Key, pair.Value));	
-	}
-
-	private static IEnumerable<Card> createCopies(string cardName, int copies) {
-		var card = cards.Get(cardName, "created cards");
-		for(int i = 0; i <  copies; i++) {
-			yield return card.ShallowClone();
-		}
 	}
 
 	public static IEnumerable<Card> CardsForDeck(DeckType deckType) {
@@ -170,7 +159,7 @@ public static class CardsCollection {
 	}
 
 	private static IEnumerable<Card> villageDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Temple", 1},
 			{"Village center", 1},
 			{"Town", 1},
@@ -180,7 +169,7 @@ public static class CardsCollection {
 	}
 
 	private static IEnumerable<Card> fishingVillageDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Temple", 1},
 			{"Village center", 1},
 			{"Port Town", 1},
@@ -190,7 +179,7 @@ public static class CardsCollection {
 	}
 
 	private static IEnumerable<Card> villageCenterDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Market Day", 2},
 			{"Public Discussion", 1},
 			{"Buy Slaves", 1},
@@ -199,7 +188,7 @@ public static class CardsCollection {
 	}
 
 	private static IEnumerable<Card> exploreDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Build Village", 1},
 			{"Fishing Village", 1},
 			{"Build Mine", 1},
@@ -207,13 +196,13 @@ public static class CardsCollection {
 	}
 
 	private static IEnumerable<Card> mineDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Mine", 1}
 		});
 	}
 
 	private static IEnumerable<Card> testDeck() {
-		return cardsForDictionary(new Dictionary<string, int>{
+		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"test", 1}
 		});
 	}
