@@ -22,6 +22,7 @@ public interface ISceneViewModel {
 	IObservable<string> TextForDoneButton { get; }
 	IObservable<Unit> HideMultiDisplay { get; }
 	IObservable<IEnumerable<CardMovementInstruction>> CardMovementInstructions { get; }
+	IObservable<IEnumerable<Tradition>> Traditions { get; }
 	#endregion
 }
 
@@ -195,6 +196,11 @@ public class SceneViewModel : ISceneViewModel {
 		}
 		throw new ArgumentOutOfRangeException($"Received unhandled index: {index}");
 	}
+
+	public IObservable<IEnumerable<Tradition>> Traditions => model.State
+		.Select(state => state.Cards.Traditions)
+		.StartWith(new Tradition[0])
+		.DistinctUntilChanged();
 	#endregion
 
 	public SceneViewModel() : this(new SceneModel()) { }
