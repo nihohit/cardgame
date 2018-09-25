@@ -60,24 +60,25 @@ public class EmpireState : BaseValueClass {
 	}
 
 	public bool CanPlayCard(Card card) {
-		return Gold >= card.GoldCost &&
+		return (Gold >= card.GoldCost &&
 			Industry >= card.IndustryCost &&
 			Population >= card.PopulationCost &&
-			Army >= card.ArmyCost;
+			Army >= card.ArmyCost) ||
+			card.DefaultChoice;
 	}
 
 	public EmpireState PlayCard(Card card) {
 		Debug.Assert(CanPlayCard(card));
 
 		return new EmpireState(
-			Gold - card.GoldCost,
-			Industry - card.IndustryCost,
-			Population - card.PopulationCost,
-			Army - card.ArmyCost,
-			card.GoldGain + AddGold,
-			card.IndustryGain + AddIndustry,
-			card.PopulationGain + AddPopulation,
-			card.ArmyGain + AddArmy);
+			Math.Max(Gold - card.GoldCost, 0),
+			Math.Max(Industry - card.IndustryCost, 0),
+			Math.Max(Population - card.PopulationCost, 0),
+			Math.Max(Army - card.ArmyCost, 0),
+			Math.Max(card.GoldGain + AddGold, 0),
+			Math.Max(card.IndustryGain + AddIndustry, 0),
+			Math.Max(card.PopulationGain + AddPopulation, 0),
+			Math.Max(card.ArmyGain + AddArmy, 0));
 	}
 
 	public override string ToString() {

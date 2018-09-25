@@ -16,6 +16,7 @@ public class Card : BaseValueClass {
 	public bool Exhaustible { get; }
 	public int NumberOfCardsToChooseToExhaust { get; }
 	public int NumberOfCardsToChooseToReplace { get; }
+	public bool DefaultChoice { get; }
 
 	public Card(string name, 
 		int goldCost = 0, 
@@ -29,7 +30,8 @@ public class Card : BaseValueClass {
 		DeckType addDeck = DeckType.None,
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
-		int numberOfCardsToChooseToReplace = 0) {
+		int numberOfCardsToChooseToReplace = 0,
+		bool defaultChoice = false) {
 		Name = name;
 		GoldCost = goldCost;
 		IndustryCost = industryCost;
@@ -43,6 +45,7 @@ public class Card : BaseValueClass {
 		Exhaustible = exhaustible;
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;
 		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;
+		DefaultChoice = defaultChoice;
 	}
 
 	public override string ToString() {
