@@ -47,28 +47,4 @@ public class Card : BaseValueClass {
 		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;
 		DefaultChoice = defaultChoice;
 	}
-
-	public override string ToString() {
-		var stringBuilder = new StringBuilder();
-		stringBuilder.AppendLine(Name);
-		if (AddDeck != DeckType.None) {
-			stringBuilder.AppendLine($"Add deck: {AddDeck}");
-		}
-		if (Exhaustible) {
-			stringBuilder.AppendLine("Exhaustible");
-		}
-		addString(stringBuilder, NumberOfCardsToChooseToExhaust, "Remove cards");
-		addString(stringBuilder, NumberOfCardsToChooseToReplace, "Replace cards");
-		return stringBuilder.ToString();
-	}
-
-	private void addString(StringBuilder builder, int propertyValue, string propertyDescription) {
-		addString(builder, propertyValue != 0 ? propertyValue.ToString() : null, propertyDescription);
-	}
-
-	private void addString(StringBuilder builder, string str, string propertyDescription) {
-		if (str != null) {
-			builder.AppendLine($"{propertyDescription}: {str}");
-		}
-	}
 }

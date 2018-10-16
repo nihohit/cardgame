@@ -96,10 +96,11 @@ public class SceneViewModelTests {
 	public void PassStateDescription() {
 		var description = viewModel.StateDescription.ToReactiveProperty();
 
-		var state = new EmpireState(1, 2, 3, 4);
+		var state = new EmpireState(1, 2, 3, 4, new List<Card>());
 		fakeModel.StateSubject.OnNext(scene(empire: state));
 
-		Assert.AreEqual(state.ToString(), description.Value);
+		Assert.AreEqual("Gold: 1, next turn:1\nIndustry: 2, next turn:2\nPopulation: 3, next turn:3\nArmy: 4, next turn:4\n", 
+		                description.Value);
 	}
 
 	[Test]

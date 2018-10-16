@@ -80,11 +80,4 @@ public class EmpireState : BaseValueClass {
 			Math.Max(card.PopulationGain + AddPopulation, 0),
 			Math.Max(card.ArmyGain + AddArmy, 0));
 	}
-
-	public override string ToString() {
-		return $"Gold: {Gold}, next turn:{Gold + AddGold}\n" +
-		  $"Industry: {Industry}, next turn:{Industry + AddIndustry}\n" +
-		  $"Population: {Population}, next turn:{Population + AddPopulation}\n" +
-		  $"Army: {Army}, next turn:{Army + AddArmy}\n";
-	}
 }
