@@ -28,8 +28,20 @@ public static class ValueClassExtensions {
 					var thisValue = info.GetValue(obj);
 					var otherValue = info.GetValue(other);
 					return thisValue == otherValue ||
-						(thisValue != null && thisValue.Equals(otherValue));
+						(thisValue != null && thisValue.Equals(otherValue)) ||
+						EnumerableEquality(thisValue, otherValue);
 				});
+	}
+
+	private static bool EnumerableEquality(object obj, object other) {
+		var enumerable  = obj as IEnumerable;
+		var otherEnumerable = other as IEnumerable;
+		if (enumerable == null || otherEnumerable == null) {
+			return false;
+		}
+		var castedEnumerable = enumerable.Cast<object>();
+		var otherCastedEnumerable = otherEnumerable.Cast<object>();
+		return castedEnumerable.SequenceEqual(otherCastedEnumerable);
 	}
 
 	public static string ToStringFromProperties(this object obj) {
@@ -37,9 +49,17 @@ public static class ValueClassExtensions {
 		var type = obj.GetType();
 		stringBuilder.AppendLine($"{type}:");
 		foreach (var property in type.GetProperties()) {
-			stringBuilder.AppendLine($"{property.Name}: {property.GetValue(obj)}");
+			stringBuilder.AppendLine($"{property.Name}: {getStringDescription(property.GetValue(obj))}");
 		}
 		return stringBuilder.ToString();
+	}
+
+	private static string getStringDescription(object obj) {
+		var enumerable = obj as IEnumerable;
+		if (enumerable == null) {
+			return obj.ToString();
+		}
+		return enumerable.Cast<object>().ToJoinedString(", ");
 	}
 
 	public static T ToObject<T>(this IDictionary<string, object> source) where T : class {

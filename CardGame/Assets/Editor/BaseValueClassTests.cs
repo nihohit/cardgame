@@ -36,13 +36,18 @@ public class BaseValueClassTests {
 		public int IntegerProperty { get; set; }
 		public Value StructProperty { get; set; }
 		public ReferenceValue ClassProperty { get; set; }
+		public IEnumerable<object> EnumerableProperty { get; set; }
 
 		public TestValueClass() {	}
 
-		public TestValueClass(int integerProperty, Value structProperty, ReferenceValue classProperty) {
+		public TestValueClass(int integerProperty,
+		                      Value structProperty, 
+		                      ReferenceValue classProperty,
+		                     IEnumerable<object> enumerableProperty) {
 			IntegerProperty = integerProperty;
 			StructProperty = structProperty;
 			ClassProperty = classProperty;
+			EnumerableProperty = enumerableProperty;
 		}
 	}
 	#endregion
@@ -110,6 +115,27 @@ public class BaseValueClassTests {
 		checkAreEqual();
 	}
 
+	[Test]
+	public void EqualAccordingToEnumerableProperty() {
+		first.EnumerableProperty = new List<object>();
+
+		checkAreNotEqual();
+
+		second.EnumerableProperty = new object[0];
+
+		checkAreEqual();
+
+		first.EnumerableProperty = new List<object> {
+			1
+		};
+
+		checkAreNotEqual();
+
+		second.EnumerableProperty = new object[] {1};
+
+		checkAreEqual();
+	}
+
 	private void checkAreEqual() {
 		Assert.AreEqual(first, second);
 		Assert.AreEqual(second, first);
@@ -127,6 +153,7 @@ public class BaseValueClassTests {
 		first.StructProperty = new Value {
 			IntegerValue = 1
 		};
+		first.EnumerableProperty = new object[] { 1 };
 
 		var expectedValue = 3;
 		var result = first.SetValue("IntegerProperty", expectedValue);
@@ -135,6 +162,8 @@ public class BaseValueClassTests {
 		expected.IntegerProperty = expectedValue;
 		expected.ClassProperty = first.ClassProperty;
 		expected.StructProperty = first.StructProperty;
+		expected.EnumerableProperty = first.EnumerableProperty;
+
 		Assert.AreEqual(expected, result);
 	}
 
@@ -145,6 +174,7 @@ public class BaseValueClassTests {
 		first.StructProperty = new Value {
 			IntegerValue = 1
 		};
+		first.EnumerableProperty = new object[] { 1 };
 
 		var expectedValue = new Value {
 			IntegerValue = 2
@@ -155,6 +185,8 @@ public class BaseValueClassTests {
 		expected.IntegerProperty = first.IntegerProperty;
 		expected.ClassProperty = first.ClassProperty;
 		expected.StructProperty = expectedValue;
+		expected.EnumerableProperty = first.EnumerableProperty;
+
 		Assert.AreEqual(expected, result);
 	}
 
@@ -165,6 +197,7 @@ public class BaseValueClassTests {
 		first.StructProperty = new Value {
 			IntegerValue = 1
 		};
+		first.EnumerableProperty = new object[] { 1 };
 
 		var expectedValue = new ReferenceValue();
 		expectedValue.IntegerValue = 5;
@@ -174,6 +207,28 @@ public class BaseValueClassTests {
 		expected.IntegerProperty = first.IntegerProperty;
 		expected.ClassProperty = expectedValue;
 		expected.StructProperty = first.StructProperty;
+		expected.EnumerableProperty = first.EnumerableProperty;
+
+		Assert.AreEqual(expected, result);
+	}
+
+	[Test]
+	public void SetEnumerableValue() {
+		first.IntegerProperty = 2;
+		first.ClassProperty = new ReferenceValue();
+		first.StructProperty = new Value {
+			IntegerValue = 1
+		};
+
+		var expectedValue = new List<object> { 1 };
+		var result = first.SetValue("EnumerableProperty", expectedValue);
+
+		var expected = new TestValueClass();
+		expected.IntegerProperty = first.IntegerProperty;
+		expected.ClassProperty = first.ClassProperty;
+		expected.StructProperty = first.StructProperty;
+		expected.EnumerableProperty = expectedValue;
+
 		Assert.AreEqual(expected, result);
 	}
 }
