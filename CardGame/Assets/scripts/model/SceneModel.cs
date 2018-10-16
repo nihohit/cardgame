@@ -35,10 +35,10 @@ public interface ISceneModel {
 }
 
 public class SceneModel : ISceneModel {
+	private EventCard nextEvent;
 	private CardsState cards;
 	private EmpireState empireState;
 	private CardHandlingMode mode = CardHandlingMode.Regular;
-	private List<EventCard> events = EventCardsCollections.Cards().ToList();
 	private readonly List<Card> playedCards = new List<Card>();
 	private int cardsToHandle;
 	private ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
@@ -47,11 +47,12 @@ public class SceneModel : ISceneModel {
 		CardsState.NewState(CardsCollection.Cards())
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND),
-		new EmpireState(1, 1, 2, 0), 
+		new EmpireState(1, 1, 2, 0, new List<Card>()), 
 		CardHandlingMode.Regular) {}
 
 	public SceneModel(CardsState cards, EmpireState empireState, 
 		CardHandlingMode mode) {
+		nextEvent = EventCardsCollections.EventCardForState(empireState);
 		this.cards = cards;
 		this.empireState = empireState;
 		this.mode = mode;
@@ -175,7 +176,7 @@ public class SceneModel : ISceneModel {
 		empireState = empireState.NextTurnState();
 		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), empireState.ToString(), cards.Hand);
 		mode = CardHandlingMode.Event;
-		if (events.Count > 1) events.RemoveAt(0);
+		nextEvent = EventCardsCollections.EventCardForState(empireState);
 		cards = cards.DiscardHand();
 	}
 
@@ -198,10 +199,10 @@ public class SceneModel : ISceneModel {
 	#endregion
 
 	private void sendCompletedState() {
-		stateSubject.OnNext(new SceneState(cards, empireState, mode, events.First()));
+		stateSubject.OnNext(new SceneState(cards, empireState, mode, nextEvent));
 	}
 
 	private string eventCardName() {
-		return events[0].Name;
+		return nextEvent.Name;
 	}
 }
