@@ -79,7 +79,9 @@ public class SceneModel : ISceneModel {
 				succeeded = exhaustCard(card);
 				break;
 		}
-		sendCompletedState();
+		if (succeeded) {
+			sendCompletedState();
+		}
 		return succeeded;
 	}
 
