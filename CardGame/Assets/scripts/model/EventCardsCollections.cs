@@ -25,7 +25,7 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Wild animals",
 			Options = new Card[] {
-				new Card("Scare them",
+				new Card("Build traps",
 					industryCost: 2
 				),
 				new Card("Fight them",
@@ -35,41 +35,71 @@ public static class EventCardsCollections {
 					populationCost: 1
 				)
 			}
+		},
+		new EventCard {
+			Name = "Minor plague",
+			Options = new Card[] {
+				new Card("Buy medicine",
+					goldCost: 2
+				),
+				new Card("Quarantine the sick",
+					armyCost: 1,
+					populationCost: 1
+				),
+				new Card("Let the sick die",
+					populationCost: 2,
+					defaultChoice: true
+				)
+			}
+		},
+		new EventCard {
+			Name = "Famine",
+			Options = new Card[] {
+				new Card("Buy food",
+					goldCost: 2
+				),
+				new Card("Raid Neighbours",
+					armyCost: 1
+				),
+				new Card("Lose people and productivity",
+					populationCost: 1,
+					industryCost: 1,
+					defaultChoice: true
+				)
+			}
 		}
 	}.ToDictionary(card => card.Name, card => card));
 
-	public static IEnumerable<EventCard> Cards() {
-		return events.objectForDictionary(new Dictionary<string, int> {
-			{ "Raiders", 2},
-			{ "Wild animals", 2},
-		});	
-	}
-
-	public static IEnumerable<EventCard> CardsForDeck(DeckType deckType) {
-		switch (deckType) {
-			case DeckType.Village: 
-				return villageDeck();
-			case DeckType.VillageCenter: 
-				return villageCenterDeck();
-			case DeckType.Test:
-				return testDeck();
-			default:
-				return new EventCard[0];
+	public static EventCard EventCardForState(EmpireState state) {
+		if (state.Population < 5) {
+			return smallEmpireCard();
+		} else if (state.Population < 10) {
+			return mediumEmpireCard();
+		} else {
+			return largeEmpireCard();
 		}
 	}
 
-	private static IEnumerable<EventCard> villageDeck() {
-		return events.objectForDictionary(new Dictionary<string, int>{
-		});
+	private static EventCard smallEmpireCard() {
+		return events.objectForDictionary(new Dictionary<string, int> {
+			{ "Raiders", 3},
+			{ "Wild animals", 3},
+			{ "Famine", 3},
+			{ "Minor plague", 1},
+		}).Shuffle().First();	
 	}
 
-	private static IEnumerable<EventCard> villageCenterDeck() {
-		return events.objectForDictionary(new Dictionary<string, int>{
-		});
+	private static EventCard mediumEmpireCard() {
+		return events.objectForDictionary(new Dictionary<string, int> {
+			{ "Raiders", 1},
+			{ "Wild animals", 1},
+		}).Shuffle().First();
 	}
 
-	private static IEnumerable<EventCard> testDeck() {
-		return events.objectForDictionary(new Dictionary<string, int>{
-		});
+	private static EventCard largeEmpireCard() {
+		return events.objectForDictionary(new Dictionary<string, int> {
+			{ "Raiders", 1},
+			{ "Wild animals", 1},
+		}).Shuffle().First();
 	}
 }
