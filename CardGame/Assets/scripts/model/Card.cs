@@ -4,43 +4,34 @@ using UnityEngine;
 
 public class Card : BaseValueClass {
   public string Name { get; }
-	public int GoldCost { get; }
-	public int IndustryCost { get; }
 	public int PopulationCost { get; }
-	public int ArmyCost { get; }
-	public int GoldGain { get; }
-	public int IndustryGain { get; }
-	public int PopulationGain { get; }
-	public int ArmyGain { get; }
+	public int GoldChange { get; }
+	public int IndustryChange { get; }
+	public int PopulationChange { get; }
+	public int ArmyChange { get; }
 	public DeckType AddDeck { get; }
 	public bool Exhaustible { get; }
 	public int NumberOfCardsToChooseToExhaust { get; }
 	public int NumberOfCardsToChooseToReplace { get; }
 	public bool DefaultChoice { get; }
 
-	public Card(string name, 
-		int goldCost = 0, 
-		int industryCost = 0, 
+	public Card(string name,
 		int populationCost = 0,
-		int armyCost = 0,
-		int goldGain = 0,
-		int industryGain = 0,
-		int populationGain = 0,
-		int armyGain = 0,
+		int goldChange = 0, 
+		int industryChange = 0, 
+		int populationChange = 0,
+		int armyChange = 0,
 		DeckType addDeck = DeckType.None,
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
 		int numberOfCardsToChooseToReplace = 0,
 		bool defaultChoice = false) {
 		Name = name;
-		GoldCost = goldCost;
-		IndustryCost = industryCost;
 		PopulationCost = populationCost;
-		ArmyCost = armyCost;
-		GoldGain = goldGain;
-		IndustryGain = industryGain;
-		PopulationGain = populationGain;
-		ArmyGain = armyGain;
+		GoldChange = goldChange;
+		IndustryChange = industryChange;
+		PopulationChange = populationChange;
+		ArmyChange = armyChange;
 		AddDeck = addDeck;
 		Exhaustible = exhaustible;
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;

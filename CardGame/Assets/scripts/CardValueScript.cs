@@ -18,4 +18,11 @@ public class CardValueScript : MonoBehaviour {
 		text.enabled = value != 0;
 		text.text = value.ToString();
 	}
+
+	public void SetDoubleValue(int available, int change) {
+		var visible = available != 0 || change != 0;
+		innerRenderer.enabled = visible;
+		text.enabled = visible;
+		text.text = $"{available}/{change}";
+	}
 }

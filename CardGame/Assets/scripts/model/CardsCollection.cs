@@ -12,120 +12,105 @@ public static class CardsCollection {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
 		new Card("test"),
 		new Card("Manual Labour",
-			populationGain: 1,
 			populationCost: 1,
-			industryGain: 1
+			industryChange: 1
 		),
 		new Card("Barter",
-			populationGain: 1,
 			populationCost: 1,
-			industryCost: 1,
-			goldGain: 1
+			industryChange: -1,
+			goldChange: 1
 		),
 		new Card("Build Village",
-			populationGain: 2,
 			populationCost: 1,
-			industryCost: 1,
+			populationChange: 1,
+			industryChange: -1,
 			addDeck: DeckType.Village,
 			exhaustible:true
 		),
 		new Card("Temple",
-			populationGain: 1,
 			populationCost: 1,
-			industryCost: 4,
+			industryChange: -4,
 			exhaustible: true,
 			addDeck: DeckType.BaseTraditions
 		),
 		new Card("Village center",
-			populationGain: 1,
 			populationCost: 1,
-			industryCost: 4,
+			industryChange: -4,
 			exhaustible: true,
 			addDeck: DeckType.VillageCenter
 		),
 		new Card("Town",
-			populationGain: 3,
 			populationCost: 2,
-			industryCost: 10,
+			populationChange: 1,
+			industryChange: -10,
 			exhaustible: true,
 			addDeck: DeckType.Town
 		),
 		new Card("Farming",
-			populationGain: 1,
 			populationCost: 1,
-			industryGain: 2
+			industryChange: 2
 		),
 		new Card("Arm Militia",
-			populationGain: 1,
 			populationCost: 1,
-			industryCost: 1,
-			armyGain: 1
+			industryChange: -1,
+			armyChange: 1
 		),
 		new Card("Market Day",
-			populationGain: 1,
 			populationCost: 1,
-			industryCost: 1,
-			goldGain: 2
+			industryChange: -1,
+			goldChange: 2
 		),
 		new Card("Public Discussion",
-			populationGain: 1,
 			populationCost: 1,
-			goldCost: 2,
+			goldChange: -2,
 			numberOfCardsToChooseToReplace: 1
 		),
 		new Card("Ostracize",
-			populationGain: 1,
 			populationCost: 1,
-			goldCost: 2,
+			goldChange: -2,
 			numberOfCardsToChooseToExhaust: 1
 		),
 		new Card("Buy Slaves",
-			populationGain: 2,
-			populationCost: 1,
-			goldCost: 10
+			populationCost: 2,
+			goldChange: -10
 		),
 		new Card("Fishing Village",
-			populationGain: 2,
 			populationCost: 1,
-			industryCost: 2,
+			populationChange: 1,
+			industryChange: -1,
 			addDeck: DeckType.FishingVillage,
 			exhaustible:true
 		),
 		new Card("Fishing",
-			populationGain: 1,
 			populationCost: 1,
-			industryGain: 1,
-			goldGain: 1
+			industryChange: 1,
+			goldChange: 1
 		),
 		new Card("Port Town",
-			populationGain: 2,
 			populationCost: 1,
-			industryCost: 10,
+			populationChange: 1,
+			industryChange: -10,
 			addDeck: DeckType.PortTown,
 			exhaustible:true
 		),
 		new Card("Explore",
-			populationGain: 1,
 			populationCost: 1,
 			addDeck: DeckType.Explore
 		),
 		new Card("Hire Mercenaries",
-			populationGain: 1,
 			populationCost: 1,
-			goldCost: 1,
-			armyGain: 1
+			goldChange: -1,
+			armyChange: 1
 		),
 		new Card("Build Mine",
-			populationGain: 1,
 			populationCost: 1,
-			industryCost: 1,
+			industryChange: -1,
 			addDeck: DeckType.Mine,
 			exhaustible:true
 		),
 		new Card("Mine",
-			populationGain: 1,
 			populationCost: 1,
-			industryGain: 3
+			industryChange: 3
 		)
 	}.ToDictionary(card => card.Name, card => card));
 

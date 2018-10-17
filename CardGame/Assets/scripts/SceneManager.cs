@@ -15,12 +15,12 @@ public class SceneManager : MonoBehaviour {
 	private DeckScript discardPile;
 	private Button doneButton;
 	private MultiCardDisplayScript multiCardDisplay;
-	private CardScript[] currentHand = new CardScript[9];
+	private readonly CardScript[] currentHand = new CardScript[9];
 
 	private CardScriptPool cardPool;
 	private ISceneViewModel viewModel;
 	private List<List<Action>> animationOrders = new List<List<Action>>();
-	private object cardAnimationsLock = new object();
+	private readonly object cardAnimationsLock = new object();
 	private int currentCardAnimationsInProgress;
 	private TraditionScript[] traditionScripts;
 

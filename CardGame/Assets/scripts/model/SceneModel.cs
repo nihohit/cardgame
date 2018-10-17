@@ -47,7 +47,7 @@ public class SceneModel : ISceneModel {
 		CardsState.NewState(CardsCollection.Cards())
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND),
-		new EmpireState(1, 1, 2, 0, new List<Card>()), 
+		EmpireState.InitialState(3, 3, 2, 0), 
 		CardHandlingMode.Regular) {}
 
 	public SceneModel(CardsState cards, EmpireState empireState, 
@@ -113,7 +113,6 @@ public class SceneModel : ISceneModel {
 			return false;
 		}
 		empireState = empireState.PlayCard(card);
-		empireState = empireState.NextTurnState();
 		EventUtils.LogEventCardPlayed(card, eventCardName(), empireState.ToString(), cards.Hand);
 		mode = CardHandlingMode.Regular;
 		startTurn();
@@ -175,7 +174,6 @@ public class SceneModel : ISceneModel {
 	}
 
 	private void endTurn() { 
-		empireState = empireState.NextTurnState();
 		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), empireState.ToString(), cards.Hand);
 		mode = CardHandlingMode.Event;
 		nextEvent = EventCardsCollections.EventCardForState(empireState);

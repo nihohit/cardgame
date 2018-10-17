@@ -52,10 +52,10 @@ public class SceneViewModel : ISceneViewModel {
 
 
 	private string stateDescription(EmpireState state) {
-		return $"Gold: {state.Gold}, next turn:{state.Gold + state.AddGold}\n" +
-			$"Industry: {state.Industry}, next turn:{state.Industry + state.AddIndustry}\n" +
-			$"Population: {state.Population}, next turn:{state.Population + state.AddPopulation}\n" +
-			$"Army: {state.Army}, next turn:{state.Army + state.AddArmy}\n";
+		return $"Gold: {state.Gold}\n" +
+			$"Industry: {state.Industry}\n" +
+			$"Population: {state.AvailablePopulation}/{state.TotalPopulation}\n" +
+			$"Army: {state.Army}\n";
 	}
 
 	public IObservable<int> DeckCount => model.State

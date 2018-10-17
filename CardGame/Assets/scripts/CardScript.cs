@@ -25,21 +25,22 @@ public class CardScript : MonoBehaviour {
 		} set {
 			_model = value;
 			text.text = cardDescription(value);
-			goldCost.SetValue(value.GoldCost);
-			populationCost.SetValue(value.PopulationCost);
-			industryCost.SetValue(value.IndustryCost);
-			armyCost.SetValue(value.ArmyCost);
-			goldGain.SetValue(value.GoldGain);
-			industryGain.SetValue(value.IndustryGain);
-			populationGain.SetValue(value.PopulationGain - value.PopulationCost);
-			armyGain.SetValue(value.ArmyGain);
+			goldCost.SetValue(value.GoldChange);
+			populationCost.SetDoubleValue(-value.PopulationCost, value.PopulationChange);
+			industryCost.SetValue(value.IndustryChange);
+			armyCost.SetValue(value.ArmyChange);
 			modelSetSubject.OnNext(Unit.Default);
+
+			goldGain.SetValue(0);
+			industryGain.SetValue(0);
+			armyGain.SetValue(0);
+			populationGain.SetValue(0);
 		}
 	}
 
-	void Awake() {
+	private void Awake() {
     text = GetComponentInChildren<TextMeshPro>();
-		goldCost = transform.Find("GoldCost").GetComponent< CardValueScript>();
+		goldCost = transform.Find("GoldCost").GetComponent<CardValueScript>();
 		populationCost = transform.Find("PopulationCost").GetComponent<CardValueScript>();
 		industryCost = transform.Find("IndustryCost").GetComponent<CardValueScript>();
 		armyCost = transform.Find("ArmyCost").GetComponent<CardValueScript>();

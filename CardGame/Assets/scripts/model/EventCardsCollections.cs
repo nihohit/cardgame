@@ -12,13 +12,13 @@ public static class EventCardsCollections {
 			Name = "Raiders",
 			Options = new Card[] {
 				new Card("Pay them off",
-					goldCost: 1
+					goldChange: -1
 				),
 				new Card("Fight them",
-					armyCost: 2
+					armyChange: -2
 				),
 				new Card("They attack",
-					populationCost: 1
+					populationChange: -1
 				)
 			}
 		},
@@ -26,13 +26,13 @@ public static class EventCardsCollections {
 			Name = "Wild animals",
 			Options = new Card[] {
 				new Card("Build traps",
-					industryCost: 2
+					industryChange: -2
 				),
 				new Card("Fight them",
-					armyCost: 1
+					armyChange: -1
 				),
 				new Card("They attack",
-					populationCost: 1
+					populationChange: -1
 				)
 			}
 		},
@@ -40,14 +40,14 @@ public static class EventCardsCollections {
 			Name = "Minor plague",
 			Options = new Card[] {
 				new Card("Buy medicine",
-					goldCost: 2
+					goldChange: -2
 				),
 				new Card("Quarantine the sick",
-					armyCost: 1,
-					populationCost: 1
+					armyChange: -1,
+					populationChange: -1
 				),
 				new Card("Let the sick die",
-					populationCost: 2,
+					populationChange: -2,
 					defaultChoice: true
 				)
 			}
@@ -56,24 +56,71 @@ public static class EventCardsCollections {
 			Name = "Famine",
 			Options = new Card[] {
 				new Card("Buy food",
-					goldCost: 2
+					goldChange: -2
 				),
 				new Card("Raid Neighbours",
-					armyCost: 1
+					armyChange: -2
 				),
 				new Card("Lose people and productivity",
-					populationCost: 1,
-					industryCost: 1,
+					populationChange: -1,
+					industryChange: -1,
 					defaultChoice: true
 				)
 			}
-		}
+		},
+		new EventCard {
+			Name = "plague",
+			Options = new Card[] {
+				new Card("Buy medicine",
+					goldChange: -4
+				),
+				new Card("Quarantine the sick",
+					armyChange: -2,
+					populationChange: -1
+				),
+				new Card("Let the sick die",
+					populationChange: -3,
+					defaultChoice: true
+				)
+			}
+		},
+		new EventCard {
+			Name = "Natural disaster1",
+			Options = new Card[] {
+				new Card("Rebuild",
+					industryChange: -5
+				),
+				new Card("Build temporary shelters",
+					industryChange: -2,
+					populationChange: -1
+				),
+				new Card("Let the population handle it",
+					populationChange: -2,
+					defaultChoice: true
+				)
+			}
+		},
+		new EventCard {
+			Name = "Animal Attacks",
+			Options = new Card[] {
+				new Card("Hire Mercenaries",
+					goldChange: -6
+				),
+				new Card("Defend the citizens",
+					armyChange: -3
+				),
+				new Card("They attack",
+					populationCost: 2,
+					armyChange: -2
+				)
+			}
+		},
 	}.ToDictionary(card => card.Name, card => card));
 
 	public static EventCard EventCardForState(EmpireState state) {
-		if (state.Population < 5) {
+		if (state.TotalPopulation < 5) {
 			return smallEmpireCard();
-		} else if (state.Population < 10) {
+		} else if (state.TotalPopulation < 10) {
 			return mediumEmpireCard();
 		} else {
 			return largeEmpireCard();
@@ -84,22 +131,24 @@ public static class EventCardsCollections {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "Raiders", 3},
 			{ "Wild animals", 3},
-			{ "Famine", 3},
 			{ "Minor plague", 1},
 		}).Shuffle().First();	
 	}
 
 	private static EventCard mediumEmpireCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
-			{ "Raiders", 1},
+			{ "plague", 2},
 			{ "Wild animals", 1},
+			{ "Famine", 1},
+			{ "Natural disaster1", 1},
 		}).Shuffle().First();
 	}
 
 	private static EventCard largeEmpireCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
-			{ "Raiders", 1},
-			{ "Wild animals", 1},
+			{ "Famine", 1},
+			{ "Natural disaster1", 1},
+			{ "Animal Attacks", 1},
 		}).Shuffle().First();
 	}
 }

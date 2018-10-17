@@ -11,7 +11,7 @@ public class CardScriptPool {
 
 	public CardScriptPool(GameObject cardPrefab, int sizeOfPool) {
 		cardPool = Enumerable.Range(0, sizeOfPool)
-			.Select(count => GameObject.Instantiate<GameObject>(cardPrefab).GetComponent<CardScript>())
+			.Select(_ => GameObject.Instantiate<GameObject>(cardPrefab).GetComponent<CardScript>())
 			.ToList();
 		foreach(var card in cardPool) {
 			card.gameObject.SetActive(false);
