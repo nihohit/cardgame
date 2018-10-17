@@ -5,6 +5,7 @@ using TMPro;
 using System;
 using UniRx.Triggers;
 using UniRx;
+using System.Text;
 
 public class CardScript : MonoBehaviour {
   private TextMeshPro text;
@@ -23,7 +24,7 @@ public class CardScript : MonoBehaviour {
 			return _model;
 		} set {
 			_model = value;
-			text.text = value.ToString();
+			text.text = cardDescription(value);
 			goldCost.SetValue(value.GoldCost);
 			populationCost.SetValue(value.PopulationCost);
 			industryCost.SetValue(value.IndustryCost);
@@ -52,5 +53,32 @@ public class CardScript : MonoBehaviour {
 		return this.OnMouseDownAsObservable()
 			.Select(_ => CardModel)
 			.TakeUntil(modelSetSubject);
+	}
+
+	private string cardDescription(Card card) {
+		var stringBuilder = new StringBuilder();
+		stringBuilder.AppendLine(card.Name);
+		if (card.AddDeck != DeckType.None) {
+			stringBuilder.AppendLine($"Add deck: {card.AddDeck}");
+		}
+		if (card.Exhaustible) {
+			stringBuilder.AppendLine("Exhaustible");
+		}
+		addString(stringBuilder, card.NumberOfCardsToChooseToExhaust, "Remove cards");
+		addString(stringBuilder, card.NumberOfCardsToChooseToReplace, "Replace cards");
+		if (card.DefaultChoice) {
+			stringBuilder.AppendLine("Default choice");
+		}
+		return stringBuilder.ToString();
+	}
+
+	private void addString(StringBuilder builder, int propertyValue, string propertyDescription) {
+		addString(builder, propertyValue != 0 ? propertyValue.ToString() : null, propertyDescription);
+	}
+
+	private void addString(StringBuilder builder, string str, string propertyDescription) {
+		if (str != null) {
+			builder.AppendLine($"{propertyDescription}: {str}");
+		}
 	}
 }

@@ -16,6 +16,7 @@ public class Card : BaseValueClass {
 	public bool Exhaustible { get; }
 	public int NumberOfCardsToChooseToExhaust { get; }
 	public int NumberOfCardsToChooseToReplace { get; }
+	public bool DefaultChoice { get; }
 
 	public Card(string name, 
 		int goldCost = 0, 
@@ -29,7 +30,8 @@ public class Card : BaseValueClass {
 		DeckType addDeck = DeckType.None,
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
-		int numberOfCardsToChooseToReplace = 0) {
+		int numberOfCardsToChooseToReplace = 0,
+		bool defaultChoice = false) {
 		Name = name;
 		GoldCost = goldCost;
 		IndustryCost = industryCost;
@@ -43,29 +45,6 @@ public class Card : BaseValueClass {
 		Exhaustible = exhaustible;
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;
 		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;
-	}
-
-	public override string ToString() {
-		var stringBuilder = new StringBuilder();
-		stringBuilder.AppendLine(Name);
-		if (AddDeck != DeckType.None) {
-			stringBuilder.AppendLine($"Add deck: {AddDeck}");
-		}
-		if (Exhaustible) {
-			stringBuilder.AppendLine("Exhaustible");
-		}
-		addString(stringBuilder, NumberOfCardsToChooseToExhaust, "Remove cards");
-		addString(stringBuilder, NumberOfCardsToChooseToReplace, "Replace cards");
-		return stringBuilder.ToString();
-	}
-
-	private void addString(StringBuilder builder, int propertyValue, string propertyDescription) {
-		addString(builder, propertyValue != 0 ? propertyValue.ToString() : null, propertyDescription);
-	}
-
-	private void addString(StringBuilder builder, string str, string propertyDescription) {
-		if (str != null) {
-			builder.AppendLine($"{propertyDescription}: {str}");
-		}
+		DefaultChoice = defaultChoice;
 	}
 }

@@ -47,7 +47,16 @@ public class SceneViewModel : ISceneViewModel {
 	}
 
 	public IObservable<string> StateDescription => model.State
-		.Select(state => state.Empire.ToString());
+		.Select(state => stateDescription(state.Empire));
+
+
+
+	private string stateDescription(EmpireState state) {
+		return $"Gold: {state.Gold}, next turn:{state.Gold + state.AddGold}\n" +
+			$"Industry: {state.Industry}, next turn:{state.Industry + state.AddIndustry}\n" +
+			$"Population: {state.Population}, next turn:{state.Population + state.AddPopulation}\n" +
+			$"Army: {state.Army}, next turn:{state.Army + state.AddArmy}\n";
+	}
 
 	public IObservable<int> DeckCount => model.State
 		.Select(state => state.Cards.CurrentDeck.Count());
