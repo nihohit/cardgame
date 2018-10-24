@@ -8,7 +8,7 @@ using UnityEngine;
 
 public enum CarType { Engine, General, Workhouse, Cannon }
 
-public class TrainCar {
+public class TrainCar : BaseValueClass {
 	public int FuelConsumption { get; }
 	public CarType Type { get; }
 
@@ -145,10 +145,12 @@ public class TrainState : BaseValueClass {
 	}
 
 	public bool CanPlayCard(Card card) {
-		return (Fuel >= -card.FuelChange &&
-			Industry >= -card.IndustryChange &&
-			AvailablePopulation >= card.PopulationCost &&
-			Army >= -card.ArmyChange) ||
+		return (
+			Fuel >= -card.FuelChange &&
+		    Industry >= -card.IndustryChange &&
+	        AvailablePopulation >= card.PopulationCost &&
+			Army >= -card.ArmyChange &&
+			(card.CarToRemove == null || Cars.Any(car => car.Equals(card.CarToRemove)))) ||
 			card.DefaultChoice;
 	}
 
@@ -159,6 +161,30 @@ public class TrainState : BaseValueClass {
 			card
 		};
 
+		bool actionNeeded = true;
+		var cars = Cars;
+		if (card.CarToRemove == null && card.CarToAdd != null) {
+			cars = cars.Append(card.CarToAdd).ToList();
+		} else if (card.CarToRemove != null && card.CarToAdd != null) {
+			cars = cars.Select(car => {
+				if (!actionNeeded || !car.Equals(card.CarToRemove)) {
+					return car;
+				}
+
+				actionNeeded = false;
+				return card.CarToAdd;
+			}).ToList();
+		} else if (card.CarToRemove == null && card.CarToAdd != null) {
+			cars = cars.Where(car => {
+				if (!actionNeeded || !car.Equals(card.CarToRemove)) {
+					return true;
+				}
+
+				actionNeeded = false;
+				return false;
+			}).ToList();
+		}
+
 		return new TrainState(
 			Math.Max(Fuel + card.FuelChange, 0),
 			Math.Max(Industry + card.IndustryChange, 0),
@@ -166,6 +192,6 @@ public class TrainState : BaseValueClass {
 			Math.Max(AvailablePopulation - card.PopulationCost, 0),
 			Math.Max(Army + card.ArmyChange, 0),
 			playedCards,
-			Cars);
+			cars);
 	}
 }
