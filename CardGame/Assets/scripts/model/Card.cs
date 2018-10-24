@@ -5,7 +5,7 @@ using UnityEngine;
 public class Card : BaseValueClass {
   public string Name { get; }
 	public int PopulationCost { get; }
-	public int GoldChange { get; }
+	public int FuelChange { get; }
 	public int IndustryChange { get; }
 	public int PopulationChange { get; }
 	public int ArmyChange { get; }
@@ -14,10 +14,13 @@ public class Card : BaseValueClass {
 	public int NumberOfCardsToChooseToExhaust { get; }
 	public int NumberOfCardsToChooseToReplace { get; }
 	public bool DefaultChoice { get; }
+	public TrainCar CarToAdd { get; }
+	public TrainCar CarToRemove { get; }
 
-	public Card(string name,
+	public Card(
+		string name,
 		int populationCost = 0,
-		int goldChange = 0, 
+		int fuelChange = 0, 
 		int industryChange = 0, 
 		int populationChange = 0,
 		int armyChange = 0,
@@ -25,10 +28,12 @@ public class Card : BaseValueClass {
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
 		int numberOfCardsToChooseToReplace = 0,
-		bool defaultChoice = false) {
+		bool defaultChoice = false,
+		TrainCar carToRemove = null,
+		TrainCar carToAdd = null) {
 		Name = name;
 		PopulationCost = populationCost;
-		GoldChange = goldChange;
+		FuelChange = fuelChange;
 		IndustryChange = industryChange;
 		PopulationChange = populationChange;
 		ArmyChange = armyChange;
@@ -37,5 +42,7 @@ public class Card : BaseValueClass {
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;
 		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;
 		DefaultChoice = defaultChoice;
+		CarToAdd = carToAdd;
+		CarToRemove = carToRemove;
 	}
 }

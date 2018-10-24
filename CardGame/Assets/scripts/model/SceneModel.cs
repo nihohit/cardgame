@@ -11,12 +11,12 @@ public enum CardHandlingMode { Regular, Event, Replace, Exhaust }
 
 public class SceneState {
 	public CardsState Cards { get; }
-	public EmpireState Empire { get; }
+	public TrainState Empire { get; }
 	public CardHandlingMode Mode { get; }
 	public EventCard CurrentEvent { get; }
 
 	public SceneState(CardsState cards, 
-		EmpireState empire, 
+		TrainState empire, 
 		CardHandlingMode mode,
 		EventCard currentEvent) {
 		Cards = cards;
@@ -37,7 +37,7 @@ public interface ISceneModel {
 public class SceneModel : ISceneModel {
 	private EventCard nextEvent;
 	private CardsState cards;
-	private EmpireState empireState;
+	private TrainState empireState;
 	private CardHandlingMode mode = CardHandlingMode.Regular;
 	private readonly List<Card> playedCards = new List<Card>();
 	private int cardsToHandle;
@@ -47,10 +47,10 @@ public class SceneModel : ISceneModel {
 		CardsState.NewState(CardsCollection.Cards())
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND),
-		EmpireState.InitialState(3, 3, 2, 0), 
+		TrainState.InitialState(3, 3, 2, 0), 
 		CardHandlingMode.Regular) {}
 
-	public SceneModel(CardsState cards, EmpireState empireState, 
+	public SceneModel(CardsState cards, TrainState empireState, 
 		CardHandlingMode mode) {
 		nextEvent = EventCardsCollections.EventCardForState(empireState);
 		this.cards = cards;
@@ -186,12 +186,12 @@ public class SceneModel : ISceneModel {
 		}
 
 		cards = cards.DrawCardsToHand(1);
-		empireState = empireState.ChangeGold(-1);
+		empireState = empireState.ChangeFuel(-1);
 		sendCompletedState();
 	}
 
 	private bool canDrawCard() {
-		return empireState.Gold > 0 &&
+		return empireState.Fuel > 0 &&
 			cards.Hand.Count() < Constants.MAX_CARDS_IN_HAND &&
 			cards.CurrentDeck.Count() > 0;
 	}

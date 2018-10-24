@@ -30,8 +30,8 @@
 //	[Test]
 //	public void ShouldEndTurnWhenUserFinishedModeIsCalledInRegularMode() {
 //		var deck = new Card[] { new Card("foo",
-//			goldCost: 1,
-//			goldGain: 5
+//			fuelCost: 1,
+//			fuelGain: 5
 //		)};
 //		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
 //			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
@@ -68,8 +68,8 @@
 //	[Test]
 //	public void ShouldPlayCardFromHand() {
 //		var deck = new Card[] { new Card("foo",
-//			goldCost: 1,
-//			goldGain: 5
+//			fuelCost: 1,
+//			fuelGain: 5
 //		)};
 //		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
 //			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
@@ -77,8 +77,8 @@
 
 //		model.PlayCard(deck[0]);
 
-//		Assert.AreEqual(0, state.Value.Empire.Gold);
-//		Assert.AreEqual(5, state.Value.Empire.AddGold);
+//		Assert.AreEqual(0, state.Value.Empire.Fuel);
+//		Assert.AreEqual(5, state.Value.Empire.AddFuel);
 //		Assert.AreEqual(0, state.Value.Cards.Hand.Count());
 //		Assert.AreEqual(deck, state.Value.Cards.DiscardPile);
 //		Assert.AreEqual(0, state.Value.Cards.CurrentDeck.Count());
@@ -87,8 +87,8 @@
 //	[Test]
 //	public void ShouldFailToPlayExpensiveCardFromHand() {
 //		var deck = new Card[] { new Card("foo",
-//			goldCost: 2,
-//			goldGain: 5
+//			fuelCost: 2,
+//			fuelGain: 5
 //		)};
 //		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
 //			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
@@ -96,8 +96,8 @@
 
 //		model.PlayCard(deck[0]);
 
-//		Assert.AreEqual(1, state.Value.Empire.Gold);
-//		Assert.AreEqual(0, state.Value.Empire.AddGold);
+//		Assert.AreEqual(1, state.Value.Empire.Fuel);
+//		Assert.AreEqual(0, state.Value.Empire.AddFuel);
 //		Assert.AreEqual(0, state.Value.Cards.DiscardPile.Count());
 //		Assert.AreEqual(0, state.Value.Cards.CurrentDeck.Count());
 //		Assert.AreEqual(deck, state.Value.Cards.Hand);
@@ -106,8 +106,8 @@
 //	[Test]
 //public void ShouldFPlayDefaultExpensiveCardFromHand() {
 //	var deck = new Card[] { new Card("foo",
-//			goldCost: 2,
-//			goldGain: 5,
+//			fuelCost: 2,
+//			fuelGain: 5,
 //				defaultChoice: true
 //		)};
 //	var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
@@ -116,14 +116,14 @@
 
 //	model.PlayCard(deck[0]);
 
-//	Assert.AreEqual(0, state.Value.Empire.Gold);
-//	Assert.AreEqual(5, state.Value.Empire.AddGold);
+//	Assert.AreEqual(0, state.Value.Empire.Fuel);
+//	Assert.AreEqual(5, state.Value.Empire.AddFuel);
 //	Assert.AreEqual(1, state.Value.Cards.DiscardPile.Count());
 //	Assert.AreEqual(0, state.Value.Cards.CurrentDeck.Count());
 //	Assert.AreEqual(new Card[0], state.Value.Cards.Hand);
 
 //	[Test]
-//  public void ShouldDrawCardAndPayOneGold() {
+//  public void ShouldDrawCardAndPayOneFuel() {
 //		var model = new SceneModel(CardsState.NewState(initialDeck).ShuffleCurrentDeck(),
 //			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();
@@ -135,7 +135,7 @@
 //	}
 
 //	[Test]
-//	public void ShouldNotDrawCardIfNoGoldIsAvailable() {
+//	public void ShouldNotDrawCardIfNoFuelIsAvailable() {
 //		var model = new SceneModel(CardsState.NewState(initialDeck).ShuffleCurrentDeck(),
 //			new EmpireState(0, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();

@@ -51,8 +51,8 @@ public class SceneViewModel : ISceneViewModel {
 
 
 
-	private string stateDescription(EmpireState state) {
-		return $"Gold: {state.Gold}\n" +
+	private string stateDescription(TrainState state) {
+		return $"Fuel: {state.Fuel}\n" +
 			$"Industry: {state.Industry}\n" +
 			$"Population: {state.AvailablePopulation}/{state.TotalPopulation}\n" +
 			$"Army: {state.Army}\n";

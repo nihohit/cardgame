@@ -14,8 +14,16 @@ public static class AssertUtils {
 		AssertConditionMet(num >= min, "{0} is smaller than {1}. {2}".FormatWith(num, min, additionalMessage), ++stackTraceDepth);
 	}
 
+	public static void Positive(double num, string additionalMessage = "", int stackTraceDepth = 1) {
+		EqualOrGreater(num, 0, additionalMessage, ++stackTraceDepth);
+	}
+
 	public static void Greater(double num, double min, string additionalMessage = "", int stackTraceDepth = 1) {
 		AssertConditionMet(num > min, "{0} is smaller than {1}. {2}".FormatWith(num, min, additionalMessage), ++stackTraceDepth);
+	}
+
+	public static void StrictlyPositive(double num, string additionalMessage = "", int stackTraceDepth = 1) {
+		Greater(num, 0, additionalMessage, ++stackTraceDepth);
 	}
 
 	public static void EqualOrLesser(double num, double max, string additionalMessage = "", int stackTraceDepth = 1) {

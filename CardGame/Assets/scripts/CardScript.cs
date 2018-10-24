@@ -9,11 +9,11 @@ using System.Text;
 
 public class CardScript : MonoBehaviour {
   private TextMeshPro text;
-	private CardValueScript goldCost;
+	private CardValueScript fuelCost;
 	private CardValueScript populationCost;
 	private CardValueScript industryCost;
 	private CardValueScript armyCost;
-	private CardValueScript goldGain;
+	private CardValueScript fuelGain;
 	private CardValueScript industryGain;
 	private CardValueScript populationGain;
 	private CardValueScript armyGain;
@@ -25,13 +25,13 @@ public class CardScript : MonoBehaviour {
 		} set {
 			_model = value;
 			text.text = cardDescription(value);
-			goldCost.SetValue(value.GoldChange);
+			fuelCost.SetValue(value.FuelChange);
 			populationCost.SetDoubleValue(-value.PopulationCost, value.PopulationChange);
 			industryCost.SetValue(value.IndustryChange);
 			armyCost.SetValue(value.ArmyChange);
 			modelSetSubject.OnNext(Unit.Default);
 
-			goldGain.SetValue(0);
+			fuelGain.SetValue(0);
 			industryGain.SetValue(0);
 			armyGain.SetValue(0);
 			populationGain.SetValue(0);
@@ -40,11 +40,11 @@ public class CardScript : MonoBehaviour {
 
 	private void Awake() {
     text = GetComponentInChildren<TextMeshPro>();
-		goldCost = transform.Find("GoldCost").GetComponent<CardValueScript>();
+		fuelCost = transform.Find("FuelCost").GetComponent<CardValueScript>();
 		populationCost = transform.Find("PopulationCost").GetComponent<CardValueScript>();
 		industryCost = transform.Find("IndustryCost").GetComponent<CardValueScript>();
 		armyCost = transform.Find("ArmyCost").GetComponent<CardValueScript>();
-		goldGain = transform.Find("GoldGain").GetComponent<CardValueScript>();
+		fuelGain = transform.Find("FuelGain").GetComponent<CardValueScript>();
 		industryGain = transform.Find("IndustryGain").GetComponent<CardValueScript>();
 		populationGain = transform.Find("PopulationGain").GetComponent<CardValueScript>();
 		armyGain = transform.Find("ArmyGain").GetComponent<CardValueScript>();

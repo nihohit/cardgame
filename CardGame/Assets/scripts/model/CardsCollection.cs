@@ -18,7 +18,7 @@ public static class CardsCollection {
 		new Card("Barter",
 			populationCost: 1,
 			industryChange: -1,
-			goldChange: 1
+			fuelChange: 1
 		),
 		new Card("Build Village",
 			populationCost: 1,
@@ -58,21 +58,21 @@ public static class CardsCollection {
 		new Card("Market Day",
 			populationCost: 1,
 			industryChange: -1,
-			goldChange: 2
+			fuelChange: 2
 		),
 		new Card("Public Discussion",
 			populationCost: 1,
-			goldChange: -2,
+			fuelChange: -2,
 			numberOfCardsToChooseToReplace: 1
 		),
 		new Card("Ostracize",
 			populationCost: 1,
-			goldChange: -2,
+			fuelChange: -2,
 			numberOfCardsToChooseToExhaust: 1
 		),
 		new Card("Buy Slaves",
 			populationCost: 2,
-			goldChange: -10
+			fuelChange: -10
 		),
 		new Card("Fishing Village",
 			populationCost: 1,
@@ -84,7 +84,7 @@ public static class CardsCollection {
 		new Card("Fishing",
 			populationCost: 1,
 			industryChange: 1,
-			goldChange: 1
+			fuelChange: 1
 		),
 		new Card("Port Town",
 			populationCost: 1,
@@ -99,7 +99,7 @@ public static class CardsCollection {
 		),
 		new Card("Hire Mercenaries",
 			populationCost: 1,
-			goldChange: -1,
+			fuelChange: -1,
 			armyChange: 1
 		),
 		new Card("Build Mine",

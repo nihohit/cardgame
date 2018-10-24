@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Shachar Langbeheim. All rights reserved.
+﻿// Copyright (c) 2018 Shachar Langbeheim. All rights reserved.
 
 using System;
 using System.Collections;
@@ -12,7 +12,7 @@ public static class EventCardsCollections {
 			Name = "Raiders",
 			Options = new Card[] {
 				new Card("Pay them off",
-					goldChange: -1
+					fuelChange: -1
 				),
 				new Card("Fight them",
 					armyChange: -2
@@ -40,7 +40,7 @@ public static class EventCardsCollections {
 			Name = "Minor plague",
 			Options = new Card[] {
 				new Card("Buy medicine",
-					goldChange: -2
+					fuelChange: -2
 				),
 				new Card("Quarantine the sick",
 					armyChange: -1,
@@ -56,7 +56,7 @@ public static class EventCardsCollections {
 			Name = "Famine",
 			Options = new Card[] {
 				new Card("Buy food",
-					goldChange: -2
+					fuelChange: -2
 				),
 				new Card("Raid Neighbours",
 					armyChange: -2
@@ -72,7 +72,7 @@ public static class EventCardsCollections {
 			Name = "plague",
 			Options = new Card[] {
 				new Card("Buy medicine",
-					goldChange: -4
+					fuelChange: -4
 				),
 				new Card("Quarantine the sick",
 					armyChange: -2,
@@ -104,7 +104,7 @@ public static class EventCardsCollections {
 			Name = "Animal Attacks",
 			Options = new Card[] {
 				new Card("Hire Mercenaries",
-					goldChange: -6
+					fuelChange: -6
 				),
 				new Card("Defend the citizens",
 					armyChange: -3
@@ -117,7 +117,7 @@ public static class EventCardsCollections {
 		},
 	}.ToDictionary(card => card.Name, card => card));
 
-	public static EventCard EventCardForState(EmpireState state) {
+	public static EventCard EventCardForState(TrainState state) {
 		if (state.TotalPopulation < 5) {
 			return smallEmpireCard();
 		} else if (state.TotalPopulation < 10) {

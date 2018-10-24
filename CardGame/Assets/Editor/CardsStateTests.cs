@@ -202,10 +202,10 @@
 //			new Card("bar"),
 //			new Card("foo")
 //		}).ShuffleCurrentDeck()
-//			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance:"GoldGain", increaseInValue:2));
+//			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance:"FuelGain", increaseInValue:2));
 
 //		CollectionAssert.AreEqual(new[] {
-//			new Card("bar", goldGain: 2),
+//			new Card("bar", fuelGain: 2),
 //			new Card("foo")
 //		}, state.CurrentDeck);
 //		CollectionAssert.AreEqual(new Card[0], state.Hand);
@@ -220,10 +220,10 @@
 //			new Card("foo")
 //		}).ShuffleCurrentDeck()
 //			.DrawCardsToHand(1)
-//			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "GoldGain", increaseInValue: 2));
+//			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "FuelGain", increaseInValue: 2));
 
 //		CollectionAssert.AreEqual(new[] { new Card("foo"), }, state.CurrentDeck);
-//		CollectionAssert.AreEqual(new[] { new Card("bar", goldGain: 2), }, state.Hand);
+//		CollectionAssert.AreEqual(new[] { new Card("bar", fuelGain: 2), }, state.Hand);
 //		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
 //	}
 
@@ -236,11 +236,11 @@
 //		}).ShuffleCurrentDeck()
 //			.DrawCardsToHand(1)
 //			.DiscardHand()
-//			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "GoldGain", increaseInValue: 2));
+//			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "FuelGain", increaseInValue: 2));
 
 //		CollectionAssert.AreEqual(new[] { new Card("foo"), }, state.CurrentDeck);
 //		CollectionAssert.AreEqual(new Card[0], state.Hand);
-//		CollectionAssert.AreEqual(new[] { new Card("bar", goldGain: 2), }, state.DiscardPile);
+//		CollectionAssert.AreEqual(new[] { new Card("bar", fuelGain: 2), }, state.DiscardPile);
 //	}
 
 //	[Test]
@@ -249,7 +249,7 @@
 //		var card = new Card("card",
 //			addDeck: DeckType.Test
 //		);
-//		var tradition = new Tradition("foo", "test", "GoldGain", 1);
+//		var tradition = new Tradition("foo", "test", "FuelGain", 1);
 //		Randomizer.SetTestableRandom(1);
 //		var state = CardsState.NewState(new[] { card })
 //			.AddTradition(tradition)
@@ -259,7 +259,7 @@
 
 //		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
 //		CollectionAssert.AreEqual(new Card[0], state.Hand);
-//		CollectionAssert.AreEqual(new[] { card, new Card("test", goldGain: 1), }, state.DiscardPile);
+//		CollectionAssert.AreEqual(new[] { card, new Card("test", fuelGain: 1), }, state.DiscardPile);
 //	}
 
 //	[Test]
@@ -268,7 +268,7 @@
 //		var card = new Card("card",
 //			addDeck: DeckType.Test
 //		);
-//		var tradition = new Tradition("foo", "test", "GoldGain", 1);
+//		var tradition = new Tradition("foo", "test", "FuelGain", 1);
 //		Randomizer.SetTestableRandom(1);
 //		var state = CardsState.NewState(new[] { card })
 //			.AddTradition(tradition)
@@ -281,7 +281,7 @@
 
 //		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
 //		CollectionAssert.AreEqual(new[] { card }, state.Hand);
-//		CollectionAssert.AreEqual(new[] { new Card("test", goldGain: 1), }, state.DiscardPile);
+//		CollectionAssert.AreEqual(new[] { new Card("test", fuelGain: 1), }, state.DiscardPile);
 //	}
 
 //	[Test]
@@ -291,11 +291,11 @@
 //			new Card("foo"),
 //			new Card("bar")
 //		}).ShuffleCurrentDeck()
-//			.RemoveTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "GoldGain", increaseInValue: 2));
+//			.RemoveTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "FuelGain", increaseInValue: 2));
 
 //		CollectionAssert.AreEqual(new[] {
 //			new Card("foo"),
-//			new Card("bar", goldGain: -2)
+//			new Card("bar", fuelGain: -2)
 //		}, state.CurrentDeck);
 //		CollectionAssert.AreEqual(new Card[0], state.Hand);
 //		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);

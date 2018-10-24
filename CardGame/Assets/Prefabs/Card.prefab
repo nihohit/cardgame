@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 4248600695752746}
   - component: {fileID: 114343692044262418}
   m_Layer: 0
-  m_Name: GoldGain
+  m_Name: FuelGain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 4616222121130186}
   - component: {fileID: 114515181341106170}
   m_Layer: 0
-  m_Name: GoldCost
+  m_Name: FuelCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
