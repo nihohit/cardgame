@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2018 Shachar Langbeheim. All rights reserved.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,30 +29,30 @@ public class TrainState : BaseValueClass {
 	public IReadOnlyList<TrainCar> Cars { get; }
 
 	public static TrainState InitialState(
-		int fuel, 
+		int fuel,
 		int industry,
-		int population, 
+		int population,
 		int army) {
 		var cars = new List<TrainCar> {
 			new TrainCar(0, CarType.Engine),
 			new TrainCar(1, CarType.General)
 		};
 		return new TrainState(
-			fuel, 
-			industry, 
+			fuel,
+			industry,
 			population,
-			population, 
-			army, 
+			population,
+			army,
 			new List<Card>(),
 			cars);
 	}
 
 	private TrainState(
-		int fuel, 
-	    int industry, 
-	    int totalPopulation,
-	    int availablePopulation,
-	    int army, 
+		int fuel,
+		int industry,
+		int totalPopulation,
+		int availablePopulation,
+		int army,
 		IReadOnlyList<Card> playedCards,
 		IReadOnlyList<TrainCar> cars) {
 		AssertUtils.Positive(fuel, "fuel");
@@ -72,8 +71,8 @@ public class TrainState : BaseValueClass {
 
 	public TrainState NextTurnState() {
 		return new TrainState(
-			Fuel, 
-			Industry, 
+			Fuel,
+			Industry,
 			TotalPopulation,
 			TotalPopulation,
 			Army,
@@ -90,8 +89,7 @@ public class TrainState : BaseValueClass {
 	}
 
 	public TrainState Drive() {
-		return new TrainState(
-			Fuel - fuelConsumption(),
+		return new TrainState(Fuel - fuelConsumption(),
 			Industry,
 			TotalPopulation,
 			TotalPopulation,
@@ -102,53 +100,51 @@ public class TrainState : BaseValueClass {
 
 	public TrainState ChangeFuel(int fuelChange) {
 		return new TrainState(
-			Fuel + fuelChange, 
-            Industry, 
-            TotalPopulation, 
-            AvailablePopulation, 
-            Army, 
-            PlayedCards,
-            Cars);
+			Fuel + fuelChange,
+			Industry,
+			TotalPopulation,
+			AvailablePopulation,
+			Army,
+			PlayedCards,
+			Cars);
 	}
 
 	public TrainState ChangeIndustry(int changeIndustry) {
-		return new TrainState(
-			Fuel, 
-            Industry + changeIndustry, 
-            TotalPopulation, 
-            AvailablePopulation,
-            Army, 
-            PlayedCards, 
-            Cars);
+		return new TrainState(Fuel,
+			Industry + changeIndustry,
+			TotalPopulation,
+			AvailablePopulation,
+			Army,
+			PlayedCards,
+			Cars);
 	}
 
 	public TrainState ChangePopulation(int populationChange) {
-		return new TrainState(
-			Fuel, 
-            Industry, 
-            TotalPopulation + populationChange, 
-            AvailablePopulation, 
-            Army,
-            PlayedCards,
-            Cars); ;
+		return new TrainState(Fuel,
+			Industry,
+			TotalPopulation + populationChange,
+			AvailablePopulation,
+			Army,
+			PlayedCards,
+			Cars); ;
 	}
 
 	public TrainState ChangeArmy(int armyChange) {
 		return new TrainState(
-			Fuel, 
-            Industry,
-            TotalPopulation, 
-            AvailablePopulation,
-            Army + armyChange, 
-            PlayedCards,
-            Cars);
+			Fuel,
+			Industry,
+			TotalPopulation,
+			AvailablePopulation,
+			Army + armyChange,
+			PlayedCards,
+			Cars);
 	}
 
 	public bool CanPlayCard(Card card) {
 		return (
 			Fuel >= -card.FuelChange &&
-		    Industry >= -card.IndustryChange &&
-	        AvailablePopulation >= card.PopulationCost &&
+				Industry >= -card.IndustryChange &&
+					AvailablePopulation >= card.PopulationCost &&
 			Army >= -card.ArmyChange &&
 			(card.CarToRemove == null || Cars.Any(car => car.Equals(card.CarToRemove)))) ||
 			card.DefaultChoice;
