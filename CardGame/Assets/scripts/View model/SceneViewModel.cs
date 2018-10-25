@@ -52,10 +52,11 @@ public class SceneViewModel : ISceneViewModel {
 
 
 	private string stateDescription(TrainState state) {
-		return $"Fuel: {state.Fuel}\n" +
+		return
+			$"Population: {state.AvailablePopulation}/{state.TotalPopulation}\n" + 
+			$"Fuel: {state.Fuel}\n" +
 			$"Materials: {state.Materials}\n" +
-			$"Population: {state.AvailablePopulation}/{state.TotalPopulation}\n" +
-			$"Army: {state.Army}\n";
+			$"Army: {state.Army}";
 	}
 
 	public IObservable<int> DeckCount => model.State

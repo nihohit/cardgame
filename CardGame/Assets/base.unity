@@ -137,7 +137,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 9466501}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.1999998, y: 3.82, z: 0.11570806}
+  m_LocalPosition: {x: 0.22, y: 3.82, z: 0.11570806}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 1805717207}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 94834194}
   - component: {fileID: 94834193}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: FuelMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,8 +351,8 @@ RectTransform:
   m_Father: {fileID: 491460503}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.75}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.75}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -514,7 +514,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 103525996}
     characterCount: 11
@@ -654,7 +654,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Hello world
+  m_text: Increase Fishing's FuelChange by 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -681,7 +681,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -699,7 +699,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 19
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -719,15 +719,15 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 128617852}
-    characterCount: 11
+    characterCount: 34
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 4
+    wordCount: 5
     linkCount: 0
-    lineCount: 1
+    lineCount: 2
     pageCount: 1
     materialCount: 1
   m_havePropertiesChanged: 0
@@ -1059,7 +1059,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 223630168}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.1999998, y: 3.82, z: 0.11570806}
+  m_LocalPosition: {x: 2.2199998, y: 3.82, z: 0.11570806}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 476344374}
@@ -1153,7 +1153,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 305968846}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -3, z: 0}
+  m_LocalPosition: {x: -6.4, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2050524223}
@@ -1643,7 +1643,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1681,7 +1681,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 476344375}
     characterCount: 11
@@ -1796,8 +1796,8 @@ RectTransform:
   m_Father: {fileID: 331391003}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 1}
-  m_AnchorMin: {x: 0, y: 0.7}
-  m_AnchorMax: {x: 0.025, y: 0.9}
+  m_AnchorMin: {x: 0, y: 0.705}
+  m_AnchorMax: {x: 0.025, y: 0.895}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1859,7 +1859,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 504439831}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.79999995, y: 3.82, z: 0.11570806}
+  m_LocalPosition: {x: -1.78, y: 3.82, z: 0.11570806}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 1507457685}
@@ -2191,7 +2191,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2229,7 +2229,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 629708215}
     characterCount: 11
@@ -2396,7 +2396,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2434,7 +2434,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 635198068}
     characterCount: 11
@@ -2676,7 +2676,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2714,7 +2714,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 656397755}
     characterCount: 11
@@ -2806,7 +2806,7 @@ GameObject:
   - component: {fileID: 661575832}
   - component: {fileID: 661575831}
   m_Layer: 5
-  m_Name: Panel (4)
+  m_Name: ArmyMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3085,7 +3085,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 933537465}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.8, y: 3.82, z: 0.11570806}
+  m_LocalPosition: {x: 3.22, y: 3.82, z: 0.11570806}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 1705939441}
@@ -3199,7 +3199,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1081104902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.34, z: 0}
+  m_LocalPosition: {x: 2.28, y: -3.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 341058668}
@@ -3358,7 +3358,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1189623713}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.19999981, y: 3.82, z: 0.11570806}
+  m_LocalPosition: {x: -0.78, y: 3.82, z: 0.11570806}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 635198067}
@@ -3527,7 +3527,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1233584222}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.25, y: -3, z: 0}
+  m_LocalPosition: {x: 6.36, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1439625785}
@@ -3921,7 +3921,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3959,7 +3959,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 1493588894}
     characterCount: 11
@@ -4126,7 +4126,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4164,7 +4164,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 1507457686}
     characterCount: 11
@@ -4691,7 +4691,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4729,7 +4729,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 1589290062}
     characterCount: 11
@@ -5094,7 +5094,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5132,7 +5132,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 1705939442}
     characterCount: 11
@@ -5360,7 +5360,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1717337425}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.2000003, y: 3.82, z: 0.11570806}
+  m_LocalPosition: {x: 1.2200003, y: 3.82, z: 0.11570806}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 1493588893}
@@ -5555,7 +5555,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5593,7 +5593,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 1805717208}
     characterCount: 11
@@ -5685,7 +5685,7 @@ GameObject:
   - component: {fileID: 1843914642}
   - component: {fileID: 1843914641}
   m_Layer: 5
-  m_Name: Panel (3)
+  m_Name: MaterialsMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5829,7 +5829,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1.6
+  m_fontSize: 1.75
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5867,7 +5867,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.5, y: 1.8453141, z: 9.5, w: 2.9739485}
+  m_margin: {x: 9.5, y: 1.8, z: 9.5, w: 3}
   m_textInfo:
     textComponent: {fileID: 1909216306}
     characterCount: 11
@@ -6034,7 +6034,7 @@ GameObject:
   - component: {fileID: 1975327625}
   - component: {fileID: 1975327624}
   m_Layer: 5
-  m_Name: Panel (2)
+  m_Name: PopulationMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6053,8 +6053,8 @@ RectTransform:
   m_Father: {fileID: 491460503}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.75}
+  m_AnchorMin: {x: 0, y: 0.75}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
