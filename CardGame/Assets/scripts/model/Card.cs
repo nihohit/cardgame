@@ -6,7 +6,7 @@ public class Card : BaseValueClass {
   public string Name { get; }
 	public int PopulationCost { get; }
 	public int FuelChange { get; }
-	public int IndustryChange { get; }
+	public int MaterialsChange { get; }
 	public int PopulationChange { get; }
 	public int ArmyChange { get; }
 	public DeckType AddDeck { get; }
@@ -21,7 +21,7 @@ public class Card : BaseValueClass {
 		string name,
 		int populationCost = 0,
 		int fuelChange = 0, 
-		int industryChange = 0, 
+		int materialsChange = 0, 
 		int populationChange = 0,
 		int armyChange = 0,
 		DeckType addDeck = DeckType.None,
@@ -34,7 +34,7 @@ public class Card : BaseValueClass {
 		Name = name;
 		PopulationCost = populationCost;
 		FuelChange = fuelChange;
-		IndustryChange = industryChange;
+		MaterialsChange = materialsChange;
 		PopulationChange = populationChange;
 		ArmyChange = armyChange;
 		AddDeck = addDeck;

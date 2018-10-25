@@ -26,7 +26,7 @@ public static class EventCardsCollections {
 			Name = "Wild animals",
 			Options = new Card[] {
 				new Card("Build traps",
-					industryChange: -2
+					materialsChange: -2
 				),
 				new Card("Fight them",
 					armyChange: -1
@@ -63,7 +63,7 @@ public static class EventCardsCollections {
 				),
 				new Card("Lose people and productivity",
 					populationChange: -1,
-					industryChange: -1,
+					materialsChange: -1,
 					defaultChoice: true
 				)
 			}
@@ -88,10 +88,10 @@ public static class EventCardsCollections {
 			Name = "Natural disaster1",
 			Options = new Card[] {
 				new Card("Rebuild",
-					industryChange: -5
+					materialsChange: -5
 				),
 				new Card("Build temporary shelters",
-					industryChange: -2,
+					materialsChange: -2,
 					populationChange: -1
 				),
 				new Card("Let the population handle it",

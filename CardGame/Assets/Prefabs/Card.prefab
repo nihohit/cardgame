@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 4958174567863614}
   - component: {fileID: 114941792061690716}
   m_Layer: 0
-  m_Name: IndustryCost
+  m_Name: MaterialsCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 4779790077393198}
   - component: {fileID: 114812036330423426}
   m_Layer: 0
-  m_Name: IndustryGain
+  m_Name: MaterialsGain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

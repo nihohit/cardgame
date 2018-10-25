@@ -21,7 +21,7 @@ public class TrainCar : BaseValueClass {
 
 public class TrainState : BaseValueClass {
 	public int Fuel { get; }
-	public int Industry { get; }
+	public int Materials { get; }
 	public int Army { get; }
 	public int TotalPopulation { get; }
 	public int AvailablePopulation { get; }
@@ -30,7 +30,7 @@ public class TrainState : BaseValueClass {
 
 	public static TrainState InitialState(
 		int fuel,
-		int industry,
+		int materials,
 		int population,
 		int army) {
 		var cars = new List<TrainCar> {
@@ -39,7 +39,7 @@ public class TrainState : BaseValueClass {
 		};
 		return new TrainState(
 			fuel,
-			industry,
+			materials,
 			population,
 			population,
 			army,
@@ -49,19 +49,19 @@ public class TrainState : BaseValueClass {
 
 	private TrainState(
 		int fuel,
-		int industry,
+		int materials,
 		int totalPopulation,
 		int availablePopulation,
 		int army,
 		IReadOnlyList<Card> playedCards,
 		IReadOnlyList<TrainCar> cars) {
 		AssertUtils.Positive(fuel, "fuel");
-		AssertUtils.Positive(industry, "industry");
+		AssertUtils.Positive(materials, "materials");
 		AssertUtils.Positive(availablePopulation, "availablePopulation");
 		AssertUtils.StrictlyPositive(totalPopulation, "totalPopulation");
 		AssertUtils.StrictlyPositive(cars.Count, "Cars count");
 		Fuel = fuel;
-		Industry = industry;
+		Materials = materials;
 		TotalPopulation = totalPopulation;
 		AvailablePopulation = availablePopulation;
 		Army = army;
@@ -72,7 +72,7 @@ public class TrainState : BaseValueClass {
 	public TrainState NextTurnState() {
 		return new TrainState(
 			Fuel,
-			Industry,
+			Materials,
 			TotalPopulation,
 			TotalPopulation,
 			Army,
@@ -90,7 +90,7 @@ public class TrainState : BaseValueClass {
 
 	public TrainState Drive() {
 		return new TrainState(Fuel - fuelConsumption(),
-			Industry,
+			Materials,
 			TotalPopulation,
 			TotalPopulation,
 			Army,
@@ -101,7 +101,7 @@ public class TrainState : BaseValueClass {
 	public TrainState ChangeFuel(int fuelChange) {
 		return new TrainState(
 			Fuel + fuelChange,
-			Industry,
+			Materials,
 			TotalPopulation,
 			AvailablePopulation,
 			Army,
@@ -109,9 +109,9 @@ public class TrainState : BaseValueClass {
 			Cars);
 	}
 
-	public TrainState ChangeIndustry(int changeIndustry) {
+	public TrainState ChangeMaterials(int changeMaterials) {
 		return new TrainState(Fuel,
-			Industry + changeIndustry,
+			Materials + changeMaterials,
 			TotalPopulation,
 			AvailablePopulation,
 			Army,
@@ -121,7 +121,7 @@ public class TrainState : BaseValueClass {
 
 	public TrainState ChangePopulation(int populationChange) {
 		return new TrainState(Fuel,
-			Industry,
+			Materials,
 			TotalPopulation + populationChange,
 			AvailablePopulation,
 			Army,
@@ -132,7 +132,7 @@ public class TrainState : BaseValueClass {
 	public TrainState ChangeArmy(int armyChange) {
 		return new TrainState(
 			Fuel,
-			Industry,
+			Materials,
 			TotalPopulation,
 			AvailablePopulation,
 			Army + armyChange,
@@ -143,7 +143,7 @@ public class TrainState : BaseValueClass {
 	public bool CanPlayCard(Card card) {
 		return (
 			Fuel >= -card.FuelChange &&
-				Industry >= -card.IndustryChange &&
+				Materials >= -card.MaterialsChange &&
 					AvailablePopulation >= card.PopulationCost &&
 			Army >= -card.ArmyChange &&
 			(card.CarToRemove == null || Cars.Any(car => car.Equals(card.CarToRemove)))) ||
@@ -183,7 +183,7 @@ public class TrainState : BaseValueClass {
 
 		return new TrainState(
 			Math.Max(Fuel + card.FuelChange, 0),
-			Math.Max(Industry + card.IndustryChange, 0),
+			Math.Max(Materials + card.MaterialsChange, 0),
 			Math.Max(TotalPopulation + card.PopulationChange, 0),
 			Math.Max(AvailablePopulation - card.PopulationCost, 0),
 			Math.Max(Army + card.ArmyChange, 0),

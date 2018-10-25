@@ -13,51 +13,51 @@ public static class CardsCollection {
 		new Card("test"),
 		new Card("Manual Labour",
 			populationCost: 1,
-			industryChange: 1
+			materialsChange: 1
 		),
 		new Card("Barter",
 			populationCost: 1,
-			industryChange: -1,
+			materialsChange: -1,
 			fuelChange: 1
 		),
 		new Card("Build Village",
 			populationCost: 1,
 			populationChange: 1,
-			industryChange: -1,
+			materialsChange: -1,
 			addDeck: DeckType.Village,
 			exhaustible:true
 		),
 		new Card("Temple",
 			populationCost: 1,
-			industryChange: -4,
+			materialsChange: -4,
 			exhaustible: true,
 			addDeck: DeckType.BaseTraditions
 		),
 		new Card("Village center",
 			populationCost: 1,
-			industryChange: -4,
+			materialsChange: -4,
 			exhaustible: true,
 			addDeck: DeckType.VillageCenter
 		),
 		new Card("Town",
 			populationCost: 2,
 			populationChange: 1,
-			industryChange: -10,
+			materialsChange: -10,
 			exhaustible: true,
 			addDeck: DeckType.Town
 		),
 		new Card("Farming",
 			populationCost: 1,
-			industryChange: 2
+			materialsChange: 2
 		),
 		new Card("Arm Militia",
 			populationCost: 1,
-			industryChange: -1,
+			materialsChange: -1,
 			armyChange: 1
 		),
 		new Card("Market Day",
 			populationCost: 1,
-			industryChange: -1,
+			materialsChange: -1,
 			fuelChange: 2
 		),
 		new Card("Public Discussion",
@@ -77,19 +77,19 @@ public static class CardsCollection {
 		new Card("Fishing Village",
 			populationCost: 1,
 			populationChange: 1,
-			industryChange: -1,
+			materialsChange: -1,
 			addDeck: DeckType.FishingVillage,
 			exhaustible:true
 		),
 		new Card("Fishing",
 			populationCost: 1,
-			industryChange: 1,
+			materialsChange: 1,
 			fuelChange: 1
 		),
 		new Card("Port Town",
 			populationCost: 1,
 			populationChange: 1,
-			industryChange: -10,
+			materialsChange: -10,
 			addDeck: DeckType.PortTown,
 			exhaustible:true
 		),
@@ -104,13 +104,13 @@ public static class CardsCollection {
 		),
 		new Card("Build Mine",
 			populationCost: 1,
-			industryChange: -1,
+			materialsChange: -1,
 			addDeck: DeckType.Mine,
 			exhaustible:true
 		),
 		new Card("Mine",
 			populationCost: 1,
-			industryChange: 3
+			materialsChange: 3
 		)
 	}.ToDictionary(card => card.Name, card => card));
 

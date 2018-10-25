@@ -11,10 +11,10 @@ public class CardScript : MonoBehaviour {
   private TextMeshPro text;
 	private CardValueScript fuelCost;
 	private CardValueScript populationCost;
-	private CardValueScript industryCost;
+	private CardValueScript materialsCost;
 	private CardValueScript armyCost;
 	private CardValueScript fuelGain;
-	private CardValueScript industryGain;
+	private CardValueScript materialsGain;
 	private CardValueScript populationGain;
 	private CardValueScript armyGain;
 
@@ -27,12 +27,12 @@ public class CardScript : MonoBehaviour {
 			text.text = cardDescription(value);
 			fuelCost.SetValue(value.FuelChange);
 			populationCost.SetDoubleValue(-value.PopulationCost, value.PopulationChange);
-			industryCost.SetValue(value.IndustryChange);
+			materialsCost.SetValue(value.MaterialsChange);
 			armyCost.SetValue(value.ArmyChange);
 			modelSetSubject.OnNext(Unit.Default);
 
 			fuelGain.SetValue(0);
-			industryGain.SetValue(0);
+			materialsGain.SetValue(0);
 			armyGain.SetValue(0);
 			populationGain.SetValue(0);
 		}
@@ -42,10 +42,10 @@ public class CardScript : MonoBehaviour {
     text = GetComponentInChildren<TextMeshPro>();
 		fuelCost = transform.Find("FuelCost").GetComponent<CardValueScript>();
 		populationCost = transform.Find("PopulationCost").GetComponent<CardValueScript>();
-		industryCost = transform.Find("IndustryCost").GetComponent<CardValueScript>();
+		materialsCost = transform.Find("MaterialsCost").GetComponent<CardValueScript>();
 		armyCost = transform.Find("ArmyCost").GetComponent<CardValueScript>();
 		fuelGain = transform.Find("FuelGain").GetComponent<CardValueScript>();
-		industryGain = transform.Find("IndustryGain").GetComponent<CardValueScript>();
+		materialsGain = transform.Find("MaterialsGain").GetComponent<CardValueScript>();
 		populationGain = transform.Find("PopulationGain").GetComponent<CardValueScript>();
 		armyGain = transform.Find("ArmyGain").GetComponent<CardValueScript>();
 	}
