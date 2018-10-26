@@ -55,6 +55,9 @@ public static class ValueClassExtensions {
 	}
 
 	private static string getStringDescription(object obj) {
+		if (obj == null) {
+			return "null";
+		}
 		var enumerable = obj as IEnumerable;
 		if (enumerable == null) {
 			return obj.ToString();
