@@ -11,7 +11,7 @@ public enum CardHandlingMode { Regular, Event, Replace, Exhaust }
 
 public class SceneState {
 	public CardsState Cards { get; }
-	public TrainState Empire { get; }
+	public TrainState Train { get; }
 	public CardHandlingMode Mode { get; }
 	public EventCard CurrentEvent { get; }
 
@@ -20,7 +20,7 @@ public class SceneState {
 		CardHandlingMode mode,
 		EventCard currentEvent) {
 		Cards = cards;
-		Empire = empire;
+		Train = empire;
 		Mode = mode;
 		CurrentEvent = currentEvent;
 	}

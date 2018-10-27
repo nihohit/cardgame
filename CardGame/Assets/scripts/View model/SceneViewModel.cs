@@ -23,6 +23,7 @@ public interface ISceneViewModel {
 	IObservable<Unit> HideMultiDisplay { get; }
 	IObservable<IEnumerable<CardMovementInstruction>> CardMovementInstructions { get; }
 	IObservable<IEnumerable<Tradition>> Traditions { get; }
+	IObservable<IReadOnlyList<TrainCar>> Train { get; }
 	#endregion
 }
 
@@ -47,7 +48,7 @@ public class SceneViewModel : ISceneViewModel {
 	}
 
 	public IObservable<string> StateDescription => model.State
-		.Select(state => stateDescription(state.Empire));
+		.Select(state => stateDescription(state.Train));
 
 
 
@@ -179,7 +180,6 @@ public class SceneViewModel : ISceneViewModel {
 				obs.OnNext(midStepMovements);
 			}
 
-
 			foreach (var index in currentHandIndicesToCheck) {
 				var card = currentHand[index];
 				lastMovements.Add(new CardMovementInstruction(card, ScreenLocation.Deck, handLocationFromIndex(index)));
@@ -211,6 +211,9 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => state.Cards.Traditions)
 		.StartWith(new Tradition[0])
 		.DistinctUntilChanged();
+
+	public IObservable<IReadOnlyList<TrainCar>> Train => model.State
+		.Select(state => state.Train.Cars);
 	#endregion
 
 	public SceneViewModel() : this(new SceneModel()) { }

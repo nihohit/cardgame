@@ -119,15 +119,15 @@ public static class EventCardsCollections {
 
 	public static EventCard EventCardForState(TrainState state) {
 		if (state.TotalPopulation < 5) {
-			return smallEmpireCard();
+			return smallTrainCard();
 		} else if (state.TotalPopulation < 10) {
-			return mediumEmpireCard();
+			return mediumTrainCard();
 		} else {
-			return largeEmpireCard();
+			return largeTrainCard();
 		}
 	}
 
-	private static EventCard smallEmpireCard() {
+	private static EventCard smallTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "Raiders", 3},
 			{ "Wild animals", 3},
@@ -135,7 +135,7 @@ public static class EventCardsCollections {
 		}).Shuffle().First();	
 	}
 
-	private static EventCard mediumEmpireCard() {
+	private static EventCard mediumTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "plague", 2},
 			{ "Wild animals", 1},
@@ -144,7 +144,7 @@ public static class EventCardsCollections {
 		}).Shuffle().First();
 	}
 
-	private static EventCard largeEmpireCard() {
+	private static EventCard largeTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "Famine", 1},
 			{ "Natural disaster1", 1},

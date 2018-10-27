@@ -16,14 +16,14 @@
 //	[Test]
 //	public void ShouldHaveInitialStateReadyOnConstruction() {
 //		var cards = CardsState.NewState(initialDeck).ShuffleCurrentDeck();
-//		var empire = new EmpireState(1, 2, 3, 4, new List<Card>());
+//		var empire = new TrainState(1, 2, 3, 4, new List<Card>());
 //		var mode = CardHandlingMode.Exhaust;
 //		var model = new SceneModel(cards, empire, mode);
 
 //		var state = model.State.ToReactiveProperty();
 
 //		Assert.AreEqual(cards, state.Value.Cards);
-//		Assert.AreEqual(empire, state.Value.Empire);
+//		Assert.AreEqual(empire, state.Value.Train);
 //		Assert.AreEqual(mode, state.Value.Mode);
 //	}
 
@@ -34,19 +34,19 @@
 //			fuelGain: 5
 //		)};
 //		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
-//			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
+//			new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();
 //		model.PlayCard(deck[0]);
 
 //		model.UserFinishedMode();
 
-	//	Assert.AreEqual(new EmpireState(5, 0, 0, 0, deck), state.Value.Empire);
+	//	Assert.AreEqual(new TrainState(5, 0, 0, 0, deck), state.Value.Train);
 //	}
 
 //	[Test]
 //	public void ShouldReturnToRegularModeFromReplace() {
 //		var model = new SceneModel(CardsState.NewState(initialDeck).ShuffleCurrentDeck(),
-//			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Replace);
+//			new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Replace);
 //		var state = model.State.ToReactiveProperty();
 
 //		model.UserFinishedMode();
@@ -57,7 +57,7 @@
 //	[Test]
 //	public void ShouldReturnToRegularModeFromExhaust() {
 //		var model = new SceneModel(CardsState.NewState(initialDeck).ShuffleCurrentDeck(),
-//			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Exhaust);
+//			new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Exhaust);
 //		var state = model.State.ToReactiveProperty();
 
 //		model.UserFinishedMode();
@@ -72,13 +72,13 @@
 //			fuelGain: 5
 //		)};
 //		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
-//			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
+//			new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();
 
 //		model.PlayCard(deck[0]);
 
-//		Assert.AreEqual(0, state.Value.Empire.Fuel);
-//		Assert.AreEqual(5, state.Value.Empire.AddFuel);
+//		Assert.AreEqual(0, state.Value.Train.Fuel);
+//		Assert.AreEqual(5, state.Value.Train.AddFuel);
 //		Assert.AreEqual(0, state.Value.Cards.Hand.Count());
 //		Assert.AreEqual(deck, state.Value.Cards.DiscardPile);
 //		Assert.AreEqual(0, state.Value.Cards.CurrentDeck.Count());
@@ -91,13 +91,13 @@
 //			fuelGain: 5
 //		)};
 //		var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
-//			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
+//			new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();
 
 //		model.PlayCard(deck[0]);
 
-//		Assert.AreEqual(1, state.Value.Empire.Fuel);
-//		Assert.AreEqual(0, state.Value.Empire.AddFuel);
+//		Assert.AreEqual(1, state.Value.Train.Fuel);
+//		Assert.AreEqual(0, state.Value.Train.AddFuel);
 //		Assert.AreEqual(0, state.Value.Cards.DiscardPile.Count());
 //		Assert.AreEqual(0, state.Value.Cards.CurrentDeck.Count());
 //		Assert.AreEqual(deck, state.Value.Cards.Hand);
@@ -111,13 +111,13 @@
 //				defaultChoice: true
 //		)};
 //	var model = new SceneModel(CardsState.NewState(deck).ShuffleCurrentDeck().DrawCardsToHand(1),
-//		new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
+//		new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //	var state = model.State.ToReactiveProperty();
 
 //	model.PlayCard(deck[0]);
 
-//	Assert.AreEqual(0, state.Value.Empire.Fuel);
-//	Assert.AreEqual(5, state.Value.Empire.AddFuel);
+//	Assert.AreEqual(0, state.Value.Train.Fuel);
+//	Assert.AreEqual(5, state.Value.Train.AddFuel);
 //	Assert.AreEqual(1, state.Value.Cards.DiscardPile.Count());
 //	Assert.AreEqual(0, state.Value.Cards.CurrentDeck.Count());
 //	Assert.AreEqual(new Card[0], state.Value.Cards.Hand);
@@ -125,24 +125,24 @@
 //	[Test]
 //  public void ShouldDrawCardAndPayOneFuel() {
 //		var model = new SceneModel(CardsState.NewState(initialDeck).ShuffleCurrentDeck(),
-//			new EmpireState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
+//			new TrainState(1, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();
 
 //		model.TryDrawCard();
 
 //		Assert.AreEqual(1, state.Value.Cards.Hand.Count());
-//		Assert.AreEqual(new EmpireState(0, 0, 0, 0, new List<Card>()), state.Value.Empire);
+//		Assert.AreEqual(new TrainState(0, 0, 0, 0, new List<Card>()), state.Value.Train);
 //	}
 
 //	[Test]
 //	public void ShouldNotDrawCardIfNoFuelIsAvailable() {
 //		var model = new SceneModel(CardsState.NewState(initialDeck).ShuffleCurrentDeck(),
-//			new EmpireState(0, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
+//			new TrainState(0, 0, 0, 0, new List<Card>()), CardHandlingMode.Regular);
 //		var state = model.State.ToReactiveProperty();
 
 //		model.TryDrawCard();
 
 //		Assert.AreEqual(0, state.Value.Cards.Hand.Count());
-//		Assert.AreEqual(new EmpireState(0, 0, 0, 0, new List<Card>()), state.Value.Empire);
+//		Assert.AreEqual(new TrainState(0, 0, 0, 0, new List<Card>()), state.Value.Train);
 //	}
 //}
