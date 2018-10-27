@@ -23,6 +23,7 @@ public class SceneManager : MonoBehaviour {
 	private readonly object cardAnimationsLock = new object();
 	private int currentCardAnimationsInProgress;
 	private TraditionScript[] traditionScripts;
+	private TrainViewScript trainView;
 
 	void Start() {
 		setPrivateGameObjects();
@@ -39,6 +40,7 @@ public class SceneManager : MonoBehaviour {
 		traditionScripts = FindObjectsOfType<TraditionScript>()
 			.OrderBy(traditionScript => traditionScript.transform.position.x)
 			.ToArray();
+		trainView = FindObjectOfType<TrainViewScript>();
 	}
 
 	private void setupViewModel() {
@@ -74,7 +76,8 @@ public class SceneManager : MonoBehaviour {
 		viewModel.Traditions
 			.DistinctUntilChanged()
 			.Subscribe(updateTraditions);
-
+		viewModel.Train.
+			Subscribe(train => trainView.setTrain(train));
 	}
 
 	private void moveCards(IEnumerable<CardMovementInstruction> instructions) {
