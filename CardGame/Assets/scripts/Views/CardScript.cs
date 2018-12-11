@@ -59,8 +59,8 @@ public class CardScript : MonoBehaviour {
 	private string cardDescription(Card card) {
 		var stringBuilder = new StringBuilder();
 		stringBuilder.AppendLine(card.Name);
-		if (card.AddDeck != DeckType.None) {
-			stringBuilder.AppendLine($"Add deck: {card.AddDeck}");
+		if (card.AddTradition != TraditionType.None) {
+			stringBuilder.AppendLine($"Add deck: {card.AddTradition}");
 		}
 		if (card.Exhaustible) {
 			stringBuilder.AppendLine("Exhaustible");

@@ -9,7 +9,7 @@ public class Card : BaseValueClass {
 	public int MaterialsChange { get; }
 	public int PopulationChange { get; }
 	public int ArmyChange { get; }
-	public DeckType AddDeck { get; }
+	public TraditionType AddTradition { get; }
 	public bool Exhaustible { get; }
 	public int NumberOfCardsToChooseToExhaust { get; }
 	public int NumberOfCardsToChooseToReplace { get; }
@@ -24,7 +24,7 @@ public class Card : BaseValueClass {
 		int materialsChange = 0, 
 		int populationChange = 0,
 		int armyChange = 0,
-		DeckType addDeck = DeckType.None,
+		TraditionType addTradition = TraditionType.None,
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
 		int numberOfCardsToChooseToReplace = 0,
@@ -37,7 +37,7 @@ public class Card : BaseValueClass {
 		MaterialsChange = materialsChange;
 		PopulationChange = populationChange;
 		ArmyChange = armyChange;
-		AddDeck = addDeck;
+		AddTradition = addTradition;
 		Exhaustible = exhaustible;
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;
 		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;

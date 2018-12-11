@@ -13,7 +13,7 @@ public static class CardsCollection {
 			populationCost: 1,
 			materialsChange: 1
 		),
-		new Card("Barter",
+		new Card("Convert To Fuel",
 			populationCost: 1,
 			materialsChange: -1,
 			fuelChange: 1
@@ -22,27 +22,7 @@ public static class CardsCollection {
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
-			addDeck: DeckType.Village,
 			exhaustible:true
-		),
-		new Card("Temple",
-			populationCost: 1,
-			materialsChange: -4,
-			exhaustible: true,
-			addDeck: DeckType.BaseTraditions
-		),
-		new Card("Village center",
-			populationCost: 1,
-			materialsChange: -4,
-			exhaustible: true,
-			addDeck: DeckType.VillageCenter
-		),
-		new Card("Town",
-			populationCost: 2,
-			populationChange: 1,
-			materialsChange: -10,
-			exhaustible: true,
-			addDeck: DeckType.Town
 		),
 		new Card("Farming",
 			populationCost: 1,
@@ -72,39 +52,15 @@ public static class CardsCollection {
 			populationCost: 2,
 			fuelChange: -10
 		),
-		new Card("Fishing Village",
-			populationCost: 1,
-			populationChange: 1,
-			materialsChange: -1,
-			addDeck: DeckType.FishingVillage,
-			exhaustible:true
-		),
 		new Card("Fishing",
 			populationCost: 1,
 			materialsChange: 1,
 			fuelChange: 1
 		),
-		new Card("Port Town",
-			populationCost: 1,
-			populationChange: 1,
-			materialsChange: -10,
-			addDeck: DeckType.PortTown,
-			exhaustible:true
-		),
-		new Card("Explore",
-			populationCost: 1,
-			addDeck: DeckType.Explore
-		),
 		new Card("Hire Mercenaries",
 			populationCost: 1,
 			fuelChange: -1,
 			armyChange: 1
-		),
-		new Card("Build Mine",
-			populationCost: 1,
-			materialsChange: -1,
-			addDeck: DeckType.Mine,
-			exhaustible:true
 		),
 		new Card("Mine",
 			populationCost: 1,
@@ -116,25 +72,25 @@ public static class CardsCollection {
 	public static IEnumerable<Card> Cards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Manual Labour", 2},
-			{"Barter", 1},
+			{"Convert To Fuel", 1},
 			{"Explore", 1},
 			{"Hire Mercenaries", 1}
 		});	
 	}
 
-	public static IEnumerable<Card> CardsForDeck(DeckType deckType) {
-		switch (deckType) {
-			case DeckType.Village: 
+	public static IEnumerable<Card> CardsForTrainCar(CarType car) {
+		switch (car) {
+			case CarType.Cannon: 
 				return villageDeck();
-			case DeckType.VillageCenter: 
+			case CarType.Engine: 
 				return villageCenterDeck();
-			case DeckType.FishingVillage:
+			case CarType.General: 
 				return fishingVillageDeck();
-			case DeckType.Explore:
+			case CarType.Workhouse: 
 				return exploreDeck();
-			case DeckType.Mine:
+			case CarType.Refinery: 
 				return mineDeck();
-			case DeckType.Test:
+			case CarType.Test:
 				return testDeck();
 			default:
 				return new Card[0];

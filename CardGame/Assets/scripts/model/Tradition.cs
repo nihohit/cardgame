@@ -11,17 +11,17 @@ public class Tradition :BaseValueClass {
 	public string CardToEnhance { get; }
 	public string PropertyToEnhance { get; }
 	public int IncreaseInValue { get; }
-	public DeckType DeckToAdd { get; }
+	public TraditionType TraditionToAdd { get; }
 
 	public Tradition(string name,
 		string cardToEnhance = null,
 		string propertyToEnhance = null,
 		int increaseInValue = 0,
-		DeckType deckToAdd = DeckType.None) {
+		TraditionType traditionToAdd = TraditionType.None) {
 		Name = name;
 		CardToEnhance = cardToEnhance;
 		PropertyToEnhance = propertyToEnhance;
 		IncreaseInValue = increaseInValue;
-		DeckToAdd = deckToAdd;
+		TraditionToAdd = traditionToAdd;
 	}
 }

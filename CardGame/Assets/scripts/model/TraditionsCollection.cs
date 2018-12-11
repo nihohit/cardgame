@@ -47,11 +47,11 @@ public static class TraditionsCollection {
 			increaseInValue:1),
 	}.ToDictionary(tradition => tradition.Name, tradition => tradition));
 
-	public static IEnumerable<Tradition> TraditionsForDeck(DeckType deckType) {
-		switch (deckType) {
-			case DeckType.BaseTraditions:
+	public static IEnumerable<Tradition> TraditionsForDeck(TraditionType traditionType) {
+		switch (traditionType) {
+			case TraditionType.BaseTraditions:
 				return baseTraditionsDeck();
-			case DeckType.Test:
+			case TraditionType.Test:
 				return testDeck();
 			default:
 				return new Tradition[0];

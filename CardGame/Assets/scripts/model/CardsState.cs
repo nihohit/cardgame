@@ -82,20 +82,19 @@ public class CardsState : BaseValueClass {
 	}
 
 	private IEnumerable<Card> modifyCardsWithTraditions(IEnumerable<Card> cards) {
-		foreach (var card in cards) {
-			var result = card;
-			foreach (var tradition in Traditions) {
-				result = modifyCardWithTradition(tradition, false)(result);
-			}
-			yield return result;
-		}
+		return cards.Select(card => {
+			return Traditions.Aggregate(card, 
+					(aggreagteCard, tradition) => modifyCardWithTradition(tradition, false)(aggreagteCard)
+			);
+		});
 	}
 
 	public CardsState PlayCard(Card card) {
     var state = card.Exhaustible ? ExhaustCardFromHand(card) : DiscardCardFromHand(card);
     return state
-			.AddCardsToDiscard(CardsCollection.CardsForDeck(card.AddDeck))
-			.addTraditions(TraditionsCollection.TraditionsForDeck(card.AddDeck));
+			.AddCardsToDiscard(card.CarToAdd == null ? new Card[0] : CardsCollection.CardsForTrainCar(card.CarToAdd.Type))
+	    .removeCards(card.CarToRemove == null ? new Card[0] : CardsCollection.CardsForTrainCar(card.CarToRemove.Type))
+			.addTraditions(TraditionsCollection.TraditionsForDeck(card.AddTradition));
   }
 
 	private CardsState addTraditions(IEnumerable<Tradition> traditions) {
@@ -104,6 +103,32 @@ public class CardsState : BaseValueClass {
 			cardState = cardState.AddTradition(tradition);
 		}
 		return cardState;
+	}
+
+	private CardsState removeCards(IEnumerable<Card> cards) {
+		var discardAsList = DiscardPile.ToList();
+		var currentDeckAsList = CurrentDeck.ToList();
+		var handAsList = Hand.ToList();
+		foreach (var card in modifyCardsWithTraditions(cards)) {
+			if (discardAsList.Remove(card)) {
+				continue;
+			}
+
+			if (currentDeckAsList.Remove(card)) {
+				continue;
+			}
+
+			if (handAsList.Remove(card)) {
+				continue;
+			}
+			
+			AssertUtils.UnreachableCode();
+		}
+		return new CardsState(PersistentDeck,
+			currentDeckAsList,
+			discardAsList,
+			handAsList,
+			Traditions);
 	}
 
 	public CardsState AddTradition(Tradition tradition) {
