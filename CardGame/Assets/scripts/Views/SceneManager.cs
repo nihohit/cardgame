@@ -14,6 +14,8 @@ public class SceneManager : MonoBehaviour {
 	private DeckScript deck;
 	private DeckScript discardPile;
 	private Button doneButton;
+	private Button driveButton;
+	private Button stayButton;
 	private MultiCardDisplayScript multiCardDisplay;
 	private readonly CardScript[] currentHand = new CardScript[9];
 
@@ -33,6 +35,8 @@ public class SceneManager : MonoBehaviour {
 	private void setPrivateGameObjects() {
 		cardPool = new CardScriptPool(CardPrefab, 100);
 		doneButton = GameObject.Find("DoneButton").GetComponent<Button>();
+		driveButton = GameObject.Find("DriveButton").GetComponent<Button>();
+		stayButton = GameObject.Find("StayButton").GetComponent<Button>();
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		multiCardDisplay = Resources.FindObjectsOfTypeAll<MultiCardDisplayScript>()[0];
@@ -52,6 +56,8 @@ public class SceneManager : MonoBehaviour {
 	private void setViewModelInputs() {
 		viewModel.setDeckWasClicked(deck.OnMouseDownAsObservable());
 		viewModel.setDoneButtonClicked(doneButton.onClick.AsObservable());
+		viewModel.setDriveButtonClicked(driveButton.onClick.AsObservable());
+		viewModel.setStayButtonClicked(stayButton.onClick.AsObservable());
 	}
 
 	private void osberveViewModelOutputs() {
@@ -66,6 +72,12 @@ public class SceneManager : MonoBehaviour {
 		});
 		viewModel.DisplayDoneButton.Subscribe(active => {
 			doneButton.gameObject.SetActive(active);
+		});
+		viewModel.DisplayDriveButton.Subscribe(active => {
+			driveButton.gameObject.SetActive(active);
+		});
+		viewModel.DisplayStayButton.Subscribe(active => {
+			stayButton.gameObject.SetActive(active);
 		});
 		viewModel.CardMovementInstructions
 			.Subscribe(moveCards);

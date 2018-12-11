@@ -8,6 +8,8 @@ using UnityEngine;
 public interface ISceneViewModel {
 	#region inputs
 	void setDoneButtonClicked(IObservable<Unit> observable);
+	void setDriveButtonClicked(IObservable<Unit> observable);
+	void setStayButtonClicked(IObservable<Unit> observable);
 	void setSelectedCardObservation(IObservable<Card> observable);
 	void setDeckWasClicked(IObservable<Unit> observable);
 	#endregion
@@ -17,6 +19,8 @@ public interface ISceneViewModel {
 	IObservable<int> DeckCount { get; }
 	IObservable<int> DiscardPileCount { get; }
 	IObservable<bool> DisplayDoneButton { get; }
+	IObservable<bool> DisplayStayButton { get; }
+	IObservable<bool> DisplayDriveButton { get; }
 	IObservable<IEnumerable<Card>> CardsInMultiDisplay { get; }
 	IObservable<string> TextForMultiDisplay { get; }
 	IObservable<string> TextForDoneButton { get; }
@@ -31,6 +35,7 @@ public class SceneViewModel : ISceneViewModel {
 	private ISceneModel model;
 
 	#region ISceneViewModel
+	#region inputs
 	public void setDoneButtonClicked(IObservable<Unit> observable) {
 		observable.Subscribe(_ => model.UserFinishedMode());
 	}
@@ -47,10 +52,19 @@ public class SceneViewModel : ISceneViewModel {
 		observable.Subscribe(_ => model.TryDrawCard());
 	}
 
+	public void setDriveButtonClicked(IObservable<Unit> observable) {
+		observable.Subscribe(_ => model.UserChoseToDrive());
+	}
+
+	public void setStayButtonClicked(IObservable<Unit> observable) {
+		observable.Subscribe(_ => model.UserFinishedMode());
+	}
+
+	#endregion
+	#region outputs
+	
 	public IObservable<string> StateDescription => model.State
 		.Select(state => stateDescription(state.Train));
-
-
 
 	private string stateDescription(TrainState state) {
 		return
@@ -70,7 +84,16 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => state.Cards.Hand);
 
 	public IObservable<bool> DisplayDoneButton => model.State
-		.Select(state => state.Mode != CardHandlingMode.Event);
+		.Select(state => state.Mode != CardHandlingMode.Event &&
+						!state.Train.CanDrive());
+	
+	public IObservable<bool> DisplayDriveButton => model.State
+		.Select(state => state.Mode != CardHandlingMode.Event &&
+						state.Train.CanDrive());
+	
+	public IObservable<bool> DisplayStayButton => model.State
+		.Select(state => state.Mode != CardHandlingMode.Event &&
+		                 state.Train.CanDrive());
 
 	public IObservable<IEnumerable<Card>> CardsInMultiDisplay => model.State
 		.Where(state => state.Mode != CardHandlingMode.Regular)
@@ -104,7 +127,7 @@ public class SceneViewModel : ISceneViewModel {
 	}
 
 	public IObservable<string> TextForDoneButton => model.State
-		.Select(state => state.Mode == CardHandlingMode.Regular ? "End Turn" : "Done");
+		.Select(state => state.Mode == CardHandlingMode.Regular ? "Stay" : "Done");
 
 	public IObservable<Unit> HideMultiDisplay => model.State
 		.Select(state => state.Mode)
@@ -214,6 +237,7 @@ public class SceneViewModel : ISceneViewModel {
 
 	public IObservable<IReadOnlyList<TrainCar>> Train => model.State
 		.Select(state => state.Train.Cars);
+	#endregion
 	#endregion
 
 	public SceneViewModel() : this(new SceneModel()) { }

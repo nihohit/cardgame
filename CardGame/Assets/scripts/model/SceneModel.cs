@@ -31,13 +31,14 @@ public interface ISceneModel {
 
 	bool PlayCard(Card card);
 	void UserFinishedMode();
+	void UserChoseToDrive();
 	void TryDrawCard();
 }
 
 public class SceneModel : ISceneModel {
 	private EventCard nextEvent;
 	private CardsState cards;
-	private TrainState empireState;
+	private TrainState trainState;
 	private CardHandlingMode mode = CardHandlingMode.Regular;
 	private readonly List<Card> playedCards = new List<Card>();
 	private int cardsToHandle;
@@ -50,13 +51,13 @@ public class SceneModel : ISceneModel {
 		TrainState.InitialState(3, 3, 2, 0), 
 		CardHandlingMode.Regular) {}
 
-	public SceneModel(CardsState cards, TrainState empireState, 
+	public SceneModel(CardsState cards, TrainState trainState, 
 		CardHandlingMode mode) {
-		nextEvent = EventCardsCollections.EventCardForState(empireState);
+		nextEvent = EventCardsCollections.EventCardForState(trainState);
 		this.cards = cards;
-		this.empireState = empireState;
+		this.trainState = trainState;
 		this.mode = mode;
-		EventUtils.LogStartTurnEvent(eventCardName(), empireState.ToString(), cards.Hand);
+		EventUtils.LogStartTurnEvent(eventCardName(), trainState.ToString(), cards.Hand);
 		sendCompletedState();
 	}
 
@@ -86,11 +87,11 @@ public class SceneModel : ISceneModel {
 	}
 
 	private bool playRegularCard(Card card) {
-		if (!empireState.CanPlayCard(card)) {
+		if (!trainState.CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
 		}
-		empireState = empireState.PlayCard(card);
+		trainState = trainState.PlayCard(card);
 		cards = cards.PlayCard(card);
 		playedCards.Add(card);
 		switchModeAccordingToCard(card);
@@ -108,12 +109,12 @@ public class SceneModel : ISceneModel {
 	}
 
 	private bool playEventCard(Card card) {
-		if (!empireState.CanPlayCard(card)) {
+		if (!trainState.CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
 		}
-		empireState = empireState.PlayCard(card);
-		EventUtils.LogEventCardPlayed(card, eventCardName(), empireState.ToString(), cards.Hand);
+		trainState = trainState.PlayCard(card);
+		EventUtils.LogEventCardPlayed(card, eventCardName(), trainState.ToString(), cards.Hand);
 		mode = CardHandlingMode.Regular;
 		startTurn();
 		return true;
@@ -143,8 +144,8 @@ public class SceneModel : ISceneModel {
 
 	private void startTurn() {
 		drawNewHand();
-		empireState = empireState.NextTurnState();
-		EventUtils.LogStartTurnEvent(eventCardName(), empireState.ToString(), cards.Hand);
+		trainState = trainState.NextTurnState();
+		EventUtils.LogStartTurnEvent(eventCardName(), trainState.ToString(), cards.Hand);
 		playedCards.Clear();
 	}
 
@@ -173,10 +174,17 @@ public class SceneModel : ISceneModel {
 		sendCompletedState();
 	}
 
+	public void UserChoseToDrive() {
+		AssertUtils.AssertConditionMet(trainState.CanDrive(), "Cannot drive");
+		trainState = trainState.Drive();
+		endTurn();
+		sendCompletedState();
+	}
+
 	private void endTurn() { 
-		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), empireState.ToString(), cards.Hand);
+		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), trainState.ToString(), cards.Hand);
 		mode = CardHandlingMode.Event;
-		nextEvent = EventCardsCollections.EventCardForState(empireState);
+		nextEvent = EventCardsCollections.EventCardForState(trainState);
 		cards = cards.DiscardHand();
 	}
 
@@ -186,12 +194,12 @@ public class SceneModel : ISceneModel {
 		}
 
 		cards = cards.DrawCardsToHand(1);
-		empireState = empireState.ChangeFuel(-1);
+		trainState = trainState.ChangeFuel(-1);
 		sendCompletedState();
 	}
 
 	private bool canDrawCard() {
-		return empireState.Fuel > 0 &&
+		return trainState.Fuel > 0 &&
 			cards.Hand.Count() < Constants.MAX_CARDS_IN_HAND &&
 			cards.CurrentDeck.Count() > 0;
 	}
@@ -199,7 +207,7 @@ public class SceneModel : ISceneModel {
 	#endregion
 
 	private void sendCompletedState() {
-		stateSubject.OnNext(new SceneState(cards, empireState, mode, nextEvent));
+		stateSubject.OnNext(new SceneState(cards, trainState, mode, nextEvent));
 	}
 
 	private string eventCardName() {
