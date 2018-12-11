@@ -309,7 +309,7 @@ public class CardsStates {
 	public void ShouldRemoveCardsAccordingToRemovedCar() {
 		Randomizer.SetTestableRandom(3);
 		var card = new Card("card",
-			carToRemove: new TrainCar(0, CarType.Test)
+			carToRemove: CarType.Test
 		);
 		var initialCards = new[] {
 			CardsCollection.CardsForTrainCar(CarType.Test),
@@ -333,7 +333,7 @@ public class CardsStates {
 	public void ShouldRemoveCardsFromDiscardThenDeckThenHand() {
 		Randomizer.SetTestableRandom(4);
 		var card = new Card("card",
-			carToRemove: new TrainCar(0, CarType.Test)
+			carToRemove: CarType.Test
 		);
 		var initialCards = new[] {
 			CardsCollection.CardsForTrainCar(CarType.Test),

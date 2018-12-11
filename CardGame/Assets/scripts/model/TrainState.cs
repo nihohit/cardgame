@@ -144,7 +144,7 @@ public class TrainState : BaseValueClass {
 				Materials >= -card.MaterialsChange &&
 					AvailablePopulation >= card.PopulationCost &&
 			Army >= -card.ArmyChange &&
-			(card.CarToRemove == null || Cars.Any(car => car.Equals(card.CarToRemove)))) ||
+			(card.CarToRemove == CarType.None || Cars.Any(car => car.Type.Equals(card.CarToRemove)))) ||
 			card.DefaultChoice;
 	}
 
@@ -157,9 +157,9 @@ public class TrainState : BaseValueClass {
 
 		bool actionNeeded = true;
 		var cars = Cars;
-		if (card.CarToRemove == null && card.CarToAdd != null) {
+		if (card.CarToRemove == CarType.None && card.CarToAdd != null) {
 			cars = cars.Append(card.CarToAdd).ToList();
-		} else if (card.CarToRemove != null && card.CarToAdd != null) {
+		} else if (card.CarToRemove != 0 && card.CarToAdd != null) {
 			cars = cars.Select(car => {
 				if (!actionNeeded || !car.Equals(card.CarToRemove)) {
 					return car;
@@ -168,7 +168,7 @@ public class TrainState : BaseValueClass {
 				actionNeeded = false;
 				return card.CarToAdd;
 			}).ToList();
-		} else if (card.CarToRemove == null && card.CarToAdd != null) {
+		} else if (card.CarToRemove == CarType.None && card.CarToAdd != null) {
 			cars = cars.Where(car => {
 				if (!actionNeeded || !car.Equals(card.CarToRemove)) {
 					return true;

@@ -93,7 +93,7 @@ public class CardsState : BaseValueClass {
     var state = card.Exhaustible ? ExhaustCardFromHand(card) : DiscardCardFromHand(card);
     return state
 			.AddCardsToDiscard(card.CarToAdd == null ? new Card[0] : CardsCollection.CardsForTrainCar(card.CarToAdd.Type))
-	    .removeCards(card.CarToRemove == null ? new Card[0] : CardsCollection.CardsForTrainCar(card.CarToRemove.Type))
+	    .removeCards(CardsCollection.CardsForTrainCar(card.CarToRemove))
 			.addTraditions(TraditionsCollection.TraditionsForDeck(card.AddTradition));
   }
 
