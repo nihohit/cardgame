@@ -58,6 +58,10 @@ public static class ValueClassExtensions {
 		if (obj == null) {
 			return "null";
 		}
+
+		if (obj is string) {
+			return obj.ToString();
+		}
 		var enumerable = obj as IEnumerable;
 		if (enumerable == null) {
 			return obj.ToString();
