@@ -6,6 +6,58 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public static class LocationBasedCards {
+	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
+		new Card("Build Regular Car",
+			populationCost: 1,
+			populationChange: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(1, CarType.General),
+			exhaustible:true
+		),
+		new Card("Convert Car to Refinery",
+			populationCost: 1,
+			populationChange: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(1, CarType.Refinery),
+			carToRemove: CarType.General,
+			exhaustible:true
+		),
+		new Card("Convert Car to Workhouse",
+			populationCost: 1,
+			populationChange: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(1, CarType.Workhouse),
+			carToRemove: CarType.General,
+			exhaustible:true
+		),
+		new Card("Convert Car to Cannon",
+			populationCost: 1,
+			populationChange: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(1, CarType.Cannon),
+			carToRemove: CarType.General,
+			exhaustible:true
+		),
+		new Card("Convert Car to Armory",
+			populationCost: 1,
+			populationChange: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(1, CarType.Armory),
+			carToRemove: CarType.General,
+			exhaustible:true
+		),
+		new Card("Convert Car to Living Quarters",
+			populationCost: 1,
+			populationChange: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(1, CarType.LivingQuarters),
+			carToRemove: CarType.General,
+			exhaustible:true
+		)
+	}.ToDictionary(card => card.Name, card => card));
+}
+
 public static class CardsCollection {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
 		new Card("test"),
@@ -18,54 +70,21 @@ public static class CardsCollection {
 			materialsChange: -1,
 			fuelChange: 1
 		),
-		new Card("Build Village",
-			populationCost: 1,
-			populationChange: 1,
-			materialsChange: -1,
-			exhaustible:true
-		),
-		new Card("Farming",
-			populationCost: 1,
-			materialsChange: 2
-		),
 		new Card("Arm Militia",
 			populationCost: 1,
 			materialsChange: -1,
 			armyChange: 1
 		),
-		new Card("Market Day",
+		new Card("Refine Materials",
 			populationCost: 1,
-			materialsChange: -1,
-			fuelChange: 2
-		),
-		new Card("Public Discussion",
-			populationCost: 1,
-			fuelChange: -2,
-			numberOfCardsToChooseToReplace: 1
-		),
-		new Card("Ostracize",
-			populationCost: 1,
-			fuelChange: -2,
-			numberOfCardsToChooseToExhaust: 1
-		),
-		new Card("Buy Slaves",
-			populationCost: 2,
-			fuelChange: -10
-		),
-		new Card("Fishing",
-			populationCost: 1,
-			materialsChange: 1,
-			fuelChange: 1
+			fuelChange: -1,
+			materialsChange: 3
 		),
 		new Card("Hire Mercenaries",
 			populationCost: 1,
 			fuelChange: -1,
 			armyChange: 1
 		),
-		new Card("Mine",
-			populationCost: 1,
-			materialsChange: 3
-		)
 	}.ToDictionary(card => card.Name, card => card));
 
 
@@ -73,7 +92,6 @@ public static class CardsCollection {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Manual Labour", 2},
 			{"Convert To Fuel", 1},
-			{"Explore", 1},
 			{"Hire Mercenaries", 1}
 		});	
 	}
