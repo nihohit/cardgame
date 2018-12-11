@@ -7,8 +7,6 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 
-public enum CardHandlingMode { Regular, Event, Replace, Exhaust }
-
 public class SceneState {
 	public CardsState Cards { get; }
 	public TrainState Train { get; }

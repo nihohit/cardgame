@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum CarType { Engine, General, Workhouse, Cannon }
-
 public class TrainCar : BaseValueClass {
 	public int FuelConsumption { get; }
 	public CarType Type { get; }
