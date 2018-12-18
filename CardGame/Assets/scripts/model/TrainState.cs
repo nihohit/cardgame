@@ -33,6 +33,7 @@ public class TrainState : BaseValueClass {
 		int army) {
 		var cars = new List<TrainCar> {
 			new TrainCar(0, CarType.Engine),
+			new TrainCar(1, CarType.General),
 			new TrainCar(1, CarType.General)
 		};
 		return new TrainState(
