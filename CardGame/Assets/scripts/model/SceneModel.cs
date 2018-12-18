@@ -42,12 +42,14 @@ public class SceneModel : ISceneModel {
 	private int cardsToHandle;
 	private ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
 
-	public SceneModel() : this(
-		CardsState.NewState(CardsCollection.Cards())
+	public static SceneModel InitialSceneModel() {
+		var trainState = TrainState.InitialState(3, 3, 2, 0);
+		var initialCards = CardsCollection.BaseCards(trainState.Cars.Select(car => car.Type));
+		var cardState = CardsState.NewState(initialCards)
 			.ShuffleCurrentDeck()
-			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND),
-		TrainState.InitialState(3, 3, 2, 0), 
-		CardHandlingMode.Regular) {}
+			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
+		return new SceneModel(cardState, trainState, CardHandlingMode.Regular);
+	}
 
 	public SceneModel(CardsState cards, TrainState trainState, 
 		CardHandlingMode mode) {

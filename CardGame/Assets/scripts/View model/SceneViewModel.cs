@@ -240,7 +240,7 @@ public class SceneViewModel : ISceneViewModel {
 	#endregion
 	#endregion
 
-	public SceneViewModel() : this(new SceneModel()) { }
+	public SceneViewModel() : this(SceneModel.InitialSceneModel()) { }
 
 	public SceneViewModel(ISceneModel model) {
 		this.model = model;

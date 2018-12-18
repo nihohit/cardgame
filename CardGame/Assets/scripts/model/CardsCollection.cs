@@ -93,12 +93,12 @@ public static class CardsCollection {
 	}.ToDictionary(card => card.Name, card => card));
 
 
-	public static IEnumerable<Card> Cards() {
-		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Manual Labour", 2},
-			{"Convert To Fuel", 1},
-			{"Hire Mercenaries", 1}
-		});	
+	public static IEnumerable<Card> BaseCards(IEnumerable<CarType> initialCars) {
+		return initialCars
+			.SelectMany(carType => CardsForTrainCar(carType))
+			.Concat(cards.objectForDictionary(new Dictionary<string, int>{
+				{"Hire Mercenaries", 1}
+			}));	
 	}
 
 	public static IEnumerable<Card> CardsForTrainCar(CarType car) {
