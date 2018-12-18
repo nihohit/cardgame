@@ -169,4 +169,21 @@ public class CardsState : BaseValueClass {
 			Hand.Select(modifyCardFunction),
 			traditions);
 	}
+
+	public CardsState LeaveLocation() {
+		return new CardsState(PersistentDeck,
+			CurrentDeck.Where(card => !card.LocationLimited),
+			DiscardPile.Where(card => !card.LocationLimited),
+			Hand.Where(card => !card.LocationLimited),
+			Traditions);
+	}
+
+	public CardsState EnterLocation(Location location) {
+		var newCards = location.Content.SelectMany(content => LocationBasedCards.cardsForContent(content)).ToList();
+		return new CardsState(PersistentDeck,
+			CurrentDeck.Interleave(newCards),
+			DiscardPile,
+			Hand,
+			Traditions);
+	}
 }

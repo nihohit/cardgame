@@ -177,6 +177,18 @@ public class SceneModel : ISceneModel {
 	public void UserChoseToDrive() {
 		AssertUtils.AssertConditionMet(trainState.CanDrive(), "Cannot drive");
 		trainState = trainState.Drive();
+		cards = cards
+			.LeaveLocation()
+			.EnterLocation(new Location("",
+				new[] {
+					LocationContent.ArmoryCarComponents,
+					LocationContent.CannonCarComponents,
+					LocationContent.EngineCarComponents,
+					LocationContent.GeneralCarComponents,
+					LocationContent.RefineryCarComponents,
+					LocationContent.WorkhouseCarComponents,
+					LocationContent.LivingQuartersCarComponents
+				}.Shuffle()));
 		endTurn();
 		sendCompletedState();
 	}
