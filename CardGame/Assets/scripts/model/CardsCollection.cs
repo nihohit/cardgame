@@ -80,6 +80,11 @@ public static class CardsCollection {
 			fuelChange: -1,
 			materialsChange: 3
 		),
+		new Card("Refine Fuel",
+			populationCost: 1,
+			fuelChange: 3,
+			materialsChange: 2
+		),
 		new Card("Hire Mercenaries",
 			populationCost: 1,
 			fuelChange: -1,
@@ -98,16 +103,18 @@ public static class CardsCollection {
 
 	public static IEnumerable<Card> CardsForTrainCar(CarType car) {
 		switch (car) {
-			case CarType.Cannon: 
-				return villageDeck();
-			case CarType.Engine: 
-				return villageCenterDeck();
-			case CarType.General: 
-				return fishingVillageDeck();
-			case CarType.Workhouse: 
-				return exploreDeck();
-			case CarType.Refinery: 
-				return mineDeck();
+			case CarType.Cannon:
+				return cannonCards();
+			case CarType.Engine:
+				return engineCards();
+			case CarType.General:
+				return generalCards();
+			case CarType.Workhouse:
+				return workhouseCards();
+			case CarType.Refinery:
+				return refineryCards();
+			case CarType.Armory:
+				return armoryCards();
 			case CarType.Test:
 				return testDeck();
 			default:
@@ -115,46 +122,38 @@ public static class CardsCollection {
 		}
 	}
 
-	private static IEnumerable<Card> villageDeck() {
+	private static IEnumerable<Card> armoryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Temple", 1},
-			{"Village center", 1},
-			{"Town", 1},
-			{"Farming", 3},
-			{"Arm Militia", 1}
+			{"Arm Militia", 1},
 		});
 	}
 
-	private static IEnumerable<Card> fishingVillageDeck() {
+	private static IEnumerable<Card> refineryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Temple", 1},
-			{"Village center", 1},
-			{"Port Town", 1},
-			{"Fishing", 3},
-			{"Arm Militia", 1}
+			{"Refine Fuel", 1},
 		});
 	}
 
-	private static IEnumerable<Card> villageCenterDeck() {
+	private static IEnumerable<Card> workhouseCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Market Day", 2},
-			{"Public Discussion", 1},
-			{"Buy Slaves", 1},
-			{"Ostracize", 1},
+			{"Refine Materials", 1},
 		});
 	}
 
-	private static IEnumerable<Card> exploreDeck() {
+	private static IEnumerable<Card> generalCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Village", 1},
-			{"Fishing Village", 1},
-			{"Build Mine", 1},
-		}).Shuffle().Take(1);
+			{"Manual Labour", 2},
+		});
 	}
 
-	private static IEnumerable<Card> mineDeck() {
+	private static IEnumerable<Card> engineCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Mine", 1}
+			{"Convert To Fuel", 1},
+		});	
+	}
+
+	private static IEnumerable<Card> cannonCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
 		});
 	}
 
