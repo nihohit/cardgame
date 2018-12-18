@@ -142,6 +142,34 @@ public static class MyExtensions {
 		}
 	}
 
+	public static IEnumerable<T> Interleave<T>(this IEnumerable<T> first, IEnumerable<T> second) {
+		var firstEnumerator = first.GetEnumerator();
+		firstEnumerator.MoveNext();
+		var secondEnumerator = second.GetEnumerator();
+		secondEnumerator.MoveNext();
+		while (firstEnumerator.Current != null && secondEnumerator.Current != null) {
+			if (Randomizer.CoinToss()) {
+				yield return firstEnumerator.Current;
+				firstEnumerator.MoveNext();
+			}
+			else {
+				yield return secondEnumerator.Current;
+				secondEnumerator.MoveNext();
+			}
+		}
+		if (firstEnumerator.Current == null) {
+			foreach (T value in secondEnumerator.ToEnumerable()) {
+				yield return value;
+			}
+		}
+		
+		if (secondEnumerator.Current == null) {
+			foreach (T value in firstEnumerator.ToEnumerable()) {
+				yield return value;
+			}
+		}
+	}
+
 	public static string ToJoinedString<T>(this IEnumerable<T> enumerable, string separator = ", ") {
 		return string.Join(separator, enumerable.Select(item => item.ToString()).ToArray());
 	}
