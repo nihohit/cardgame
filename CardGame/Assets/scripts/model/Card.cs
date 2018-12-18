@@ -16,6 +16,7 @@ public class Card : BaseValueClass {
 	public bool DefaultChoice { get; }
 	public TrainCar CarToAdd { get; }
 	public CarType CarToRemove { get; }
+	public bool LocationLimited { get; }
 
 	public Card(
 		string name,
@@ -30,7 +31,8 @@ public class Card : BaseValueClass {
 		int numberOfCardsToChooseToReplace = 0,
 		bool defaultChoice = false,
 		CarType carToRemove = CarType.None,
-		TrainCar carToAdd = null) {
+		TrainCar carToAdd = null,
+		bool locationLimited = false) {
 		Name = name;
 		PopulationCost = populationCost;
 		FuelChange = fuelChange;
@@ -44,5 +46,6 @@ public class Card : BaseValueClass {
 		DefaultChoice = defaultChoice;
 		CarToAdd = carToAdd;
 		CarToRemove = carToRemove;
+		LocationLimited = locationLimited;
 	}
 }

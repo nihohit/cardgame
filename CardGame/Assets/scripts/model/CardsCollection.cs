@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public static class LocationBasedCards {
@@ -13,6 +14,12 @@ public static class LocationBasedCards {
 			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.General),
+			exhaustible:true
+		),
+		new Card("Build Engine",
+			populationCost: 1,
+			materialsChange: -1,
+			carToAdd: new TrainCar(0, CarType.Engine),
 			exhaustible:true
 		),
 		new Card("Convert Car to Refinery",
@@ -56,6 +63,69 @@ public static class LocationBasedCards {
 			exhaustible:true
 		)
 	}.ToDictionary(card => card.Name, card => card));
+
+	public static IEnumerable<Card> cardsForContent(LocationContent content) {
+		switch (content) {
+			case LocationContent.ArmoryCarComponents:
+				return armoryComponentsCards();
+			case LocationContent.EngineCarComponents:
+				return engineComponentsCards();
+			case LocationContent.CannonCarComponents:
+				return cannonComponentsCards();
+			case LocationContent.GeneralCarComponents:
+				return generalComponentsCards();
+			case LocationContent.RefineryCarComponents:
+				return refineryComponentsCards();
+			case LocationContent.WorkhouseCarComponents:
+				return workhouseComponentsCards();
+			case LocationContent.LivingQuartersCarComponents:
+				return livingQuartersComponentsCards();
+			default:
+				return new Card[0];
+		}
+	}
+
+	private static IEnumerable<Card> armoryComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Convert Car to Armory", 1},
+		});
+	}
+
+	private static IEnumerable<Card> engineComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Build Engine", 1},
+		});
+	}
+
+	private static IEnumerable<Card> cannonComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Convert Car to Cannon", 1},
+		});
+	}
+
+	private static IEnumerable<Card> generalComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Build Regular Car", 1},
+		});
+	}
+
+	private static IEnumerable<Card> refineryComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Convert Car to Refinery", 1},
+		});
+	}
+
+	private static IEnumerable<Card> workhouseComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Convert Car to Workhouse", 1},
+		});
+	}
+
+	private static IEnumerable<Card> livingQuartersComponentsCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Convert Car to Living Quarters", 1},
+		});
+	}
 }
 
 public static class CardsCollection {
