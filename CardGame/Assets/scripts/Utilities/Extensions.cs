@@ -57,7 +57,7 @@ public static class MyExtensions {
 	#region IEnumerable
 
 	public static IEnumerable<T> Duplicate<T>(this IEnumerable<T> enumerable) {
-		return enumerable.Select(item => item).ToList();
+		return enumerable.Select(item => item);
 	}
 
 	// returns an enumerable with all values of an enumerator
@@ -85,7 +85,7 @@ public static class MyExtensions {
 	}
 
 	public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable) {
-		return enumerable.IsNullOrEmpty(pbj => true);
+		return enumerable.IsNullOrEmpty(obj => true);
 	}
 
 	public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable, Func<T, bool> op) {
@@ -137,32 +137,49 @@ public static class MyExtensions {
 			yield return enumerator.Current;
 		}
 
-		while (other != null && other.MoveNext()) {
+		if (other == null) {
+			yield break;
+		}
+
+		while (other.MoveNext()) {
 			yield return other.Current;
 		}
 	}
 
-	public static IEnumerable<T> Interleave<T>(this IEnumerable<T> first, IEnumerable<T> second) {
+	public static IEnumerable<T> Interleave<T>(
+		this IEnumerable<T> first,
+		IEnumerable<T> second) {
 		return first
 			.Concat(second)
 			.Shuffle();
 	}
 
-	public static string ToJoinedString<T>(this IEnumerable<T> enumerable, string separator = ", ") {
-		return string.Join(separator, enumerable.Select(item => item.ToString()).ToArray());
+	public static string ToJoinedString<T>(
+		this IEnumerable<T> enumerable,
+		string separator = ", ") {
+		return string.Join(
+			separator,
+			enumerable.Select(item => item.ToString()).ToArray());
+	}
+
+	public static IEnumerable<T> RemoveFirstIdentical<T>(
+		this IEnumerable<T> enumerable, T item) where T : class {
+		bool found = false;
+		foreach (var obj in enumerable) {
+			if (!found && obj == item) {
+				found = true;
+			} else {
+				yield return obj;
+			}
+		}
+
+		// used in order not to enumerate enumerable again in comment.
+		if (!found) {
+			AssertUtils.UnreachableCode($"{item} not found in {enumerable.ToJoinedString(", ")}");
+		}
 	}
 
 	#endregion IEnumerable
-
-	public static void RemoveIdentical<T>(this IList<T> list, T item) where T : class {
-		for (int i = 0; i < list.Count; i++) {
-			if (list[i] == item) {
-				list.RemoveAt(i);
-				return;
-			}
-		}
-		AssertUtils.UnreachableCode($"{item} not found in {list.ToJoinedString(",")}");
-	}
 }
 
 /// <summary>

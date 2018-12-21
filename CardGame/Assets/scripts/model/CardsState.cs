@@ -41,9 +41,8 @@ public class CardsState : BaseValueClass {
   }
 
   public CardsState ExhaustCardFromHand(Card card) {
-    var handList = Hand.ToList();
-    handList.RemoveIdentical(card);
-    return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, handList, Traditions);
+    var clearedHand = Hand.RemoveFirstIdentical(card);
+    return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, clearedHand, Traditions);
   }
 
   public CardsState DiscardHand() {
