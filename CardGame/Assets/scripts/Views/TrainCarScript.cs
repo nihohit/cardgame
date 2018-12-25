@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,10 +32,19 @@ public class TrainCarScript : MonoBehaviour {
 				return 23;
 			case CarType.Workhouse:
 				return 21;
-			default:
-				AssertUtils.UnreachableCode();
-				return -1;
+			case CarType.Armory:
+				return 15;
+			case CarType.Refinery:
+				return 28;
+			case CarType.LivingQuarters:
+				return 17;
+			case CarType.None:
+			case CarType.Test:
+				break;
 		}
+		
+		AssertUtils.UnreachableCode();
+		return -1;
 	}
 
 	// Use this for initialization

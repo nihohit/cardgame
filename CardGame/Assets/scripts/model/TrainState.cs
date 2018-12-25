@@ -171,24 +171,17 @@ public class TrainState : BaseValueClass {
 		var cars = Cars;
 		if (card.CarToRemove == CarType.None && card.CarToAdd != null) {
 			cars = cars.Append(card.CarToAdd).ToList();
-		} else if (card.CarToRemove != 0 && card.CarToAdd != null) {
+		} else if (card.CarToRemove != CarType.None && card.CarToAdd != null) {
 			cars = cars.Select(car => {
-				if (!actionNeeded || !car.Equals(card.CarToRemove)) {
-					return car;
+				if (actionNeeded && car.Type == card.CarToRemove) {
+					actionNeeded = false;
+					return card.CarToAdd;
 				}
 
-				actionNeeded = false;
-				return card.CarToAdd;
+				return car;
 			}).ToList();
-		} else if (card.CarToRemove == CarType.None && card.CarToAdd != null) {
-			cars = cars.Where(car => {
-				if (!actionNeeded || !car.Equals(card.CarToRemove)) {
-					return true;
-				}
-
-				actionNeeded = false;
-				return false;
-			}).ToList();
+		} else if (card.CarToRemove != CarType.None && card.CarToAdd == null) {
+			cars = cars.RemoveFirstWhere(car => car.Type == card.CarToRemove).ToList();
 		}
 
 		return new TrainState(
