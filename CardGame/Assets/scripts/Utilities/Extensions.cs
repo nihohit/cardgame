@@ -151,23 +151,15 @@ public static class MyExtensions {
 		IEnumerable<T> second) {
 		var firstEnumerator = first.GetEnumerator();
 		var secondEnumerator = second.GetEnumerator();
-		var firstCanMove = firstEnumerator.MoveNext();
-		var secondCanMove = secondEnumerator.MoveNext();
-		IEnumerator<T> nextEnumerator = secondEnumerator;
-		while (firstCanMove && secondCanMove) {
-			var coinToss = Randomizer.CoinToss();
-			nextEnumerator = coinToss ? firstEnumerator : secondEnumerator;
+		IEnumerator<T> nextEnumerator = Randomizer.CoinToss() ? firstEnumerator : secondEnumerator;
+		while (nextEnumerator.MoveNext()) {
 			yield return nextEnumerator.Current;
-			firstCanMove = !coinToss || firstEnumerator.MoveNext();
-			secondCanMove = coinToss || secondEnumerator.MoveNext();
+			nextEnumerator = Randomizer.CoinToss() ? firstEnumerator : secondEnumerator;
 		}
 
-		while (firstCanMove && firstEnumerator.MoveNext()) {
-			yield return firstEnumerator.Current;
-		}
-
-		while (secondCanMove && secondEnumerator.MoveNext()) {
-			yield return secondEnumerator.Current;
+		nextEnumerator = nextEnumerator == firstEnumerator ? secondEnumerator : firstEnumerator;
+		while (nextEnumerator.MoveNext()) {
+			yield return nextEnumerator.Current;
 		}
 	}
 
