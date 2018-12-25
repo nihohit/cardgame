@@ -195,6 +195,8 @@ public class BaseEnumerationTests {
 			Enumerable.Range(1, 100).Shuffle());
 		CollectionAssert.AreEquivalent(Enumerable.Range(1, 100),
 			Enumerable.Range(1, 100).Shuffle());
+
+		CollectionAssert.AreEquivalent(new object[0], new object[0].Shuffle());
 	}
 
 	[Test]
@@ -208,12 +210,27 @@ public class BaseEnumerationTests {
 	[Test]
 	public void TestInterleave() {
 		lazyEvaluationTwoEnumerablesTests(MyExtensions.Interleave);
+		CollectionAssert.AreEqual(new object[0], new object[0].Interleave(new object[0]));
+
 		CollectionAssert.AreNotEqual(
 			Enumerable.Range(1, 50).Interleave(Enumerable.Range(51, 50)),
 			Enumerable.Range(1, 100));
 		CollectionAssert.AreEquivalent(
-			Enumerable.Range(1, 50).Interleave(Enumerable.Range(51, 50)),
-			Enumerable.Range(1, 100));
+			Enumerable.Range(1, 100),
+			Enumerable.Range(1, 50).Interleave(Enumerable.Range(51, 50)));
+
+		// Verify order is kept
+		var interleaveEnumeration = Enumerable.Range(1, 50)
+			.Interleave(Enumerable.Range(51, 50))
+			.ToList();
+		var firstIndices = Enumerable.Range(1, 50)
+			.Select(val => interleaveEnumeration.IndexOf(val))
+			.ToList();
+		var secondIndices = Enumerable.Range(51, 50)
+			.Select(val => interleaveEnumeration.IndexOf(val))
+			.ToList();
+		CollectionAssert.AreEqual(firstIndices, firstIndices.OrderBy(val => val));
+		CollectionAssert.AreEqual(secondIndices, secondIndices.OrderBy(val => val));
 	}
 
 	private IEnumerator simpleEnumerator(List<int> list, int toAdd) {

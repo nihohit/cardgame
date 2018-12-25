@@ -149,9 +149,26 @@ public static class MyExtensions {
 	public static IEnumerable<T> Interleave<T>(
 		this IEnumerable<T> first,
 		IEnumerable<T> second) {
-		return first
-			.Concat(second)
-			.Shuffle();
+		var firstEnumerator = first.GetEnumerator();
+		var secondEnumerator = second.GetEnumerator();
+		var firstCanMove = firstEnumerator.MoveNext();
+		var secondCanMove = secondEnumerator.MoveNext();
+		IEnumerator<T> nextEnumerator = secondEnumerator;
+		while (firstCanMove && secondCanMove) {
+			var coinToss = Randomizer.CoinToss();
+			nextEnumerator = coinToss ? firstEnumerator : secondEnumerator;
+			yield return nextEnumerator.Current;
+			firstCanMove = !coinToss || firstEnumerator.MoveNext();
+			secondCanMove = coinToss || secondEnumerator.MoveNext();
+		}
+
+		while (firstCanMove && firstEnumerator.MoveNext()) {
+			yield return firstEnumerator.Current;
+		}
+
+		while (secondCanMove && secondEnumerator.MoveNext()) {
+			yield return secondEnumerator.Current;
+		}
 	}
 
 	public static string ToJoinedString<T>(

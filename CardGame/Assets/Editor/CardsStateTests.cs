@@ -13,6 +13,10 @@ public class CardsStates {
     return new Card(name);
   }
 
+	[TearDown]
+	public void TearDown() {
+		Randomizer.SetRandom(new System.Random());
+	}
 
   [Test]
 	public void CreateNewState() {
