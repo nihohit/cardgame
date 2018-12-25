@@ -131,6 +131,12 @@ public static class MyExtensions {
 		}
 	}
 
+	public static IEnumerable<T> ToEnumerable<T>(this IEnumerator<T> enumerator) {
+		while (enumerator.MoveNext()) {
+			yield return enumerator.Current;
+		}
+	}
+	
 	// Join two enumerators into a new one
 	public static IEnumerator Join(this IEnumerator enumerator, IEnumerator other) {
 		while (enumerator.MoveNext()) {
@@ -171,11 +177,14 @@ public static class MyExtensions {
 			enumerable.Select(item => item.ToString()).ToArray());
 	}
 
-	public static IEnumerable<T> RemoveFirstIdentical<T>(
-		this IEnumerable<T> enumerable, T item) where T : class {
+	public static IEnumerable<T> RemoveFirstWhere<T>(
+		this IEnumerable<T> enumerable,
+		Func<T, bool> condition,
+		bool assertIfNotFound = true,
+		Func<string> errorMessageFunction = null) {
 		bool found = false;
 		foreach (var obj in enumerable) {
-			if (!found && obj == item) {
+			if (!found && condition(obj)) {
 				found = true;
 			} else {
 				yield return obj;
@@ -183,9 +192,16 @@ public static class MyExtensions {
 		}
 
 		// used in order not to enumerate enumerable again in comment.
-		if (!found) {
-			AssertUtils.UnreachableCode($"{item} not found in {enumerable.ToJoinedString(", ")}");
-		}
+		if (!found && assertIfNotFound) {
+			var errorMessage = errorMessageFunction == null ? "" : errorMessageFunction();
+			AssertUtils.UnreachableCode(errorMessage);
+		}	
+	}
+	
+	public static IEnumerable<T> RemoveFirstIdentical<T>(
+		this IEnumerable<T> enumerable, T item) where T : class {
+		return enumerable.RemoveFirstWhere(obj => obj == item,
+			errorMessageFunction: () => $"{item} not found in {enumerable.ToJoinedString()}"); 
 	}
 
 	#endregion IEnumerable

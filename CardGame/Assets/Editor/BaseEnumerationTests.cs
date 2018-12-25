@@ -368,4 +368,13 @@ public class BaseEnumerationTests {
 
 		UnityEngine.Assertions.Assert.IsFalse(enumerator.MoveNext());
 	}
+
+	[Test]
+	public void removeFirstWhereTest() {
+		lazyEvaluationSingleEnumerableTests(enumerable => enumerable.RemoveFirstWhere(_ => false, assertIfNotFound:false));
+		CollectionAssert.AreEqual(new []{1, 1}.RemoveFirstWhere(i => i == 1), new[]{1});
+		CollectionAssert.AreEqual(new []{2, 1, 2}.RemoveFirstWhere(i => i == 2), new[]{1, 2});
+		CollectionAssert.AreEqual(new []{1, 2}.RemoveFirstWhere(i => i == 3, assertIfNotFound:false), new[]{1, 2});
+		Assert.Throws<AssertedException>(() => new[] {1, 2}.RemoveFirstWhere(i => i == 3).ToList());
+	}
 }
