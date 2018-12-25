@@ -41,9 +41,10 @@ public class SceneModel : ISceneModel {
 	private readonly List<Card> playedCards = new List<Card>();
 	private int cardsToHandle;
 	private ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
+	private IEnumerator<Location> locations;
 
 	public static SceneModel InitialSceneModel() {
-		var trainState = TrainState.InitialState(3, 3, 2, 0);
+		var trainState = TrainState.InitialState(3, 3, 2, 0, locationsEnumeration().ToEnumerable<Location>().First());
 		var initialCards = CardsCollection.BaseCards(trainState.Cars.Select(car => car.Type));
 		var cardState = CardsState.NewState(initialCards)
 			.ShuffleCurrentDeck()
@@ -51,8 +52,24 @@ public class SceneModel : ISceneModel {
 		return new SceneModel(cardState, trainState, CardHandlingMode.Regular);
 	}
 
+	private static IEnumerator<Location> locationsEnumeration() {
+		while (true) {
+			yield return new Location("Full workshop",
+				new[] {
+					LocationContent.ArmoryCarComponents,
+					LocationContent.CannonCarComponents,
+					LocationContent.EngineCarComponents,
+					LocationContent.GeneralCarComponents,
+					LocationContent.RefineryCarComponents,
+					LocationContent.WorkhouseCarComponents,
+					LocationContent.LivingQuartersCarComponents
+				}.Shuffle());
+		}
+	}
+
 	public SceneModel(CardsState cards, TrainState trainState, 
 		CardHandlingMode mode) {
+		locations = locationsEnumeration();
 		nextEvent = EventCardsCollections.EventCardForState(trainState);
 		this.cards = cards;
 		this.trainState = trainState;
@@ -176,19 +193,12 @@ public class SceneModel : ISceneModel {
 
 	public void UserChoseToDrive() {
 		AssertUtils.AssertConditionMet(trainState.CanDrive(), "Cannot drive");
-		trainState = trainState.Drive();
+		locations.MoveNext();
+		var nextLocation = locations.Current;
+		trainState = trainState.Drive(nextLocation);
 		cards = cards
 			.LeaveLocation()
-			.EnterLocation(new Location("",
-				new[] {
-					LocationContent.ArmoryCarComponents,
-					LocationContent.CannonCarComponents,
-					LocationContent.EngineCarComponents,
-					LocationContent.GeneralCarComponents,
-					LocationContent.RefineryCarComponents,
-					LocationContent.WorkhouseCarComponents,
-					LocationContent.LivingQuartersCarComponents
-				}.Shuffle()));
+			.EnterLocation(nextLocation);
 		endTurn();
 		sendCompletedState();
 	}

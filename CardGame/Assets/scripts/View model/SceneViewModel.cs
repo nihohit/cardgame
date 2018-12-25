@@ -32,7 +32,7 @@ public interface ISceneViewModel {
 }
 
 public class SceneViewModel : ISceneViewModel {
-	private ISceneModel model;
+	private readonly ISceneModel model;
 
 	#region ISceneViewModel
 	#region inputs
@@ -71,7 +71,12 @@ public class SceneViewModel : ISceneViewModel {
 			$"Population: {state.AvailablePopulation}/{state.TotalPopulation}\n" + 
 			$"Fuel: {state.Fuel}\n" +
 			$"Materials: {state.Materials}\n" +
-			$"Army: {state.Army}";
+			$"Army: {state.Army}\n" +
+			$"Current Location:{locationDescription(state.CurrentLocation)}";
+	}
+
+	private string locationDescription(Location location) {
+		return location.Name;
 	}
 
 	public IObservable<int> DeckCount => model.State

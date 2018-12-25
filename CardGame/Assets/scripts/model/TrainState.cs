@@ -25,12 +25,14 @@ public class TrainState : BaseValueClass {
 	public int AvailablePopulation { get; }
 	public IReadOnlyList<Card> PlayedCards { get; }
 	public IReadOnlyList<TrainCar> Cars { get; }
+	public Location CurrentLocation { get; }
 
 	public static TrainState InitialState(
 		int fuel,
 		int materials,
 		int population,
-		int army) {
+		int army,
+		Location initialLocation) {
 		var cars = new List<TrainCar> {
 			new TrainCar(0, CarType.Engine),
 			new TrainCar(1, CarType.General),
@@ -43,7 +45,8 @@ public class TrainState : BaseValueClass {
 			population,
 			army,
 			new List<Card>(),
-			cars);
+			cars, 
+			initialLocation);
 	}
 
 	private TrainState(
@@ -53,7 +56,8 @@ public class TrainState : BaseValueClass {
 		int availablePopulation,
 		int army,
 		IReadOnlyList<Card> playedCards,
-		IReadOnlyList<TrainCar> cars) {
+		IReadOnlyList<TrainCar> cars,
+		Location currentLocation) {
 		AssertUtils.Positive(fuel, "fuel");
 		AssertUtils.Positive(materials, "materials");
 		AssertUtils.Positive(availablePopulation, "availablePopulation");
@@ -66,6 +70,7 @@ public class TrainState : BaseValueClass {
 		Army = army;
 		PlayedCards = playedCards;
 		Cars = cars;
+		CurrentLocation = currentLocation;
 	}
 
 	public TrainState NextTurnState() {
@@ -76,7 +81,8 @@ public class TrainState : BaseValueClass {
 			TotalPopulation,
 			Army,
 			PlayedCards,
-			Cars);
+			Cars,
+			CurrentLocation);
 	}
 
 	public int fuelConsumption() {
@@ -87,14 +93,15 @@ public class TrainState : BaseValueClass {
 		return fuelConsumption() < Fuel;
 	}
 
-	public TrainState Drive() {
+	public TrainState Drive(Location toLocation) {
 		return new TrainState(Fuel - fuelConsumption(),
 			Materials,
 			TotalPopulation,
 			TotalPopulation,
 			Army,
 			PlayedCards,
-			Cars);
+			Cars,
+			toLocation);
 	}
 
 	public TrainState ChangeFuel(int fuelChange) {
@@ -105,7 +112,8 @@ public class TrainState : BaseValueClass {
 			AvailablePopulation,
 			Army,
 			PlayedCards,
-			Cars);
+			Cars,
+			CurrentLocation);
 	}
 
 	public TrainState ChangeMaterials(int changeMaterials) {
@@ -115,7 +123,8 @@ public class TrainState : BaseValueClass {
 			AvailablePopulation,
 			Army,
 			PlayedCards,
-			Cars);
+			Cars, 
+			CurrentLocation);
 	}
 
 	public TrainState ChangePopulation(int populationChange) {
@@ -125,7 +134,8 @@ public class TrainState : BaseValueClass {
 			AvailablePopulation,
 			Army,
 			PlayedCards,
-			Cars); ;
+			Cars,
+			CurrentLocation); ;
 	}
 
 	public TrainState ChangeArmy(int armyChange) {
@@ -136,14 +146,15 @@ public class TrainState : BaseValueClass {
 			AvailablePopulation,
 			Army + armyChange,
 			PlayedCards,
-			Cars);
+			Cars,
+			CurrentLocation);
 	}
 
 	public bool CanPlayCard(Card card) {
 		return (
 			Fuel >= -card.FuelChange &&
-				Materials >= -card.MaterialsChange &&
-					AvailablePopulation >= card.PopulationCost &&
+			Materials >= -card.MaterialsChange &&
+			AvailablePopulation >= card.PopulationCost &&
 			Army >= -card.ArmyChange &&
 			(card.CarToRemove == CarType.None || Cars.Any(car => car.Type.Equals(card.CarToRemove)))) ||
 			card.DefaultChoice;
@@ -187,6 +198,7 @@ public class TrainState : BaseValueClass {
 			Math.Max(AvailablePopulation - card.PopulationCost, 0),
 			Math.Max(Army + card.ArmyChange, 0),
 			playedCards,
-			cars);
+			cars,
+			CurrentLocation);
 	}
 }
