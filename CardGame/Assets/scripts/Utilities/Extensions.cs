@@ -169,6 +169,13 @@ public static class MyExtensions {
 		}
 	}
 
+	public static Dictionary<TKey, TVal> CombineWith<TKey, TVal>(
+		this Dictionary<TKey, TVal> first,
+		Dictionary<TKey, TVal> second) {
+		return first.Concat(second)
+			.ToDictionary(pair => pair.Key, pair => pair.Value);
+	}
+	
 	public static string ToJoinedString<T>(
 		this IEnumerable<T> enumerable,
 		string separator = ", ") {
