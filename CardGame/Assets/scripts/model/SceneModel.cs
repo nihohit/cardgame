@@ -40,36 +40,24 @@ public class SceneModel : ISceneModel {
 	private CardHandlingMode mode = CardHandlingMode.Regular;
 	private readonly List<Card> playedCards = new List<Card>();
 	private int cardsToHandle;
-	private ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
-	private IEnumerator<Location> locations;
+	private readonly ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
+	private readonly IEnumerator<Location> locations;
 
 	public static SceneModel InitialSceneModel() {
-		var trainState = TrainState.InitialState(3, 3, 2, 0, locationsEnumeration().ToEnumerable<Location>().First());
-		var initialCards = CardsCollection.BaseCards(trainState.Cars.Select(car => car.Type));
+		var locationsEnumerator = new RandomLocationsGenerator().Locations().GetEnumerator();
+		locationsEnumerator.MoveNext();
+		var trainState = TrainState.InitialState(3, 3, 2, 0, locationsEnumerator.Current);
+		var initialCards = TrainCarsCardCollection.BaseCards(trainState.Cars.Select(car => car.Type));
 		var cardState = CardsState.NewState(initialCards)
 			.ShuffleCurrentDeck()
+			.EnterLocation(locationsEnumerator.Current)
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
-		return new SceneModel(cardState, trainState, CardHandlingMode.Regular);
-	}
-
-	private static IEnumerator<Location> locationsEnumeration() {
-		while (true) {
-			yield return new Location("Full workshop",
-				new[] {
-					LocationContent.ArmoryCarComponents,
-					LocationContent.CannonCarComponents,
-					LocationContent.EngineCarComponents,
-					LocationContent.GeneralCarComponents,
-					LocationContent.RefineryCarComponents,
-					LocationContent.WorkhouseCarComponents,
-					LocationContent.LivingQuartersCarComponents
-				}.Shuffle());
-		}
+		return new SceneModel(cardState, trainState, CardHandlingMode.Regular, locationsEnumerator);
 	}
 
 	public SceneModel(CardsState cards, TrainState trainState, 
-		CardHandlingMode mode) {
-		locations = locationsEnumeration();
+		CardHandlingMode mode, IEnumerator<Location> locations) {
+		this.locations = locations;
 		nextEvent = EventCardsCollections.EventCardForState(trainState);
 		this.cards = cards;
 		this.trainState = trainState;
@@ -168,7 +156,9 @@ public class SceneModel : ISceneModel {
 
 	private void drawNewHand() {
 		var remainingCards = Math.Max(Constants.MAX_CARDS_IN_HAND - cards.CurrentDeck.Count(), 0);
-		cards = cards.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
+		cards = cards
+			.DiscardHand()
+			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND - remainingCards);
 		if (remainingCards > 0) {
 			cards = cards.ShuffleDiscardToDeck()
 				.DrawCardsToHand(remainingCards);
@@ -215,15 +205,13 @@ public class SceneModel : ISceneModel {
 			return;
 		}
 
-		cards = cards.DrawCardsToHand(1);
-		trainState = trainState.ChangeFuel(-1);
+		drawNewHand();
+		trainState = trainState.ChangeAvailablePopulation(-1);
 		sendCompletedState();
 	}
 
 	private bool canDrawCard() {
-		return trainState.Fuel > 0 &&
-			cards.Hand.Count() < Constants.MAX_CARDS_IN_HAND &&
-			cards.CurrentDeck.Count() > 0;
+		return trainState.AvailablePopulation > 0;
 	}
 
 	#endregion
