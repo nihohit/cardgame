@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using Random = System.Random;
 
 /// <summary>
 /// Initializes a single Random object for the whole program, in order to overcome flaws in Random implementation.
@@ -90,17 +92,19 @@ public static class Randomizer {
 		return Next(2) > 0;
 	}
 
-	public static IEnumerable<T> ChooseWeightedValues<T>(IDictionary<T, double> dictionary, int amount) {
+	public static IEnumerable<T> ChooseWeightedValues<T>(IDictionary<T, double> dictionary,
+		bool withRepetitions = true) {
 		var chooser = new WeightedValuesChooser<T>();
 
 		// if the chances don't sum to 1, normalize the values.
 		var chancesSum = dictionary.Values.Sum();
-		if (Math.Abs(chancesSum - 1) > 0.001) {
-			//TODO - log a warning
-			dictionary = dictionary.ToDictionary(pair => pair.Key, pair => pair.Value / chancesSum);
+		if (!(Math.Abs(chancesSum - 1) > 0.001)) {
+			return chooser.ChooseWeightedValues(dictionary, withRepetitions);
 		}
+		Debug.LogWarning($"Received dictionary {dictionary.ToJoinedString(",")} with chance sum {chancesSum}");
+		dictionary = dictionary.ToDictionary(pair => pair.Key, pair => pair.Value / chancesSum);
 
-		return chooser.ChooseWeightedValues(dictionary, amount);
+		return chooser.ChooseWeightedValues(dictionary, withRepetitions);
 	}
 
 	private class TestRandom : System.Random {
@@ -143,7 +147,7 @@ public static class Randomizer {
 			return nodes;
 		}
 
-		private T PopFromHeap(List<Node> heap) {
+		private T PopFromHeap(List<Node> heap, bool adjustWeight) {
 			var gas = NextDouble(heap[1].TotalWeight);
 			int i = 1;
 
@@ -157,31 +161,34 @@ public static class Randomizer {
 				}
 			}
 
+			if (!adjustWeight) {
+				return heap[i].Value;
+			}
+			
+			T item = heap[i].Value;
 			var weight = heap[i].Weight;
-			T card = heap[i].Value;
-
 			heap[i].Weight = 0;
 
 			while (i > 0) {
 				heap[i].TotalWeight -= weight;
 				i >>= 1;
-			}
+			}	
 
-			return card;
+			return item;
 		}
 
-		public IEnumerable<T> ChooseWeightedValues(IEnumerable<KeyValuePair<T, double>> dictionary, int amount) {
+		public IEnumerable<T> ChooseWeightedValues(IEnumerable<KeyValuePair<T, double>> dictionary, bool withRepetitions) {
 			var nodesHeap = GenerateHeap(dictionary);
 
-			for (int i = 0; i < amount; i++) {
-				yield return PopFromHeap(nodesHeap);
+			while (true) {
+				yield return PopFromHeap(nodesHeap, !withRepetitions);
 			}
 		}
 
 		private class Node {
 			public double Weight { get; set; }
 
-			public T Value { get; private set; }
+			public T Value { get; }
 
 			public double TotalWeight { get; set; }
 
