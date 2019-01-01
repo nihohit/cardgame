@@ -13,5 +13,18 @@ public enum LocationContent {
 	WorkhouseCarComponents, 
 	EngineCarComponents, 
 	LivingQuartersCarComponents, 
-	RefineryCarComponents
+	RefineryCarComponents,
+	Woods,
+	WildAnimals,
+	LivingPeople,
+	FuelStorage,
+	SpareMaterials,
+	MinableMaterials,
+}
+
+public enum Dangers {
+	Avalanche,
+	Robbers,
+	WildAnimalsAttack,
+	
 }
