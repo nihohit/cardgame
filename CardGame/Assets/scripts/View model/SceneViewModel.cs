@@ -75,8 +75,47 @@ public class SceneViewModel : ISceneViewModel {
 			$"Current Location:{locationDescription(state.CurrentLocation)}";
 	}
 
+	private string locationContentDescription(LocationContent content) {
+		switch (content) {
+			case LocationContent.Test:
+				break;
+			case LocationContent.GeneralCarComponents:
+				return "train car components";
+			case LocationContent.CannonCarComponents:
+				return "mobile cannon";
+			case LocationContent.ArmoryCarComponents:
+				return "armory components";
+			case LocationContent.WorkhouseCarComponents:
+				return "workhouse components";
+			case LocationContent.EngineCarComponents:
+				return "engine components";
+			case LocationContent.LivingQuartersCarComponents:
+				return "living quarters components";
+			case LocationContent.RefineryCarComponents:
+				return "refinery components";
+			case LocationContent.Woods:
+				return "woods";
+			case LocationContent.WildAnimals:
+				return "wild animals";
+			case LocationContent.LivingPeople:
+				return "small settlement";
+			case LocationContent.FuelStorage:
+				return "fuel storage";
+			case LocationContent.SpareMaterials:
+				return "abandoned materials";
+			case LocationContent.MinableMaterials:
+				return "mineable materials";
+		}
+
+		return "";
+	}
+
 	private string locationDescription(Location location) {
-		return location.Name;
+		var contentDescription = location.Content
+			.Distinct()
+			.Select(locationContentDescription)
+			.ToJoinedString(", ");
+		return $"{location.Name} containing {contentDescription}";
 	}
 
 	public IObservable<int> DeckCount => model.State
