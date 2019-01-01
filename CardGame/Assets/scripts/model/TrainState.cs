@@ -137,6 +137,17 @@ public class TrainState : BaseValueClass {
 			Cars,
 			CurrentLocation); ;
 	}
+	
+	public TrainState ChangeAvailablePopulation(int populationChange) {
+		return new TrainState(Fuel,
+			Materials,
+			TotalPopulation,
+			AvailablePopulation + populationChange,
+			Army,
+			PlayedCards,
+			Cars,
+			CurrentLocation); ;
+	}
 
 	public TrainState ChangeArmy(int armyChange) {
 		return new TrainState(
