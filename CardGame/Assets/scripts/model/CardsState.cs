@@ -13,12 +13,12 @@ public class CardsState : BaseValueClass {
   public IReadOnlyList<Card> Hand { get; }
 	public IReadOnlyList<Tradition> Traditions { get; }
 
-	private CardsState(IEnumerable<Card> presistentDeck, 
+	private CardsState(IEnumerable<Card> persistentDeck, 
     IEnumerable<Card> currentDeck = null,
     IEnumerable<Card> discardPile = null,
     IEnumerable<Card> hand = null,
 		IEnumerable<Tradition> traditions = null) {
-    PersistentDeck = presistentDeck.ToList();
+    PersistentDeck = persistentDeck.ToList();
     CurrentDeck = (currentDeck ?? Enumerable.Empty<Card>()).ToList();
     DiscardPile = (discardPile ?? Enumerable.Empty<Card>()).ToList();
     Hand = (hand ?? Enumerable.Empty<Card>()).ToList();
@@ -91,8 +91,8 @@ public class CardsState : BaseValueClass {
 	public CardsState PlayCard(Card card) {
     var state = card.Exhaustible ? ExhaustCardFromHand(card) : DiscardCardFromHand(card);
     return state
-			.AddCardsToDiscard(card.CarToAdd == null ? new Card[0] : CardsCollection.CardsForTrainCar(card.CarToAdd.Type))
-	    .removeCards(CardsCollection.CardsForTrainCar(card.CarToRemove))
+			.AddCardsToDiscard(card.CarToAdd == null ? new Card[0] : TrainCarsCardCollection.CardsForTrainCar(card.CarToAdd.Type))
+	    .removeCards(TrainCarsCardCollection.CardsForTrainCar(card.CarToRemove))
 			.addTraditions(TraditionsCollection.TraditionsForDeck(card.AddTradition));
   }
 

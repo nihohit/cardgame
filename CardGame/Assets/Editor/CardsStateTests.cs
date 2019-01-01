@@ -316,7 +316,7 @@ public class CardsStates {
 			carToRemove: CarType.Test
 		);
 		var initialCards = new[] {
-			CardsCollection.CardsForTrainCar(CarType.Test),
+			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
 			new[] {
 				new Card("foo"),
 				card
@@ -340,12 +340,12 @@ public class CardsStates {
 			carToRemove: CarType.Test
 		);
 		var initialCards = new[] {
-			CardsCollection.CardsForTrainCar(CarType.Test),
+			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
 			new[] {
 				card
 			},
-			CardsCollection.CardsForTrainCar(CarType.Test),
-			CardsCollection.CardsForTrainCar(CarType.Test),
+			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
+			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
 		}.SelectMany(collection => collection);
 
 		var state = CardsState.NewState(initialCards)
