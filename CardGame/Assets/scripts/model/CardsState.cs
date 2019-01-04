@@ -178,7 +178,7 @@ public class CardsState : BaseValueClass {
 	}
 
 	public CardsState EnterLocation(Location location) {
-		var newCards = location.Content.SelectMany(content => LocationBasedCards.cardsForContent(content)).ToList();
+		var newCards = location.Content.SelectMany(content => LocationBasedCards.CardsForContent(content)).ToList();
 		return new CardsState(PersistentDeck,
 			CurrentDeck.Concat(newCards).Shuffle(),
 			DiscardPile,

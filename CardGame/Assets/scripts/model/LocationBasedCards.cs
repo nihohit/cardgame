@@ -118,7 +118,12 @@ public static class LocationBasedCards {
 		),
 	}.ToDictionary(card => card.Name, card => card));
 
-	public static IEnumerable<Card> cardsForContent(LocationContent content) {
+	public static IEnumerable<Card> CardsForContent(LocationContent content) {
+		return internalCardsForContent(content)
+			.Select(card => card.MakeExhaustibleCopy());
+	}
+
+	private static IEnumerable<Card> internalCardsForContent(LocationContent content) { 
 		switch (content) {
 			case LocationContent.ArmoryCarComponents:
 				return armoryComponentsCards();

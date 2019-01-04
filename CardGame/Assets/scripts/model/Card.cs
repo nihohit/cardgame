@@ -48,4 +48,22 @@ public class Card : BaseValueClass {
 		CarToRemove = carToRemove;
 		LocationLimited = locationLimited;
 	}
+
+	public Card MakeExhaustibleCopy() {
+		return new Card(
+			Name,
+			PopulationCost,
+			FuelChange,
+			MaterialsChange,
+			PopulationChange,
+			ArmyChange,
+			AddTradition,
+			true,
+			NumberOfCardsToChooseToExhaust,
+			NumberOfCardsToChooseToReplace,
+			DefaultChoice,
+			CarToRemove,
+			CarToAdd,
+			LocationLimited);
+	}
 }
