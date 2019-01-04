@@ -10,7 +10,7 @@ public class Location : BaseValueClass {
 		IEnumerable<LocationContent> content,
 		IEnumerable<Dangers> dangers = null) {
 		Name = name;
-		Content = content;
-		Dangers = dangers ?? Enumerable.Empty<Dangers>();
+		Content = content.ToList();
+		Dangers = (dangers ?? Enumerable.Empty<Dangers>()).ToList();
 	}
 }
