@@ -75,7 +75,7 @@ public static class LocationBasedCards {
 		new Card("Mine with Explosives",
 			populationCost:1,
 			materialsChange:4,
-			fuelChange:1
+			fuelChange:-1
 		),  
 		new Card("Collect Materials", 
 			populationCost:1,
@@ -93,14 +93,16 @@ public static class LocationBasedCards {
 			populationCost:1,
 			fuelChange:1
 		),
+		new Card("Hire Mercenaries",
+			fuelChange:-2,
+			armyChange: 3
+		),
 		new Card("Trade for Materials", 
-			populationCost:1,
-			materialsChange:4,
+			materialsChange:2,
 			fuelChange:-1
 		),
-		new Card("Trade for Fuel", 
-			populationCost:1,
-			fuelChange:2,
+		new Card("Trade for Fuel",
+			fuelChange:1,
 			materialsChange:-1
 		),
 		new Card("Small scale Hunt", 

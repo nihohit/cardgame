@@ -39,33 +39,36 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 		return makeLocation("Village",
 			new Dictionary<LocationContent, double> {
 				{LocationContent.Woods, 0.1},
-				{LocationContent.LivingPeople, 0.8},
+				{LocationContent.LivingPeople, 0.7},
 				{LocationContent.WildAnimals, 0.05},
-				{trainCarComponent(), 0.05}
+				{trainCarComponent(), 0.05},
+				{LocationContent.LivingQuartersCarComponents, 0.1},
 			});
 	}
 	
 	private Location abandonedVillage() {
 		return makeLocation("Abandoned Village",
 			new Dictionary<LocationContent, double> {
-				{LocationContent.Woods, 0.2},
+				{LocationContent.Woods, 0.15},
 				{LocationContent.LivingPeople, 0.05},
-				{LocationContent.WildAnimals, 0.2},
-				{trainCarComponent(), 0.05},
+				{LocationContent.WildAnimals, 0.1},
 				{LocationContent.FuelStorage, 0.2},
 				{LocationContent.SpareMaterials, 0.2},
 				{LocationContent.MinableMaterials, 0.1},
+				{LocationContent.WorkhouseCarComponents, 0.1},
+				{LocationContent.LivingQuartersCarComponents, 0.1},
 			});
 	}
 
 	private Location emptyWoods() {
 		return makeLocation("Woods",
 			new Dictionary<LocationContent, double> {
-				{LocationContent.Woods, 0.6},
-				{LocationContent.LivingPeople, 0.1},
-				{LocationContent.WildAnimals, 0.2},
+				{LocationContent.Woods, 0.5},
+				{LocationContent.LivingPeople, 0.15},
+				{LocationContent.WildAnimals, 0.15},
 				{LocationContent.SpareMaterials, 0.05},
 				{LocationContent.MinableMaterials, 0.05},
+				{trainCarComponent(), 0.1},
 			});
 	}
 
@@ -73,7 +76,7 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 		var componentsDictionary = trainCarComponentsDictionary(6, 0.11);
 		var extraStuffDictionary = new Dictionary<LocationContent, double> {
 			{LocationContent.LivingPeople, 0.11},
-			{LocationContent.FuelStorage, 0.11},
+			{LocationContent.FuelStorage, 0.12},
 			{LocationContent.SpareMaterials, 0.11},
 		};
 		return makeLocation("Train Workshop",
@@ -81,25 +84,27 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 	}
 
 	private Location abandonedFactory() {
-		var componentsDictionary = trainCarComponentsDictionary(2, 0.11);
-		var extraStuffDictionary = new Dictionary<LocationContent, double> {
-			{LocationContent.LivingPeople, 0.11},
-			{LocationContent.FuelStorage, 0.33},
-			{LocationContent.SpareMaterials, 0.33},
-		};
 		return makeLocation("Abandoned Factory",
-			componentsDictionary.CombineWith(extraStuffDictionary));
+			new Dictionary<LocationContent, double> {
+			{LocationContent.LivingPeople, 0.1},
+			{LocationContent.FuelStorage, 0.3},
+			{LocationContent.SpareMaterials, 0.3},
+			{LocationContent.WorkhouseCarComponents, 0.1},
+			{LocationContent.RefineryCarComponents, 0.1},
+			{LocationContent.EngineCarComponents, 0.1}
+		});
   }
 
 	private Location mountains() {
 		return makeLocation("Mountains region",
 			new Dictionary<LocationContent, double> {
 				{LocationContent.Woods, 0.1},
-				{LocationContent.LivingPeople, 0.1},
-				{LocationContent.WildAnimals, 0.1},
-				{LocationContent.SpareMaterials, 0.1},
-				{LocationContent.FuelStorage, 0.1},
-				{LocationContent.MinableMaterials, 0.5},
+				{LocationContent.LivingPeople, 0.15},
+				{LocationContent.WildAnimals, 0.15},
+				{LocationContent.SpareMaterials, 0.05},
+				{LocationContent.FuelStorage, 0.05},
+				{LocationContent.MinableMaterials, 0.3},
+				{trainCarComponent(), 0.2},
 			});
 	}
 

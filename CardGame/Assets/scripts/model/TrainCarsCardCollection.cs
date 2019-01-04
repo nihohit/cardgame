@@ -24,6 +24,11 @@ public static class TrainCarsCardCollection {
 			materialsChange: -1,
 			armyChange: 1
 		),
+		new Card("Conduct Training",
+			populationCost: 1,
+			materialsChange: -2,
+			armyChange: 3
+		),
 		new Card("Refine Materials",
 			populationCost: 1,
 			fuelChange: -1,
@@ -34,11 +39,6 @@ public static class TrainCarsCardCollection {
 			fuelChange: 3,
 			materialsChange: 2
 		),
-		new Card("Hire Mercenaries",
-			populationCost: 1,
-			fuelChange: -1,
-			armyChange: 1
-		),
 	}.ToDictionary(card => card.Name, card => card));
 
 
@@ -46,7 +46,7 @@ public static class TrainCarsCardCollection {
 		return initialCars
 			.SelectMany(carType => CardsForTrainCar(carType))
 			.Concat(cards.objectForDictionary(new Dictionary<string, int>{
-				{"Hire Mercenaries", 1}
+				{"Arm Militia", 1 }
 			}));	
 	}
 
@@ -76,7 +76,7 @@ public static class TrainCarsCardCollection {
 
 	private static IEnumerable<Card> armoryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Arm Militia", 1},
+			{"Conduct Training", 1},
 		});
 	}
 
@@ -94,7 +94,7 @@ public static class TrainCarsCardCollection {
 
 	private static IEnumerable<Card> generalCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Manual Labour", 2},
+			{"Manual Labour", 1},
 		});
 	}
 
