@@ -80,20 +80,19 @@ public class SceneViewModel : ISceneViewModel {
 		switch (content) {
 			case LocationContent.Test:
 				break;
-			case LocationContent.GeneralCarComponents:
-				return "train car components";
-			case LocationContent.CannonCarComponents:
-				return "mobile cannon";
-			case LocationContent.ArmoryCarComponents:
-				return "armory components";
-			case LocationContent.WorkhouseCarComponents:
-				return "workhouse components";
 			case LocationContent.EngineCarComponents:
-				return "engine components";
+			case LocationContent.GeneralCarComponents:
+				return "wrecked train";
+			case LocationContent.CannonCarComponents:
+				return "howitzer";
+			case LocationContent.ArmoryCarComponents:
+				return "armory";
+			case LocationContent.WorkhouseCarComponents:
+				return "old workshop";
 			case LocationContent.LivingQuartersCarComponents:
-				return "living quarters components";
+				return "old houses";
 			case LocationContent.RefineryCarComponents:
-				return "refinery components";
+				return "refinery";
 			case LocationContent.Woods:
 				return "woods";
 			case LocationContent.WildAnimals:
@@ -103,9 +102,9 @@ public class SceneViewModel : ISceneViewModel {
 			case LocationContent.FuelStorage:
 				return "fuel storage";
 			case LocationContent.SpareMaterials:
-				return "abandoned materials";
+				return "storehouse";
 			case LocationContent.MinableMaterials:
-				return "mineable materials";
+				return "mines";
 		}
 
 		return "";
