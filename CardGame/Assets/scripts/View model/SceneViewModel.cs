@@ -72,7 +72,8 @@ public class SceneViewModel : ISceneViewModel {
 			$"Fuel: {state.Fuel}\n" +
 			$"Materials: {state.Materials}\n" +
 			$"Army: {state.Army}\n" +
-			$"Current Location:{locationDescription(state.CurrentLocation)}";
+			$"{locationDescription(state.CurrentLocation)}\n" +
+			$"Next: {locationDescription(state.NextLocation)}";
 	}
 
 	private string locationContentDescription(LocationContent content) {
@@ -115,7 +116,7 @@ public class SceneViewModel : ISceneViewModel {
 			.Distinct()
 			.Select(locationContentDescription)
 			.ToJoinedString(", ");
-		return $"{location.Name} containing {contentDescription}";
+		return $"{location.Name} with {contentDescription}";
 	}
 
 	public IObservable<int> DeckCount => model.State

@@ -46,11 +46,15 @@ public class SceneModel : ISceneModel {
 	public static SceneModel InitialSceneModel() {
 		var locationsEnumerator = new RandomLocationsGenerator().Locations().GetEnumerator();
 		locationsEnumerator.MoveNext();
-		var trainState = TrainState.InitialState(3, 3, 2, 0, locationsEnumerator.Current);
+		var initialLocation = locationsEnumerator.Current;
+		locationsEnumerator.MoveNext();
+		var trainState = TrainState.InitialState(3, 3, 2, 0, 
+			initialLocation, 
+			locationsEnumerator.Current);
 		var initialCards = TrainCarsCardCollection.BaseCards(trainState.Cars.Select(car => car.Type));
 		var cardState = CardsState.NewState(initialCards)
 			.ShuffleCurrentDeck()
-			.EnterLocation(locationsEnumerator.Current)
+			.EnterLocation(trainState.CurrentLocation)
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
 		return new SceneModel(cardState, trainState, CardHandlingMode.Regular, locationsEnumerator);
 	}
@@ -188,7 +192,7 @@ public class SceneModel : ISceneModel {
 		trainState = trainState.Drive(nextLocation);
 		cards = cards
 			.LeaveLocation()
-			.EnterLocation(nextLocation);
+			.EnterLocation(trainState.CurrentLocation);
 		endTurn();
 		sendCompletedState();
 	}
