@@ -17,7 +17,7 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 			new Dictionary<LocationContent, double> {
 				{LocationContent.FuelStorage, 0.25},
 				{LocationContent.Woods, 0.25},
-				{LocationContent.SpareMaterials, 0.25},
+				{LocationContent.Storehouse, 0.25},
 				{LocationContent.LivingPeople, 0.25}
 			});
 	}
@@ -39,10 +39,11 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 		return makeLocation("Village",
 			new Dictionary<LocationContent, double> {
 				{LocationContent.Woods, 0.1},
-				{LocationContent.LivingPeople, 0.7},
+				{LocationContent.LivingPeople, 0.6},
 				{LocationContent.WildAnimals, 0.05},
-				{trainCarComponent(), 0.05},
-				{LocationContent.LivingQuartersCarComponents, 0.1},
+				{LocationContent.OldHouses, 0.1},
+				{LocationContent.Workhouse, 0.1},
+				{LocationContent.FuelRefinery, 0.05},
 			});
 	}
 	
@@ -53,45 +54,50 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.LivingPeople, 0.05},
 				{LocationContent.WildAnimals, 0.1},
 				{LocationContent.FuelStorage, 0.2},
-				{LocationContent.SpareMaterials, 0.2},
-				{LocationContent.MinableMaterials, 0.1},
-				{LocationContent.WorkhouseCarComponents, 0.1},
-				{LocationContent.LivingQuartersCarComponents, 0.1},
+				{LocationContent.Storehouse, 0.2},
+				{LocationContent.Mine, 0.1},
+				{LocationContent.Workhouse, 0.1},
+				{LocationContent.OldHouses, 0.1},
 			});
 	}
 
 	private Location emptyWoods() {
 		return makeLocation("Woods",
 			new Dictionary<LocationContent, double> {
-				{LocationContent.Woods, 0.5},
-				{LocationContent.LivingPeople, 0.15},
+				{LocationContent.Woods, 0.45},
+				{LocationContent.LivingPeople, 0.1},
 				{LocationContent.WildAnimals, 0.15},
-				{LocationContent.SpareMaterials, 0.05},
-				{LocationContent.MinableMaterials, 0.05},
-				{trainCarComponent(), 0.1},
+				{LocationContent.Storehouse, 0.05},
+				{LocationContent.Mine, 0.05},
+				{LocationContent.TrainWreck, 0.1},
+				{LocationContent.FuelStorage, 0.1},
 			});
 	}
 
 	private Location trainWorkshop() {
-		var componentsDictionary = trainCarComponentsDictionary(6, 0.11);
-		var extraStuffDictionary = new Dictionary<LocationContent, double> {
-			{LocationContent.LivingPeople, 0.11},
-			{LocationContent.FuelStorage, 0.12},
-			{LocationContent.SpareMaterials, 0.11},
-		};
-		return makeLocation("Train Workshop",
-			componentsDictionary.CombineWith(extraStuffDictionary));
+		return makeLocation("Industrial Zone",
+			new Dictionary<LocationContent, double> {
+				{LocationContent.LivingPeople, 0.051},
+				{LocationContent.FuelStorage, 0.1},
+				{LocationContent.Storehouse, 0.2},
+				{LocationContent.TrainWreck, 0.05},
+				{LocationContent.OldHouses, 0.1},
+				{LocationContent.FuelRefinery, 0.2},
+				{LocationContent.Workhouse, 0.2},
+				{LocationContent.Mine, 0.1},
+		});
 	}
 
 	private Location abandonedFactory() {
 		return makeLocation("Abandoned Factory",
 			new Dictionary<LocationContent, double> {
-			{LocationContent.LivingPeople, 0.1},
-			{LocationContent.FuelStorage, 0.3},
-			{LocationContent.SpareMaterials, 0.3},
-			{LocationContent.WorkhouseCarComponents, 0.1},
-			{LocationContent.RefineryCarComponents, 0.1},
-			{LocationContent.EngineCarComponents, 0.1}
+				{LocationContent.LivingPeople, 0.1},
+				{LocationContent.FuelStorage, 0.2},
+				{LocationContent.Storehouse, 0.3},
+				{LocationContent.Workhouse, 0.1},
+				{LocationContent.FuelRefinery, 0.1},
+				{LocationContent.TrainWreck, 0.1},
+				{LocationContent.Howitizer, 0.1}
 		});
   }
 
@@ -101,10 +107,11 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.Woods, 0.1},
 				{LocationContent.LivingPeople, 0.15},
 				{LocationContent.WildAnimals, 0.15},
-				{LocationContent.SpareMaterials, 0.05},
+				{LocationContent.Storehouse, 0.05},
 				{LocationContent.FuelStorage, 0.05},
-				{LocationContent.MinableMaterials, 0.3},
-				{trainCarComponent(), 0.2},
+				{LocationContent.Mine, 0.3},
+				{LocationContent.Howitizer, 0.1},
+				{LocationContent.FuelRefinery, 0.1}
 			});
 	}
 
@@ -114,29 +121,5 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 		return new Location(name, 
 			Randomizer.ChooseWeightedValues(dict)
 				.Take(contentCount));
-	}
-	
-	private Dictionary<LocationContent, double> trainCarComponentsDictionary(
-		int count, 
-		double chance) {
-		return trainCarComponents(count)
-			.ToDictionary(component => component, _ => chance);
-	}
-	
-	private IEnumerable<LocationContent> trainCarComponents(int count) {
-		return new[] {
-				LocationContent.ArmoryCarComponents,
-				LocationContent.CannonCarComponents,
-				LocationContent.EngineCarComponents,
-				LocationContent.GeneralCarComponents,
-				LocationContent.RefineryCarComponents,
-				LocationContent.WorkhouseCarComponents,
-				LocationContent.LivingQuartersCarComponents
-			}.Shuffle()
-			.Take(count);
-	}
-	
-	private LocationContent trainCarComponent() {
-		return trainCarComponents(1).First();
 	}
 }

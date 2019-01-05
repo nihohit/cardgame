@@ -4,7 +4,7 @@ using System.Linq;
 
 public static class LocationBasedCards {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
-		new Card("Build Regular Car",
+		new Card("Build Train Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -63,11 +63,14 @@ public static class LocationBasedCards {
 		),
 		new Card("Make Charcoal",
 			populationCost: 1,
-			fuelChange: 1
+			fuelChange: 2
 		),
 		new Card("Easy Foraging",
 			materialsChange: 1
-		), 
+		),
+		new Card("Abandoned Weapons",
+			armyChange: 1
+		),
 		new Card("Mine Materials", 
 			populationCost:1,
 			materialsChange:2
@@ -85,6 +88,10 @@ public static class LocationBasedCards {
 			populationCost:1,
 			fuelChange:3
 		),
+		new Card("Drain Fuel Tank",
+			populationCost:1,
+			fuelChange:2
+		),
 		new Card("Work for Materials", 
 			populationCost:1,
 			materialsChange:2
@@ -92,6 +99,10 @@ public static class LocationBasedCards {
 		new Card("Work for Fuel", 
 			populationCost:1,
 			fuelChange:1
+		),
+		new Card("Buy weapons",
+			materialsChange:-1,
+			armyChange: 1
 		),
 		new Card("Hire Mercenaries",
 			fuelChange:-2,
@@ -104,6 +115,11 @@ public static class LocationBasedCards {
 		new Card("Trade for Fuel",
 			fuelChange:1,
 			materialsChange:-1
+		),
+		new Card("Make Weapons",
+			fuelChange:-1,
+			materialsChange:-1,
+			armyChange:2
 		),
 		new Card("Small scale Hunt", 
 			populationCost:1,
@@ -127,20 +143,18 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> internalCardsForContent(LocationContent content) { 
 		switch (content) {
-			case LocationContent.ArmoryCarComponents:
-				return armoryComponentsCards();
-			case LocationContent.EngineCarComponents:
-				return engineComponentsCards();
-			case LocationContent.CannonCarComponents:
-				return cannonComponentsCards();
-			case LocationContent.GeneralCarComponents:
-				return generalComponentsCards();
-			case LocationContent.RefineryCarComponents:
-				return refineryComponentsCards();
-			case LocationContent.WorkhouseCarComponents:
-				return workhouseComponentsCards();
-			case LocationContent.LivingQuartersCarComponents:
-				return livingQuartersComponentsCards();
+			case LocationContent.Armory:
+				return armoryCards();
+			case LocationContent.TrainWreck:
+				return trainWreckCards();
+			case LocationContent.Howitizer:
+				return howitizerCards();
+			case LocationContent.FuelRefinery:
+				return fuelRefineryCards();
+			case LocationContent.Workhouse:
+				return workhouseCards();
+			case LocationContent.OldHouses:
+				return oldHousesCards();
 			case LocationContent.Test:
 				return new Card[0];
 			case LocationContent.Woods:
@@ -151,32 +165,35 @@ public static class LocationBasedCards {
 				return livingPopulationCards();
 			case LocationContent.FuelStorage:
 				return fuelStorageCards();
-			case LocationContent.SpareMaterials:
-				return spareMaterialsCards();
-			case LocationContent.MinableMaterials:
-				return minableMineralsCards();
+			case LocationContent.Storehouse:
+				return storehouseCards();
+			case LocationContent.Mine:
+				return mineCards();
 			default:
 				throw new ArgumentOutOfRangeException(nameof(content), content, null);
 		}
 	}
 
-	private static IEnumerable<Card> minableMineralsCards() {
+	private static IEnumerable<Card> mineCards() {
 		return cards.objectForDictionary(new Dictionary<string, int> {
 			{"Mine Materials", 2},
-			{"Mine with Explosives", 2}
-		});
+			{"Mine with Explosives", 2},
+			{"Abandoned Weapons", 1}
+		}).Shuffle().Take(3);
 	}
 
-	private static IEnumerable<Card> spareMaterialsCards() {
+	private static IEnumerable<Card> storehouseCards() {
 		return cards.objectForDictionary(new Dictionary<string, int> {
-			{"Collect Materials", 1}
-		});
+			{"Collect Materials", 2},
+			{"Abandoned Weapons", 1}
+		}).Shuffle().Take(2);
 	}
 
 	private static IEnumerable<Card> fuelStorageCards() {
 		return cards.objectForDictionary(new Dictionary<string, int> {
-			{"Drain Fuel Storage", 1}
-		});
+			{"Drain Fuel Storage", 2},
+			{"Abandoned Weapons", 1}
+		}).Shuffle().Take(2);
 	}
 
 	private static IEnumerable<Card> livingPopulationCards() {
@@ -192,7 +209,7 @@ public static class LocationBasedCards {
 		return cards.objectForDictionary(new Dictionary<string, int> {
 			{"Small scale Hunt", 4},
 			{"Large scale Hunt", 2},
-			{"Fuel from Feces", 1},
+			{"Fuel from Feces", 2},
 		}).Shuffle().Take(3);
 	}
 
@@ -204,45 +221,52 @@ public static class LocationBasedCards {
 		}).Shuffle().Take(3);
 	}
 
-	private static IEnumerable<Card> armoryComponentsCards() {
+	private static IEnumerable<Card> armoryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Convert Car to Armory", 1},
+			{"Make Weapons", 1},
 		});
 	}
 
-	private static IEnumerable<Card> engineComponentsCards() {
+	private static IEnumerable<Card> trainWreckCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Build Engine", 1},
-		});
+			{"Build Train Car", 2},
+			{"Drain Fuel Tank", 1},
+			{"Collect Materials", 1},
+			{"Abandoned Weapons", 1}
+		}).Shuffle().Take(3);
 	}
 
-	private static IEnumerable<Card> cannonComponentsCards() {
+	private static IEnumerable<Card> howitizerCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Convert Car to Cannon", 1},
-		});
+			{"Abandoned Weapons", 1},
+			{"Drain Fuel Tank", 1}
+		}).Shuffle().Take(2);
 	}
 
-	private static IEnumerable<Card> generalComponentsCards() {
-		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Regular Car", 1},
-		});
-	}
-
-	private static IEnumerable<Card> refineryComponentsCards() {
+	private static IEnumerable<Card> fuelRefineryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Convert Car to Refinery", 1},
+			{"Drain Fuel Tank", 1}
 		});
 	}
 
-	private static IEnumerable<Card> workhouseComponentsCards() {
+	private static IEnumerable<Card> workhouseCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Convert Car to Workhouse", 1},
-		});
+			{"Make Weapons", 1},
+			{"Work for Materials", 1},
+			{"Work for Fuel", 1},
+		}).Shuffle().Take(2);
 	}
 
-	private static IEnumerable<Card> livingQuartersComponentsCards() {
+	private static IEnumerable<Card> oldHousesCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Convert Car to Living Quarters", 1},
-		});
+			{"Abandoned Weapons", 1},
+			{"Collect Materials", 1 }
+		}).Shuffle().Take(2);
 	}
 }

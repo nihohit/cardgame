@@ -14,7 +14,7 @@ public static class TrainCarsCardCollection {
 			populationCost: 1,
 			materialsChange: 1
 		),
-		new Card("Convert To Fuel",
+		new Card("Make Fuel",
 			populationCost: 1,
 			materialsChange: -1,
 			fuelChange: 1
@@ -100,7 +100,7 @@ public static class TrainCarsCardCollection {
 
 	private static IEnumerable<Card> engineCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Convert To Fuel", 1},
+			{"Make Fuel", 1},
 		});	
 	}
 

@@ -7,19 +7,18 @@ public enum CardHandlingMode { Regular, Event, Replace, Exhaust }
 //TODO consider making into flags
 public enum LocationContent {
 	Test, 
-	GeneralCarComponents, 
-	CannonCarComponents, 
-	ArmoryCarComponents, 
-	WorkhouseCarComponents, 
-	EngineCarComponents, 
-	LivingQuartersCarComponents, 
-	RefineryCarComponents,
+	Howitizer, 
+	Armory, 
+	Workhouse, 
+	TrainWreck, 
+	OldHouses, 
+	FuelRefinery,
 	Woods,
 	WildAnimals,
 	LivingPeople,
 	FuelStorage,
-	SpareMaterials,
-	MinableMaterials,
+	Storehouse,
+	Mine,
 }
 
 public enum Dangers {
