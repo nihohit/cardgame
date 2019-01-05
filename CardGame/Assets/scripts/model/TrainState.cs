@@ -117,7 +117,7 @@ public class TrainState : BaseValueClass {
 	}
 
 	public bool CanDrive() {
-		return fuelConsumption() < Fuel;
+		return fuelConsumption() <= Fuel;
 	}
 
 	public TrainState Drive(Location nextLocation) {
