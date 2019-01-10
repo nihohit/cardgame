@@ -37,7 +37,7 @@ public static class TrainCarsCardCollection {
 		new Card("Refine Fuel",
 			populationCost: 1,
 			fuelChange: 3,
-			materialsChange: 2
+			materialsChange: -2
 		),
 	}.ToDictionary(card => card.Name, card => card));
 
