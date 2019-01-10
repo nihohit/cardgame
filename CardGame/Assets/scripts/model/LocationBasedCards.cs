@@ -25,7 +25,7 @@ public static class LocationBasedCards {
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		new Card("Build Workhouse car",
+		new Card("Build Workhouse Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
