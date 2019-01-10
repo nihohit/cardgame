@@ -15,7 +15,11 @@ public interface ISceneViewModel {
 	#endregion
 
 	#region outputs
-	IObservable<string> StateDescription { get; }
+	IObservable<string> MainTextContent { get; }
+	IObservable<string> PopulationValue { get; }
+	IObservable<string> FuelValue { get; }
+	IObservable<string> MaterialsValue { get; }
+	IObservable<string> ArmyValue { get; }
 	IObservable<int> DeckCount { get; }
 	IObservable<int> DiscardPileCount { get; }
 	IObservable<bool> DisplayDoneButton { get; }
@@ -62,16 +66,24 @@ public class SceneViewModel : ISceneViewModel {
 
 	#endregion
 	#region outputs
-	
-	public IObservable<string> StateDescription => model.State
-		.Select(state => stateDescription(state.Train));
 
-	private string stateDescription(TrainState state) {
+	public IObservable<string> MainTextContent => model.State
+		.Select(state => locationsDescription(state.Train));
+
+	public IObservable<string> PopulationValue => model.State
+		.Select(state => $"{state.Train.AvailablePopulation}/{state.Train.TotalPopulation}");
+
+	public IObservable<string> FuelValue => model.State
+		.Select(state => $"{state.Train.Fuel} ({state.Train.FuelConsumption()})");
+
+	public IObservable<string> MaterialsValue => model.State
+		.Select(state => $"{state.Train.Materials} ({state.Train.MaterialsConsumption()})");
+
+	public IObservable<string> ArmyValue => model.State
+		.Select(state => state.Train.Army.ToString());
+
+	private string locationsDescription(TrainState state) {
 		return
-			$"Population: {state.AvailablePopulation}/{state.TotalPopulation}\n" + 
-			$"Fuel: {state.Fuel}\n" +
-			$"Materials: {state.Materials}\n" +
-			$"Army: {state.Army}\n" +
 			$"{locationDescription(state.CurrentLocation)}\n" +
 			$"Next: {locationDescription(state.NextLocation)}";
 	}

@@ -13,10 +13,8 @@ public class SceneManager : MonoBehaviour {
 	public GameObject stateDescription;
 	private DeckScript deck;
 	private DeckScript discardPile;
-	private Button doneButton;
-	private Button driveButton;
-	private Button stayButton;
 	private MultiCardDisplayScript multiCardDisplay;
+	private TopBarView topBarView;
 	private readonly CardScript[] currentHand = new CardScript[9];
 
 	private CardScriptPool cardPool;
@@ -33,10 +31,8 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	private void setPrivateGameObjects() {
-		cardPool = new CardScriptPool(CardPrefab, 100);
-		doneButton = GameObject.Find("DoneButton").GetComponent<Button>();
-		driveButton = GameObject.Find("DriveButton").GetComponent<Button>();
-		stayButton = GameObject.Find("StayButton").GetComponent<Button>();
+		topBarView = GameObject.FindObjectOfType<TopBarView>();
+		cardPool = new CardScriptPool(CardPrefab, 40);
 		deck = GameObject.Find("Deck").GetComponent<DeckScript>();
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		multiCardDisplay = Resources.FindObjectsOfTypeAll<MultiCardDisplayScript>()[0];
@@ -55,41 +51,37 @@ public class SceneManager : MonoBehaviour {
 
 	private void setViewModelInputs() {
 		viewModel.setDeckWasClicked(deck.OnMouseDownAsObservable());
-		viewModel.setDoneButtonClicked(doneButton.onClick.AsObservable());
-		viewModel.setDriveButtonClicked(driveButton.onClick.AsObservable());
-		viewModel.setStayButtonClicked(stayButton.onClick.AsObservable());
+		viewModel.setDoneButtonClicked(topBarView.DoneButtonClicked());
+		viewModel.setDriveButtonClicked(topBarView.DriveButtonClicked());
+		viewModel.setStayButtonClicked(topBarView.StayButtonClicked());
 	}
 
 	private void osberveViewModelOutputs() {
-		viewModel.StateDescription.Subscribe(description => {
+		viewModel.MainTextContent.Subscribe(description => {
 			stateDescription.GetComponent<Text>().text = description;
 		});
+		viewModel.PopulationValue.Subscribe(topBarView.SetPopulationValue);
+		viewModel.FuelValue.Subscribe(topBarView.SetFuelValue);
+		viewModel.MaterialsValue.Subscribe(topBarView.SetMaterialsValue);
+		viewModel.ArmyValue.Subscribe(topBarView.SetArmyValue);
 		viewModel.DeckCount.Subscribe(count => {
 			deck.SetCardNumber(count);
 		});
 		viewModel.DiscardPileCount.Subscribe(count => {
 			discardPile.SetCardNumber(count);
 		});
-		viewModel.DisplayDoneButton.Subscribe(active => {
-			doneButton.gameObject.SetActive(active);
-		});
-		viewModel.DisplayDriveButton.Subscribe(active => {
-			driveButton.gameObject.SetActive(active);
-		});
-		viewModel.DisplayStayButton.Subscribe(active => {
-			stayButton.gameObject.SetActive(active);
-		});
-		viewModel.CardMovementInstructions
-			.Subscribe(moveCards);
-		viewModel.TextForDoneButton.Subscribe(setDoneButtonText);
+		viewModel.DisplayDoneButton.Subscribe(topBarView.DisplayDoneButton);
+		viewModel.DisplayDriveButton.Subscribe(topBarView.DisplayDriveButton);
+		viewModel.DisplayStayButton.Subscribe(topBarView.DisplayStayButton);
+		viewModel.CardMovementInstructions.Subscribe(moveCards);
+		viewModel.TextForDoneButton.Subscribe(topBarView.SetDoneButtonText);
 		viewModel.HideMultiDisplay.Subscribe(_ => multiCardDisplay.FinishWork());
 		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair)
 			.Subscribe(setMultiCardDisplayCardSelectionObservation);
 		viewModel.Traditions
 			.DistinctUntilChanged()
 			.Subscribe(updateTraditions);
-		viewModel.Train.
-			Subscribe(train => trainView.setTrain(train));
+		viewModel.Train.Subscribe(train => trainView.setTrain(train));
 	}
 
 	private void moveCards(IEnumerable<CardMovementInstruction> instructions) {
@@ -211,10 +203,6 @@ public class SceneManager : MonoBehaviour {
 		Vector3 deckRight = deck.transform.position + Vector3.right * deck.GetComponent<BoxCollider2D>().size.x / 2 * deck.transform.localScale.x;
 		var size = CardPrefab.GetComponent<BoxCollider2D>().size * CardPrefab.transform.localScale.x;
 		return deckRight + new Vector3((size.x * index) + (size.x / 2), 0, 0);
-	}
-
-	private void setDoneButtonText(string text) {
-		doneButton.GetComponentInChildren<Text>().text = text;
 	}
 
 	private KeyValuePair<IEnumerable<Card>, string> toCardsTextPair(IEnumerable<Card> cards, string text) {

@@ -103,7 +103,7 @@ public class TrainState : BaseValueClass {
 	}
 
 	public TrainState NextTurnState() {
-		var remainingMaterials = Materials - TotalPopulation;
+		var remainingMaterials = Materials - MaterialsConsumption();
 		var remainingPopulation = remainingMaterials < 0 ? TotalPopulation - 1 : TotalPopulation;
 		return newState(
 			materials: Math.Max(remainingMaterials, 0),
@@ -112,17 +112,21 @@ public class TrainState : BaseValueClass {
 		);
 	}
 
-	public int fuelConsumption() {
+	public int MaterialsConsumption() {
+		return TotalPopulation;
+	}
+
+	public int FuelConsumption() {
 		return Cars.Sum(car => car.FuelConsumption);
 	}
 
 	public bool CanDrive() {
-		return fuelConsumption() <= Fuel;
+		return FuelConsumption() <= Fuel;
 	}
 
 	public TrainState Drive(Location nextLocation) {
 		return newState(
-			fuel: Fuel - fuelConsumption(),
+			fuel: Fuel - FuelConsumption(),
 			currentLocation: NextLocation,
 			nextLocation: nextLocation);
 	}
