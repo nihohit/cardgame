@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class SceneManager : MonoBehaviour {
 	private MultiCardDisplayScript multiCardDisplay;
 	private TopBarView topBarView;
 	private readonly CardScript[] currentHand = new CardScript[9];
+	private TextMeshProUGUI textBox;
 
 	private CardScriptPool cardPool;
 	private ISceneViewModel viewModel;
@@ -41,6 +43,7 @@ public class SceneManager : MonoBehaviour {
 			.OrderBy(traditionScript => traditionScript.transform.position.x)
 			.ToArray();
 		trainView = FindObjectOfType<TrainViewScript>();
+		textBox = GameObject.Find("MainText").GetComponent<TextMeshProUGUI>();
 	}
 
 	private void setupViewModel() {
@@ -58,7 +61,7 @@ public class SceneManager : MonoBehaviour {
 
 	private void osberveViewModelOutputs() {
 		viewModel.MainTextContent.Subscribe(description => {
-			stateDescription.GetComponent<Text>().text = description;
+			textBox.text = description;
 		});
 		viewModel.PopulationValue.Subscribe(topBarView.SetPopulationValue);
 		viewModel.FuelValue.Subscribe(topBarView.SetFuelValue);
