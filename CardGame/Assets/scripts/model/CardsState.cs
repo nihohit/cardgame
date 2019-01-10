@@ -53,13 +53,10 @@ public class CardsState : BaseValueClass {
 
   public CardsState DrawCardsToHand(int numberOfCardsToDraw) {
     var currentDeckList = CurrentDeck.ToList();
-    Debug.AssertFormat(currentDeckList.Count >= numberOfCardsToDraw, 
-		                   "Tried to draw {0} cards from {1} unused cards", 
-		                   numberOfCardsToDraw, currentDeckList.Count);
-    var firstCards = currentDeckList.Take(numberOfCardsToDraw);
+    var firstCards = currentDeckList.Take(numberOfCardsToDraw).ToList();
     var newHand = Hand.ToList();
     newHand.AddRange(firstCards);
-    currentDeckList.RemoveRange(0, numberOfCardsToDraw);
+    currentDeckList.RemoveRange(0, firstCards.Count);
     return new CardsState(PersistentDeck, currentDeckList, DiscardPile, newHand, Traditions);
   }
 
