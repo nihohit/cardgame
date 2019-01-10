@@ -54,3 +54,4 @@ CardGame/\.vscode/
 /Executable/
 /CardGame/.vs/
 /Build/
+/CardGame/Assets/Plugins/Editor/JetBrains/*
