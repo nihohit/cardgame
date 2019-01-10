@@ -4,7 +4,7 @@ using System.Linq;
 
 public static class LocationBasedCards {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
-		new Card("Build Train Car",
+		new Card("Build Basic Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -17,7 +17,7 @@ public static class LocationBasedCards {
 			carToAdd: new TrainCar(0, CarType.Engine),
 			exhaustible:true
 		),
-		new Card("Convert Car to Refinery",
+		new Card("Build Refinery Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -25,7 +25,7 @@ public static class LocationBasedCards {
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		new Card("Convert Car to Workhouse",
+		new Card("Build Workhouse car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -33,7 +33,7 @@ public static class LocationBasedCards {
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		new Card("Convert Car to Cannon",
+		new Card("Build Cannon Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -41,7 +41,7 @@ public static class LocationBasedCards {
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		new Card("Convert Car to Armory",
+		new Card("Build Armory Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -49,7 +49,7 @@ public static class LocationBasedCards {
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		new Card("Convert Car to Living Quarters",
+		new Card("Build Housing Car",
 			populationCost: 1,
 			populationChange: 1,
 			materialsChange: -1,
@@ -223,7 +223,7 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> armoryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Convert Car to Armory", 1},
+			{"Build Armory Car", 1},
 			{"Make Weapons", 1},
 		});
 	}
@@ -231,7 +231,7 @@ public static class LocationBasedCards {
 	private static IEnumerable<Card> trainWreckCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Build Engine", 1},
-			{"Build Train Car", 2},
+			{"Build Basic Car", 2},
 			{"Drain Fuel Tank", 1},
 			{"Collect Materials", 1},
 			{"Abandoned Weapons", 1}
@@ -240,7 +240,7 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> howitizerCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Convert Car to Cannon", 1},
+			{"Build Cannon Car", 1},
 			{"Abandoned Weapons", 1},
 			{"Drain Fuel Tank", 1}
 		}).Shuffle().Take(2);
@@ -248,14 +248,14 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> fuelRefineryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Convert Car to Refinery", 1},
+			{"Build Refinery Car", 1},
 			{"Drain Fuel Tank", 1}
 		});
 	}
 
 	private static IEnumerable<Card> workhouseCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Convert Car to Workhouse", 1},
+			{"Build Workhouse Car", 1},
 			{"Make Weapons", 1},
 			{"Work for Materials", 1},
 			{"Work for Fuel", 1},
@@ -264,7 +264,7 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> oldHousesCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Convert Car to Living Quarters", 1},
+			{"Build Housing Car", 1},
 			{"Abandoned Weapons", 1},
 			{"Collect Materials", 1 }
 		}).Shuffle().Take(2);
