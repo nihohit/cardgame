@@ -11,9 +11,9 @@ public enum ScreenLocation { Center, Deck, DiscardPile, Hand1, Hand2, Hand3, Han
 public class CardMovementInstruction: BaseValueClass {
 	public ScreenLocation From { get; }
 	public ScreenLocation To { get; }
-	public Card Card { get; }
+	public CardDisplayModel Card { get; }
 
-	public CardMovementInstruction (Card card, ScreenLocation from, ScreenLocation to) {
+	public CardMovementInstruction (CardDisplayModel card, ScreenLocation from, ScreenLocation to) {
 		Card = card;
 		To = to;
 		From = from;

@@ -27,13 +27,13 @@ public class MultiCardDisplayScript : MonoBehaviour {
 		cardPool = cardScriptPool;
 	}
 
-	public IObservable<Card> setup(IEnumerable<Card> cards, string description) {
+	public IObservable<Card> setup(IEnumerable<CardDisplayModel> cards, string description) {
 		gameObject.SetActive(true);
 		textMesh.text = description;
 		return setupCardScripts(cards);
 	}
 
-	private IObservable<Card> setupCardScripts(IEnumerable<Card> cards) {
+	private IObservable<Card> setupCardScripts(IEnumerable<CardDisplayModel> cards) {
 		AssertUtils.IsEmpty(cardScripts, "cardScripts");
 		cardScripts.AddRange(cards.Select(card => cardPool.CardForModel(card)));
 		foreach (var cardScript in cardScripts) {

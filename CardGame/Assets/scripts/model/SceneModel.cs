@@ -27,6 +27,7 @@ public class SceneState {
 public interface ISceneModel {
 	IObservable<SceneState> State { get; }
 
+	bool CanPlayCard(Card card);
 	bool PlayCard(Card card);
 	void UserFinishedMode();
 	void UserChoseToDrive();
@@ -73,6 +74,10 @@ public class SceneModel : ISceneModel {
 	#region ISceneModel
 	public IObservable<SceneState> State => stateSubject;
 
+	public bool CanPlayCard(Card card) {
+		return trainState.CanPlayCard(card);
+	}
+
 	public bool PlayCard(Card card) {
 		bool succeeded = false;
 		switch (mode) {
@@ -95,8 +100,9 @@ public class SceneModel : ISceneModel {
 		return succeeded;
 	}
 
+
 	private bool playRegularCard(Card card) {
-		if (!trainState.CanPlayCard(card)) {
+		if (!CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
 		}
@@ -118,7 +124,7 @@ public class SceneModel : ISceneModel {
 	}
 
 	private bool playEventCard(Card card) {
-		if (!trainState.CanPlayCard(card)) {
+		if (!CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
 		}

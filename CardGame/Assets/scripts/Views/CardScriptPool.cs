@@ -18,7 +18,7 @@ public class CardScriptPool {
 		}
 	}
 
-	public CardScript CardForModel(Card cardModel) {
+	public CardScript CardForModel(CardDisplayModel cardModel) {
 		var cardScript = cardPool[0];
 		cardScript.gameObject.SetActive(true);
 		cardPool.Remove(cardScript);

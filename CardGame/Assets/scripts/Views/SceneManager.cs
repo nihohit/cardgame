@@ -205,11 +205,11 @@ public class SceneManager : MonoBehaviour {
 		return deckRight + new Vector3((size.x * index) + (size.x / 2), 0, 0);
 	}
 
-	private KeyValuePair<IEnumerable<Card>, string> toCardsTextPair(IEnumerable<Card> cards, string text) {
-		return new KeyValuePair<IEnumerable<Card>, string>(cards, text);
+	private KeyValuePair<IEnumerable<CardDisplayModel>, string> toCardsTextPair(IEnumerable<CardDisplayModel> cards, string text) {
+		return new KeyValuePair<IEnumerable<CardDisplayModel>, string>(cards, text);
 	}
 
-	private void setMultiCardDisplayCardSelectionObservation(KeyValuePair<IEnumerable<Card>, string> pair) {
+	private void setMultiCardDisplayCardSelectionObservation(KeyValuePair<IEnumerable<CardDisplayModel>, string> pair) {
 		viewModel.setSelectedCardObservation(multiCardDisplay.setup(pair.Key, pair.Value));
 	}
 

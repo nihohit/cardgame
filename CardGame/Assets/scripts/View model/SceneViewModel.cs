@@ -25,7 +25,7 @@ public interface ISceneViewModel {
 	IObservable<bool> DisplayDoneButton { get; }
 	IObservable<bool> DisplayStayButton { get; }
 	IObservable<bool> DisplayDriveButton { get; }
-	IObservable<IEnumerable<Card>> CardsInMultiDisplay { get; }
+	IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay { get; }
 	IObservable<string> TextForMultiDisplay { get; }
 	IObservable<string> TextForDoneButton { get; }
 	IObservable<Unit> HideMultiDisplay { get; }
@@ -150,16 +150,16 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => state.Mode != CardHandlingMode.Event &&
 		                 state.Train.CanDrive());
 
-	public IObservable<IEnumerable<Card>> CardsInMultiDisplay => model.State
+	public IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay => model.State
 		.Where(state => state.Mode != CardHandlingMode.Regular)
 		.Select(cardsInMultiCardDisplay);
 
 	// TODO: Move using CardMovementInstructions.
-	private IEnumerable<Card> cardsInMultiCardDisplay(SceneState state) {
+	private IEnumerable<CardDisplayModel> cardsInMultiCardDisplay(SceneState state) {
 		if (state.Mode == CardHandlingMode.Event) {
-			return state.CurrentEvent.Options;
+			return state.CurrentEvent.Options.Select(displayModel);
 		}
-		return state.Cards.Hand;
+		return state.Cards.Hand.Select(displayModel);
 	}
 
 	public IObservable<string> TextForMultiDisplay => model.State
@@ -215,7 +215,7 @@ public class SceneViewModel : ISceneViewModel {
 				var card = previousHand[i];
 				var currentIndex = currentHand.FindIndex(currentCard => currentCard == card);
 				if (currentIndex == -1) {
-					initialMovements.Add(new CardMovementInstruction(card, handLocationFromIndex(i), ScreenLocation.DiscardPile));
+					initialMovements.Add(new CardMovementInstruction(displayModel(card), handLocationFromIndex(i), ScreenLocation.DiscardPile));
 					discardedCards.Add(card);
 					continue;
 				}
@@ -224,7 +224,7 @@ public class SceneViewModel : ISceneViewModel {
 					continue;
 				}
 
-				initialMovements.Add(new CardMovementInstruction(card, handLocationFromIndex(i), handLocationFromIndex(currentIndex)));
+				initialMovements.Add(new CardMovementInstruction(displayModel(card), handLocationFromIndex(i), handLocationFromIndex(currentIndex)));
 			}
 			if (initialMovements.Count > 0) {
 				obs.OnNext(initialMovements);
@@ -240,7 +240,7 @@ public class SceneViewModel : ISceneViewModel {
 				}
 			}
 			foreach(var card in newDiscardedCards) {
-				midStepMovements.Add(new CardMovementInstruction(card, ScreenLocation.Center, ScreenLocation.DiscardPile));
+				midStepMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.Center, ScreenLocation.DiscardPile));
 			}
 
 			var previousDeck = pair.Previous.CurrentDeck.ToList();
@@ -249,10 +249,10 @@ public class SceneViewModel : ISceneViewModel {
 					continue;
 				}
 				if (cardsMovedFromDiscardToDeck.FindIndex(discardedCard => discardedCard == card) != -1) {
-					midStepMovements.Add(new CardMovementInstruction(card, ScreenLocation.DiscardPile, ScreenLocation.Deck));
+					midStepMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.DiscardPile, ScreenLocation.Deck));
 					continue;
 				}
-				midStepMovements.Add(new CardMovementInstruction(card, ScreenLocation.Center, ScreenLocation.Deck));
+				midStepMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.Center, ScreenLocation.Deck));
 			}
 			if (midStepMovements.Count > 0) {
 				obs.OnNext(midStepMovements);
@@ -260,7 +260,7 @@ public class SceneViewModel : ISceneViewModel {
 
 			foreach (var index in currentHandIndicesToCheck) {
 				var card = currentHand[index];
-				lastMovements.Add(new CardMovementInstruction(card, ScreenLocation.Deck, handLocationFromIndex(index)));
+				lastMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.Deck, handLocationFromIndex(index)));
 			}
 			if (lastMovements.Count > 0) {
 				obs.OnNext(lastMovements);
@@ -268,6 +268,10 @@ public class SceneViewModel : ISceneViewModel {
 
 			return null;
 		});
+	}
+
+	private CardDisplayModel displayModel(Card card) {
+		return new CardDisplayModel(card, model.CanPlayCard(card));
 	}
 
 	private ScreenLocation handLocationFromIndex(int index) {

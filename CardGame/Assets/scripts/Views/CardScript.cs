@@ -5,10 +5,10 @@ using TMPro;
 using System;
 using UniRx.Triggers;
 using UniRx;
-using System.Text;
 using System.Linq;
 
 public class CardScript : MonoBehaviour {
+	private bool needsSetup = true;
   private TextMeshPro nameField;
 	private TextMeshPro traitField;
 	private CardValueScript fuelCost;
@@ -19,20 +19,26 @@ public class CardScript : MonoBehaviour {
 	private CardValueScript materialsGain;
 	private CardValueScript populationGain;
 	private CardValueScript armyGain;
+	private SpriteRenderer spriteRenderer;
 
 	private Subject<Unit> modelSetSubject = new Subject<Unit>();
-	private Card _model;
-	public Card CardModel { get {
+	private CardDisplayModel _model;
+	public CardDisplayModel CardModel { get {
 			return _model;
 		} set {
+			if (needsSetup) {
+				InitialCardSetup();
+			}
 			_model = value;
-			nameField.text = value.Name;
-			fuelCost.SetValue(value.FuelChange);
-			populationCost.SetDoubleValue(-value.PopulationCost, value.PopulationChange);
-			materialsCost.SetValue(value.MaterialsChange);
-			armyCost.SetValue(value.ArmyChange);
+			var card = value.Card;
+			nameField.text = card.Name;
+			fuelCost.SetValue(card.FuelChange);
+			populationCost.SetDoubleValue(-card.PopulationCost, card.PopulationChange);
+			materialsCost.SetValue(card.MaterialsChange);
+			armyCost.SetValue(card.ArmyChange);
 			modelSetSubject.OnNext(Unit.Default);
-			setTraits(value);
+			setTraits(card);
+			spriteRenderer.color = value.Playable ? Color.white : Color.gray;
 
 			fuelGain.SetValue(0);
 			materialsGain.SetValue(0);
@@ -99,7 +105,7 @@ public class CardScript : MonoBehaviour {
 		return "";
 	}
 
-	private void Awake() {
+	private void InitialCardSetup() {
 		nameField = transform.Find("Name").GetComponent<TextMeshPro>();
 		traitField = transform.Find("Traits").GetComponent<TextMeshPro>();
 		fuelCost = transform.Find("FuelCost").GetComponent<CardValueScript>();
@@ -110,11 +116,12 @@ public class CardScript : MonoBehaviour {
 		materialsGain = transform.Find("MaterialsGain").GetComponent<CardValueScript>();
 		populationGain = transform.Find("PopulationGain").GetComponent<CardValueScript>();
 		armyGain = transform.Find("ArmyGain").GetComponent<CardValueScript>();
+		spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
 	}
 
 	public IObservable<Card> ClickObservation() {
 		return this.OnMouseDownAsObservable()
-			.Select(_ => CardModel)
+			.Select(_ => CardModel.Card)
 			.TakeUntil(modelSetSubject);
 	}
 }
