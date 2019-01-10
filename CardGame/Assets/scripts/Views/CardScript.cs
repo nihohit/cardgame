@@ -6,9 +6,11 @@ using System;
 using UniRx.Triggers;
 using UniRx;
 using System.Text;
+using System.Linq;
 
 public class CardScript : MonoBehaviour {
-  private TextMeshPro text;
+  private TextMeshPro nameField;
+	private TextMeshPro traitField;
 	private CardValueScript fuelCost;
 	private CardValueScript populationCost;
 	private CardValueScript materialsCost;
@@ -24,12 +26,13 @@ public class CardScript : MonoBehaviour {
 			return _model;
 		} set {
 			_model = value;
-			text.text = cardDescription(value);
+			nameField.text = value.Name;
 			fuelCost.SetValue(value.FuelChange);
 			populationCost.SetDoubleValue(-value.PopulationCost, value.PopulationChange);
 			materialsCost.SetValue(value.MaterialsChange);
 			armyCost.SetValue(value.ArmyChange);
 			modelSetSubject.OnNext(Unit.Default);
+			setTraits(value);
 
 			fuelGain.SetValue(0);
 			materialsGain.SetValue(0);
@@ -38,8 +41,67 @@ public class CardScript : MonoBehaviour {
 		}
 	}
 
+	private void setTraits(Card card) {
+		traitField.text = getTraits(card).ToJoinedString("\n");
+	}
+
+	private IEnumerable<string> getTraits(Card card) {
+		if (card.AddTradition != TraditionType.None) {
+			yield return $"Add tradition: {card.AddTradition}";
+		}
+
+		if (card.NumberOfCardsToChooseToExhaust > 0) {
+			yield return $"Remove {card.NumberOfCardsToChooseToExhaust} cards";
+		}
+
+		if (card.NumberOfCardsToChooseToReplace > 0) {
+			yield return $"Replace {card.NumberOfCardsToChooseToReplace} cards";
+		}
+
+		if (card.CarToAdd != null && card.CarToAdd.Type != CarType.None) {
+			if (card.CarToRemove != CarType.None) {
+				yield return $"Replace {carName(card.CarToRemove)} with {carName(card.CarToAdd.Type)}";
+			} else {
+				yield return $"Add {carName(card.CarToAdd.Type)}";
+			}
+		} else if (card.CarToRemove != CarType.None) {
+			yield return $"Remove {carName(card.CarToRemove)}";
+		}
+
+		if (card.DefaultChoice) {
+			yield return "Default choice";
+		}
+
+		if (card.Exhaustible) {
+			yield return "Single use";
+		}
+	}
+
+	private string carName(CarType carType) {
+		switch (carType) {
+			case CarType.Engine:
+				return "Engine";
+			case CarType.General:
+				return "Basic";
+			case CarType.Workhouse:
+				return "Workhouse";
+			case CarType.Armory:
+				return "Armory";
+			case CarType.Refinery:
+				return "Refinery";
+			case CarType.Cannon:
+				return "Cannon";
+			case CarType.LivingQuarters:
+				return "LivingQuarters";
+		}
+
+		AssertUtils.UnreachableCode($"unknown type {carType}");
+		return "";
+	}
+
 	private void Awake() {
-    text = GetComponentInChildren<TextMeshPro>();
+		nameField = transform.Find("Name").GetComponent<TextMeshPro>();
+		traitField = transform.Find("Traits").GetComponent<TextMeshPro>();
 		fuelCost = transform.Find("FuelCost").GetComponent<CardValueScript>();
 		populationCost = transform.Find("PopulationCost").GetComponent<CardValueScript>();
 		materialsCost = transform.Find("MaterialsCost").GetComponent<CardValueScript>();
@@ -54,32 +116,5 @@ public class CardScript : MonoBehaviour {
 		return this.OnMouseDownAsObservable()
 			.Select(_ => CardModel)
 			.TakeUntil(modelSetSubject);
-	}
-
-	private string cardDescription(Card card) {
-		var stringBuilder = new StringBuilder();
-		stringBuilder.AppendLine(card.Name);
-		if (card.AddTradition != TraditionType.None) {
-			stringBuilder.AppendLine($"Add deck: {card.AddTradition}");
-		}
-		if (card.Exhaustible) {
-			stringBuilder.AppendLine("Exhaustible");
-		}
-		addString(stringBuilder, card.NumberOfCardsToChooseToExhaust, "Remove cards");
-		addString(stringBuilder, card.NumberOfCardsToChooseToReplace, "Replace cards");
-		if (card.DefaultChoice) {
-			stringBuilder.AppendLine("Default choice");
-		}
-		return stringBuilder.ToString();
-	}
-
-	private void addString(StringBuilder builder, int propertyValue, string propertyDescription) {
-		addString(builder, propertyValue != 0 ? propertyValue.ToString() : null, propertyDescription);
-	}
-
-	private void addString(StringBuilder builder, string str, string propertyDescription) {
-		if (str != null) {
-			builder.AppendLine($"{propertyDescription}: {str}");
-		}
 	}
 }
