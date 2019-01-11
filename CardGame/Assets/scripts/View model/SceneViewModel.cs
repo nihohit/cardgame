@@ -71,10 +71,10 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => locationsDescription(state.Train));
 
 	public IObservable<string> PopulationValue => model.State
-		.Select(state => $"{state.Train.AvailablePopulation}/{state.Train.TotalPopulation}");
+		.Select(state => $"{state.Train.AvailablePopulation}/{state.Train.TotalPopulation}/{state.Train.LivingSpace}");
 
 	public IObservable<string> FuelValue => model.State
-		.Select(state => $"{state.Train.Fuel} ({state.Train.FuelConsumption()})");
+		.Select(state => $"{state.Train.Fuel} ({state.Train.FuelConsumption})");
 
 	public IObservable<string> MaterialsValue => model.State
 		.Select(state => $"{state.Train.Materials} ({state.Train.MaterialsConsumption()})");
