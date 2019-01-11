@@ -102,6 +102,7 @@ public class SceneManager : MonoBehaviour {
 			if (locationInHand(instruction.From)) {
 				var fromIndex = handIndexForLocation(instruction.From);
 				cardScript = currentHand[fromIndex];
+				cardScript.CardModel = instruction.Card;
 				currentHand[fromIndex] = null;
 			} else {
 				cardScript = cardPool.CardForModel(instruction.Card);
@@ -115,9 +116,7 @@ public class SceneManager : MonoBehaviour {
 				 if (!locationInHand(instruction.To)) {
 					 cardPool.ReleaseCard(cardScript);
 				 } else {
-					 if (!locationInHand(instruction.From)) {
-						 viewModel.setSelectedCardObservation(cardScript.ClickObservation());
-					 }
+					viewModel.setSelectedCardObservation(cardScript.ClickObservation());
 					 currentHand[handIndexForLocation(instruction.To)] = cardScript;
 				 }
 				 markCardAnimationEnded();

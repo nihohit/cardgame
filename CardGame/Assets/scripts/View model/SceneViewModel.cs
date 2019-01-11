@@ -220,9 +220,6 @@ public class SceneViewModel : ISceneViewModel {
 					continue;
 				}
 				currentHandIndicesToCheck.Remove(currentIndex);
-				if (currentIndex == i) {
-					continue;
-				}
 
 				initialMovements.Add(new CardMovementInstruction(displayModel(card), handLocationFromIndex(i), handLocationFromIndex(currentIndex)));
 			}
