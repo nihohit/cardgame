@@ -23,6 +23,8 @@ public class TrainState : BaseValueClass {
 	public int Army { get; }
 	public int TotalPopulation { get; }
 	public int AvailablePopulation { get; }
+	public int LivingSpace { get; }
+	public int FuelConsumption { get; }
 	public IReadOnlyList<Card> PlayedCards { get; }
 	public IReadOnlyList<TrainCar> Cars { get; }
 	public Location CurrentLocation { get; }
@@ -67,6 +69,7 @@ public class TrainState : BaseValueClass {
 		AssertUtils.Positive(availablePopulation, "availablePopulation");
 		AssertUtils.StrictlyPositive(totalPopulation, "totalPopulation");
 		AssertUtils.StrictlyPositive(cars.Count, "Cars count");
+		AssertUtils.EqualOrGreater(totalPopulation, availablePopulation);
 		Fuel = fuel;
 		Materials = materials;
 		TotalPopulation = totalPopulation;
@@ -76,6 +79,33 @@ public class TrainState : BaseValueClass {
 		Cars = cars;
 		CurrentLocation = currentLocation;
 		NextLocation = nextLocation;
+		FuelConsumption = Cars.Sum(car => car.FuelConsumption);
+		LivingSpace = livingSpaceForCars(cars);
+
+		AssertUtils.EqualOrGreater(LivingSpace, TotalPopulation);
+	}
+
+	private int livingSpaceForCars(IEnumerable<TrainCar> cars) {
+		return cars.Sum(car => spacePerCar(car.Type));
+	}
+
+	private int spacePerCar(CarType car) {
+		switch (car) {
+			case CarType.LivingQuarters:
+				return 3;
+			case CarType.General:
+				return 2;
+			case CarType.Engine:
+				return 0;
+			case CarType.Workhouse:
+			case CarType.Armory:
+			case CarType.Refinery:
+			case CarType.Cannon:
+				return 1;
+			default:
+				AssertUtils.UnreachableCode("Illegal type: " + car);
+				return Int32.MinValue;
+		}
 	}
 
 	private const int kUnsetValue = -1;
@@ -116,17 +146,13 @@ public class TrainState : BaseValueClass {
 		return TotalPopulation;
 	}
 
-	public int FuelConsumption() {
-		return Cars.Sum(car => car.FuelConsumption);
-	}
-
 	public bool CanDrive() {
-		return FuelConsumption() <= Fuel;
+		return FuelConsumption <= Fuel;
 	}
 
 	public TrainState Drive(Location nextLocation) {
 		return newState(
-			fuel: Fuel - FuelConsumption(),
+			fuel: Fuel - FuelConsumption,
 			currentLocation: NextLocation,
 			nextLocation: nextLocation);
 	}
@@ -156,6 +182,7 @@ public class TrainState : BaseValueClass {
 			Fuel >= -card.FuelChange &&
 			Materials >= -card.MaterialsChange &&
 			AvailablePopulation >= card.PopulationCost &&
+			LivingSpace >= card.PopulationChange + TotalPopulation &&
 			Army >= -card.ArmyChange &&
 			(card.CarToRemove == CarType.None || Cars.Any(car => car.Type.Equals(card.CarToRemove)))) ||
 			card.DefaultChoice;
@@ -185,11 +212,16 @@ public class TrainState : BaseValueClass {
 			cars = cars.RemoveFirstWhere(car => car.Type == card.CarToRemove).ToList();
 		}
 
+		var newTotalPopulation = Math.Max(TotalPopulation + card.PopulationChange, 0);
+		newTotalPopulation = Math.Min(newTotalPopulation, livingSpaceForCars(cars));
+		var newAvailablePopulation = Math.Max(AvailablePopulation - card.PopulationCost, 0);
+		newAvailablePopulation = Math.Min(newAvailablePopulation, newTotalPopulation);
+
 		return newState(
 			fuel: Math.Max(Fuel + card.FuelChange, 0),
 			materials: Math.Max(Materials + card.MaterialsChange, 0),
-			totalPopulation: Math.Max(TotalPopulation + card.PopulationChange, 0),
-			availablePopulation: Math.Max(AvailablePopulation - card.PopulationCost, 0),
+			totalPopulation: newTotalPopulation,
+			availablePopulation: newAvailablePopulation,
 			army: Math.Max(Army + card.ArmyChange, 0),
 			playedCards: playedCards,
 			cars: cars);

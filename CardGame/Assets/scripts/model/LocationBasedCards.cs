@@ -6,7 +6,6 @@ public static class LocationBasedCards {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
 		new Card("Build Basic Car",
 			populationCost: 1,
-			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.General),
 			exhaustible:true
@@ -19,7 +18,6 @@ public static class LocationBasedCards {
 		),
 		new Card("Build Refinery Car",
 			populationCost: 1,
-			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Refinery),
 			carToRemove: CarType.General,
@@ -27,7 +25,6 @@ public static class LocationBasedCards {
 		),
 		new Card("Build Workhouse Car",
 			populationCost: 1,
-			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Workhouse),
 			carToRemove: CarType.General,
@@ -35,7 +32,6 @@ public static class LocationBasedCards {
 		),
 		new Card("Build Cannon Car",
 			populationCost: 1,
-			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Cannon),
 			carToRemove: CarType.General,
@@ -43,7 +39,6 @@ public static class LocationBasedCards {
 		),
 		new Card("Build Armory Car",
 			populationCost: 1,
-			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Armory),
 			carToRemove: CarType.General,
@@ -51,7 +46,6 @@ public static class LocationBasedCards {
 		),
 		new Card("Build Housing Car",
 			populationCost: 1,
-			populationChange: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.LivingQuarters),
 			carToRemove: CarType.General,
@@ -134,6 +128,15 @@ public static class LocationBasedCards {
 			populationCost:1,
 			fuelChange:1
 		),
+		new Card("Find Survivors",
+			populationCost:1,
+			populationChange:1,
+			materialsChange:-1
+		),
+		new Card("Recruit the Locals",
+			populationChange:1,
+			materialsChange:-2
+		),
 	}.ToDictionary(card => card.Name, card => card));
 
 	public static IEnumerable<Card> CardsForContent(LocationContent content) {
@@ -178,7 +181,8 @@ public static class LocationBasedCards {
 		return cards.objectForDictionary(new Dictionary<string, int> {
 			{"Mine Materials", 2},
 			{"Mine with Explosives", 2},
-			{"Abandoned Weapons", 1}
+			{"Abandoned Weapons", 1},
+			{"Find Survivors", 1}
 		}).Shuffle().Take(3);
 	}
 
@@ -202,6 +206,7 @@ public static class LocationBasedCards {
 			{"Work for Fuel", 1},
 			{"Trade for Materials", 1},
 			{"Trade for Fuel", 1},
+			{"Recruit the Locals", 1}
 		}).Shuffle().Take(2);
 	}
 
@@ -217,7 +222,8 @@ public static class LocationBasedCards {
 		return cards.objectForDictionary(new Dictionary<string, int> {
 			{"Cut Trees", 2},
 			{"Make Charcoal", 2},
-			{"Easy Foraging", 1}
+			{"Easy Foraging", 1},
+			{"Find Survivors", 1}
 		}).Shuffle().Take(3);
 	}
 
@@ -234,7 +240,8 @@ public static class LocationBasedCards {
 			{"Build Basic Car", 2},
 			{"Drain Fuel Tank", 1},
 			{"Collect Materials", 1},
-			{"Abandoned Weapons", 1}
+			{"Abandoned Weapons", 1},
+			{"Find Survivors", 1}
 		}).Shuffle().Take(3);
 	}
 
@@ -259,6 +266,7 @@ public static class LocationBasedCards {
 			{"Make Weapons", 1},
 			{"Work for Materials", 1},
 			{"Work for Fuel", 1},
+			{"Find Survivors", 1},
 		}).Shuffle().Take(2);
 	}
 
@@ -266,7 +274,8 @@ public static class LocationBasedCards {
 		return cards.objectForDictionary(new Dictionary<string, int>{
 			{"Build Housing Car", 1},
 			{"Abandoned Weapons", 1},
-			{"Collect Materials", 1 }
+			{"Collect Materials", 1 },
+			{"Find Survivors", 1}
 		}).Shuffle().Take(2);
 	}
 }
