@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 public class SceneViewController : MonoBehaviour {
 	public GameObject CardPrefab;
+	public GameObject endGamePanel;
 	private DeckScript deck;
 	private DeckScript discardPile;
 	private MultiCardDisplayScript multiCardDisplay;
@@ -85,6 +86,7 @@ public class SceneViewController : MonoBehaviour {
 			.DistinctUntilChanged()
 			.Subscribe(updateTraditions);
 		viewModel.Train.Subscribe(train => trainView.setTrain(train));
+		viewModel.ShowEndGameScreen.Subscribe(endGamePanel.SetActive);
 	}
 
 	private void moveCards(IEnumerable<CardMovementInstruction> instructions) {
@@ -224,5 +226,9 @@ public class SceneViewController : MonoBehaviour {
 		for (int i = traditionsAsList.Count; i < traditionScripts.Length; i++) {
 			traditionScripts[i].setTradition(null);
 		}
+	}
+
+	public void EndGameButtonPressed() {
+		SceneManager.LoadScene("base");
 	}
 }
