@@ -67,7 +67,6 @@ public class TrainState : BaseValueClass {
 		AssertUtils.Positive(fuel, "fuel");
 		AssertUtils.Positive(materials, "materials");
 		AssertUtils.Positive(availablePopulation, "availablePopulation");
-		AssertUtils.StrictlyPositive(totalPopulation, "totalPopulation");
 		AssertUtils.StrictlyPositive(cars.Count, "Cars count");
 		AssertUtils.EqualOrGreater(totalPopulation, availablePopulation);
 		Fuel = fuel;

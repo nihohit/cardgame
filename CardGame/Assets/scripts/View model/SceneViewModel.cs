@@ -32,6 +32,7 @@ public interface ISceneViewModel {
 	IObservable<IEnumerable<CardMovementInstruction>> CardMovementInstructions { get; }
 	IObservable<IEnumerable<Tradition>> Traditions { get; }
 	IObservable<IReadOnlyList<TrainCar>> Train { get; }
+	IObservable<bool> ShowEndGameScreen { get; }
 	#endregion
 }
 
@@ -293,6 +294,9 @@ public class SceneViewModel : ISceneViewModel {
 
 	public IObservable<IReadOnlyList<TrainCar>> Train => model.State
 		.Select(state => state.Train.Cars);
+
+	public IObservable<bool> ShowEndGameScreen => model.State
+		.Select(state => state.Train.TotalPopulation <= 0);
 	#endregion
 	#endregion
 
