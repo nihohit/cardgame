@@ -7,11 +7,11 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneManager : MonoBehaviour {
+public class SceneViewController : MonoBehaviour {
 	public GameObject CardPrefab;
-	public GameObject stateDescription;
 	private DeckScript deck;
 	private DeckScript discardPile;
 	private MultiCardDisplayScript multiCardDisplay;
