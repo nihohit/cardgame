@@ -69,7 +69,7 @@ public class SceneViewModel : ISceneViewModel {
 	#region outputs
 
 	public IObservable<string> MainTextContent => model.State
-		.Select(state => locationsDescription(state.Train));
+		.CombineLatest(model.PopulationDied, locationsDescription);
 
 	public IObservable<string> PopulationValue => model.State
 		.Select(state => $"{state.Train.AvailablePopulation}/{state.Train.TotalPopulation}/{state.Train.LivingSpace}");
@@ -83,10 +83,12 @@ public class SceneViewModel : ISceneViewModel {
 	public IObservable<string> ArmyValue => model.State
 		.Select(state => state.Train.Army.ToString());
 
-	private string locationsDescription(TrainState state) {
+	private string locationsDescription(SceneState state, bool populationDied) {
+		var end = populationDied ? "\nSome population left you for lack of materials" : "";
 		return
-			$"{locationDescription(state.CurrentLocation)}\n" +
-			$"Next: {locationDescription(state.NextLocation)}";
+			$"{locationDescription(state.Train.CurrentLocation)}\n" +
+			$"Next: {locationDescription(state.Train.NextLocation)}" +
+			end;
 	}
 
 	private string locationContentDescription(LocationContent content) {
