@@ -26,6 +26,7 @@ public class SceneState {
 
 public interface ISceneModel {
 	IObservable<SceneState> State { get; }
+	IObservable<bool> PopulationDied { get; }
 
 	bool CanPlayCard(Card card);
 	bool PlayCard(Card card);
@@ -43,6 +44,7 @@ public class SceneModel : ISceneModel {
 	private int cardsToHandle;
 	private readonly ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
 	private readonly IEnumerator<Location> locations;
+	private Subject<bool> populationDiedSubject = new Subject<bool>();
 
 	public static SceneModel InitialSceneModel() {
 		var locationsEnumerator = new RandomLocationsGenerator().Locations().GetEnumerator();
@@ -159,7 +161,9 @@ public class SceneModel : ISceneModel {
 
 	private void startTurn() {
 		drawNewHand();
+		var lastPopulationCount = trainState.TotalPopulation;
 		trainState = trainState.NextTurnState();
+		populationDiedSubject.OnNext(lastPopulationCount > trainState.TotalPopulation);
 		EventUtils.LogStartTurnEvent(eventCardName(), trainState.ToString(), cards.Hand);
 		playedCards.Clear();
 	}
@@ -222,6 +226,10 @@ public class SceneModel : ISceneModel {
 
 	private bool canDrawCard() {
 		return trainState.AvailablePopulation > 0;
+	}
+
+	public IObservable<bool> PopulationDied {
+		get { return populationDiedSubject; }
 	}
 
 	#endregion
