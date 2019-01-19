@@ -156,10 +156,31 @@ public class BaseValueClassTests {
 		first.EnumerableProperty = new object[] { 1 };
 
 		var expectedValue = 3;
-		var result = first.SetValue("IntegerProperty", expectedValue);
+		var result = first.CopyWithSetValue("IntegerProperty", expectedValue);
 
 		var expected = new TestValueClass();
 		expected.IntegerProperty = expectedValue;
+		expected.ClassProperty = first.ClassProperty;
+		expected.StructProperty = first.StructProperty;
+		expected.EnumerableProperty = first.EnumerableProperty;
+
+		Assert.AreEqual(expected, result);
+	}
+
+	[Test]
+	public void ModifyIntegerValue() {
+		first.IntegerProperty = 2;
+		first.ClassProperty = new ReferenceValue();
+		first.StructProperty = new Value {
+			IntegerValue = 1
+		};
+		first.EnumerableProperty = new object[] { 1 };
+
+		var modificationValue = 3;
+		var result = first.CopyWithModifiedValue("IntegerProperty", modificationValue);
+
+		var expected = new TestValueClass();
+		expected.IntegerProperty = 5;
 		expected.ClassProperty = first.ClassProperty;
 		expected.StructProperty = first.StructProperty;
 		expected.EnumerableProperty = first.EnumerableProperty;
@@ -179,7 +200,7 @@ public class BaseValueClassTests {
 		var expectedValue = new Value {
 			IntegerValue = 2
 		};
-		var result = first.SetValue("StructProperty", expectedValue);
+		var result = first.CopyWithSetValue("StructProperty", expectedValue);
 
 		var expected = new TestValueClass();
 		expected.IntegerProperty = first.IntegerProperty;
@@ -201,7 +222,7 @@ public class BaseValueClassTests {
 
 		var expectedValue = new ReferenceValue();
 		expectedValue.IntegerValue = 5;
-		var result = first.SetValue("ClassProperty", expectedValue);
+		var result = first.CopyWithSetValue("ClassProperty", expectedValue);
 
 		var expected = new TestValueClass();
 		expected.IntegerProperty = first.IntegerProperty;
@@ -221,7 +242,7 @@ public class BaseValueClassTests {
 		};
 
 		var expectedValue = new List<object> { 1 };
-		var result = first.SetValue("EnumerableProperty", expectedValue);
+		var result = first.CopyWithSetValue("EnumerableProperty", expectedValue);
 
 		var expected = new TestValueClass();
 		expected.IntegerProperty = first.IntegerProperty;

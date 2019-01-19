@@ -143,14 +143,12 @@ public class CardsState : BaseValueClass {
 		if (tradition.CardToEnhance == null) {
 			return card => card;
 		}
-		var propertyToEnhance = typeof(Card).GetProperty(tradition.PropertyToEnhance);
 		return card => {
 			if (!card.Name.Equals(tradition.CardToEnhance)) {
 				return card;
 			}
 			var valueAdjustment = invertValue ? -tradition.IncreaseInValue : tradition.IncreaseInValue;
-			var finalValue = (int)propertyToEnhance.GetValue(card) + valueAdjustment;
-			return card.SetValue(tradition.PropertyToEnhance, finalValue);
+			return card.CopyWithModifiedValue(tradition.PropertyToEnhance, valueAdjustment);
 		};
 	}
 
