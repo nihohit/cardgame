@@ -183,8 +183,18 @@ public class TrainState : BaseValueClass {
 			AvailablePopulation >= card.PopulationCost &&
 			LivingSpace >= card.PopulationChange + TotalPopulation &&
 			Army >= -card.ArmyChange &&
-			(card.CarToRemove == CarType.None || Cars.Any(car => car.Type.Equals(card.CarToRemove)))) ||
+			hasRequiredCars(card)) ||
 			card.DefaultChoice;
+	}
+
+	private bool hasRequiredCars(Card card) {
+		return containsCarOfType(card.CarToRemove) && 
+			containsCarOfType(card.RequiresCar);
+	}
+
+	private bool containsCarOfType(CarType type) {
+		return type == CarType.None ||
+			Cars.Select(car => car.Type).Any(carType => carType == type);
 	}
 
 	public TrainState PlayCard(Card card) {

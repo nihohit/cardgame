@@ -17,6 +17,7 @@ public class Card : BaseValueClass {
 	public TrainCar CarToAdd { get; }
 	public CarType CarToRemove { get; }
 	public bool LocationLimited { get; }
+	public CarType RequiresCar { get; }
 
 	public Card(
 		string name,
@@ -32,7 +33,8 @@ public class Card : BaseValueClass {
 		bool defaultChoice = false,
 		CarType carToRemove = CarType.None,
 		TrainCar carToAdd = null,
-		bool locationLimited = false) {
+		bool locationLimited = false,
+		CarType requiresCar = CarType.None) {
 		Name = name;
 		PopulationCost = populationCost;
 		FuelChange = fuelChange;
@@ -47,6 +49,7 @@ public class Card : BaseValueClass {
 		CarToAdd = carToAdd;
 		CarToRemove = carToRemove;
 		LocationLimited = locationLimited;
+		RequiresCar = requiresCar;
 	}
 
 	public Card MakeExhaustibleCopy() {
