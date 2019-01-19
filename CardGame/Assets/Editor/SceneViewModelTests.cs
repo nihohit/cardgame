@@ -10,7 +10,7 @@
 //	private readonly static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
 //	private static Card cardWithName(string name) {
-//		return new Card(name);
+//		return Card.MakeCard(name);
 //	}
 
 //	private class FakeModel : ISceneModel {
@@ -79,7 +79,7 @@
 //	[Test]
 //	public void PassSelectedCardModel() {
 //		var subject = new Subject<Card>();
-//		var card = new Card("");
+//		var card = Card.MakeCard("");
 //		viewModel.setSelectedCardObservation(subject);
 
 //		Assert.IsNull(fakeModel.PlayedCard);

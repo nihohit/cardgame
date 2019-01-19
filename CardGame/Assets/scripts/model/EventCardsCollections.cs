@@ -11,13 +11,13 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Raiders",
 			Options = new Card[] {
-				new Card("Pay them off",
+				Card.MakeCard("Pay them off",
 					fuelChange: -1
 				),
-				new Card("Fight them",
+				Card.MakeCard("Fight them",
 					armyChange: -2
 				),
-				new Card("They attack",
+				Card.MakeCard("They attack",
 					populationChange: -1
 				)
 			}
@@ -25,13 +25,13 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Wild animals",
 			Options = new Card[] {
-				new Card("Build traps",
+				Card.MakeCard("Build traps",
 					materialsChange: -2
 				),
-				new Card("Fight them",
+				Card.MakeCard("Fight them",
 					armyChange: -1
 				),
-				new Card("They attack",
+				Card.MakeCard("They attack",
 					populationChange: -1
 				)
 			}
@@ -39,14 +39,14 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Minor plague",
 			Options = new Card[] {
-				new Card("Buy medicine",
+				Card.MakeCard("Buy medicine",
 					fuelChange: -2
 				),
-				new Card("Quarantine the sick",
+				Card.MakeCard("Quarantine the sick",
 					armyChange: -1,
 					populationChange: -1
 				),
-				new Card("Let the sick die",
+				Card.MakeCard("Let the sick die",
 					populationChange: -2,
 					defaultChoice: true
 				)
@@ -55,13 +55,13 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Famine",
 			Options = new Card[] {
-				new Card("Buy food",
+				Card.MakeCard("Buy food",
 					fuelChange: -2
 				),
-				new Card("Raid Neighbours",
+				Card.MakeCard("Raid Neighbours",
 					armyChange: -2
 				),
-				new Card("Lose people and productivity",
+				Card.MakeCard("Lose people and productivity",
 					populationChange: -1,
 					materialsChange: -1,
 					defaultChoice: true
@@ -71,14 +71,14 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "plague",
 			Options = new Card[] {
-				new Card("Buy medicine",
+				Card.MakeCard("Buy medicine",
 					fuelChange: -4
 				),
-				new Card("Quarantine the sick",
+				Card.MakeCard("Quarantine the sick",
 					armyChange: -2,
 					populationChange: -1
 				),
-				new Card("Let the sick die",
+				Card.MakeCard("Let the sick die",
 					populationChange: -3,
 					defaultChoice: true
 				)
@@ -87,14 +87,14 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Natural disaster1",
 			Options = new Card[] {
-				new Card("Rebuild",
+				Card.MakeCard("Rebuild",
 					materialsChange: -5
 				),
-				new Card("Build temporary shelters",
+				Card.MakeCard("Build temporary shelters",
 					materialsChange: -2,
 					populationChange: -1
 				),
-				new Card("Let the population handle it",
+				Card.MakeCard("Let the population handle it",
 					populationChange: -2,
 					defaultChoice: true
 				)
@@ -103,13 +103,13 @@ public static class EventCardsCollections {
 		new EventCard {
 			Name = "Animal Attacks",
 			Options = new Card[] {
-				new Card("Hire Mercenaries",
+				Card.MakeCard("Hire Mercenaries",
 					fuelChange: -6
 				),
-				new Card("Defend the citizens",
+				Card.MakeCard("Defend the citizens",
 					armyChange: -3
 				),
-				new Card("They attack",
+				Card.MakeCard("They attack",
 					populationCost: 2,
 					armyChange: -2
 				)

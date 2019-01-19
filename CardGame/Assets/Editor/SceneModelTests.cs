@@ -10,7 +10,7 @@
 //	private static Card[] initialDeck = new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
 
 //	private static Card cardWithName(string name) {
-//		return new Card(name);
+//		return Card.MakeCard(name);
 //	}
 
 //	[Test]
@@ -29,7 +29,7 @@
 
 //	[Test]
 //	public void ShouldEndTurnWhenUserFinishedModeIsCalledInRegularMode() {
-//		var deck = new Card[] { new Card("foo",
+//		var deck = new Card[] { Card.MakeCard("foo",
 //			fuelCost: 1,
 //			fuelGain: 5
 //		)};
@@ -67,7 +67,7 @@
 
 //	[Test]
 //	public void ShouldPlayCardFromHand() {
-//		var deck = new Card[] { new Card("foo",
+//		var deck = new Card[] { Card.MakeCard("foo",
 //			fuelCost: 1,
 //			fuelGain: 5
 //		)};
@@ -86,7 +86,7 @@
 
 //	[Test]
 //	public void ShouldFailToPlayExpensiveCardFromHand() {
-//		var deck = new Card[] { new Card("foo",
+//		var deck = new Card[] { Card.MakeCard("foo",
 //			fuelCost: 2,
 //			fuelGain: 5
 //		)};
@@ -105,7 +105,7 @@
 
 //	[Test]
 //public void ShouldFPlayDefaultExpensiveCardFromHand() {
-//	var deck = new Card[] { new Card("foo",
+//	var deck = new Card[] { Card.MakeCard("foo",
 //			fuelCost: 2,
 //			fuelGain: 5,
 //				defaultChoice: true
