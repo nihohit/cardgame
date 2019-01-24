@@ -57,7 +57,11 @@ public static class LocationBasedCards {
 		),
 		Card.MakeCard("Make Charcoal",
 			populationCost: 1,
-			fuelChange: 2
+			fuelChange: 2,
+			modifiedByCar: CarType.Refinery,
+			carModifications: new Dictionary<string, int> {
+				{"FuelChange",1}
+			}
 		),
 		Card.MakeCard("Easy Foraging",
 			materialsChange: 1
@@ -67,12 +71,20 @@ public static class LocationBasedCards {
 		),
 		Card.MakeCard("Mine Materials", 
 			populationCost:1,
-			materialsChange:2
+			materialsChange:2,
+			modifiedByCar: CarType.Workhouse,
+			carModifications: new Dictionary<string, int> {
+				{"MaterialsChange",1}
+			}
 		), 
 		Card.MakeCard("Mine with Explosives",
 			populationCost:1,
 			materialsChange:4,
-			fuelChange:-1
+			fuelChange:-1,
+			modifiedByCar: CarType.Cannon,
+			carModifications: new Dictionary<string, int> {
+				{"MaterialsChange",2}
+			}
 		),  
 		Card.MakeCard("Collect Materials", 
 			populationCost:1,
@@ -88,11 +100,19 @@ public static class LocationBasedCards {
 		),
 		Card.MakeCard("Work for Materials", 
 			populationCost:1,
-			materialsChange:2
+			materialsChange:2,
+			modifiedByCar: CarType.Workhouse,
+			carModifications: new Dictionary<string, int> {
+				{"MaterialsChange",1}
+			}
 		),
 		Card.MakeCard("Work for Fuel", 
 			populationCost:1,
-			fuelChange:1
+			fuelChange:1,
+			modifiedByCar: CarType.Workhouse,
+			carModifications: new Dictionary<string, int> {
+				{"FuelChange",1}
+			}
 		),
 		Card.MakeCard("Buy weapons",
 			materialsChange:-1,
@@ -113,7 +133,11 @@ public static class LocationBasedCards {
 		Card.MakeCard("Make Weapons",
 			fuelChange:-1,
 			materialsChange:-1,
-			armyChange:2
+			armyChange:2,
+			modifiedByCar: CarType.Armory,
+			carModifications: new Dictionary<string, int> {
+				{"fuelChange",1}
+			}
 		),
 		Card.MakeCard("Small scale Hunt", 
 			populationCost:1,
@@ -126,7 +150,11 @@ public static class LocationBasedCards {
 		),
 		Card.MakeCard("Fuel from Feces", 
 			populationCost:1,
-			fuelChange:1
+			fuelChange:1,
+			modifiedByCar: CarType.Refinery,
+			carModifications: new Dictionary<string, int> {
+				{"FuelChange",1}
+			}
 		),
 		Card.MakeCard("Find Survivors",
 			populationCost:1,
@@ -135,7 +163,11 @@ public static class LocationBasedCards {
 		),
 		Card.MakeCard("Recruit the Locals",
 			populationChange:1,
-			materialsChange:-2
+			materialsChange:-2,
+			modifiedByCar: CarType.LivingQuarters,
+			carModifications: new Dictionary<string, int> {
+				{"MaterialsChange",1}
+			}
 		),
 	}.ToDictionary(card => card.Name, card => card));
 
@@ -206,7 +238,8 @@ public static class LocationBasedCards {
 			{"Work for Fuel", 1},
 			{"Trade for Materials", 1},
 			{"Trade for Fuel", 1},
-			{"Recruit the Locals", 1}
+			{"Recruit the Locals", 1},
+			{"Hire Mercenaries", 1}
 		}).Shuffle().Take(2);
 	}
 

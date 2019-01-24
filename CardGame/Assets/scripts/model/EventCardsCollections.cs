@@ -19,6 +19,9 @@ public static class EventCardsCollections {
 				),
 				Card.MakeCard("They attack",
 					populationChange: -1
+				),
+				Card.MakeCard("Blow Them Away",
+					requiresCar:CarType.Cannon
 				)
 			}
 		},
@@ -33,6 +36,9 @@ public static class EventCardsCollections {
 				),
 				Card.MakeCard("They attack",
 					populationChange: -1
+				),
+				Card.MakeCard("Blow Them Away",
+					requiresCar:CarType.Cannon
 				)
 			}
 		},
@@ -49,6 +55,10 @@ public static class EventCardsCollections {
 				Card.MakeCard("Let the sick die",
 					populationChange: -2,
 					defaultChoice: true
+				),
+				Card.MakeCard("Build impromptu infirmary",
+					requiresCar:CarType.LivingQuarters,
+					materialsChange:-2
 				)
 			}
 		},
@@ -59,7 +69,11 @@ public static class EventCardsCollections {
 					fuelChange: -2
 				),
 				Card.MakeCard("Raid Neighbours",
-					armyChange: -2
+					armyChange: -2,
+					modifiedByCar:CarType.Cannon,
+					carModifications:new Dictionary<string, int>{
+						{ "ArmyChange", 1 }
+					}
 				),
 				Card.MakeCard("Lose people and productivity",
 					populationChange: -1,
