@@ -81,11 +81,24 @@ public static class ValueClassExtensions {
 		return (T)constructor.Invoke(constructorArguments);
 	}
 
-	public static IDictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance) {
+	public static IDictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.Instance) {
 		return source.GetType().GetProperties(bindingAttr).ToDictionary(
 				propInfo => propInfo.Name,
 				propInfo => propInfo.GetValue(source, null)
 		);
+	}
+
+	// TODO - try implement this and CopyWithModifiedValue using this: https://stackoverflow.com/questions/8523061/how-to-verify-whether-a-type-overloads-supports-a-certain-operator
+	public static T CopyWithModifiedValues<T>(
+		this T source,
+		Dictionary<string, int> values) where T : class {
+		var dictionary = source.AsDictionary();
+		values.ForEach(pair => {
+			var value = (int)dictionary.Get(pair.Key, typeof(T).ToString());
+			dictionary[pair.Key] = value + value;
+		});
+
+		return dictionary.ToObject<T>();
 	}
 
 	public static T CopyWithModifiedValue<T>(
