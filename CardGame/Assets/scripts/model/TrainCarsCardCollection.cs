@@ -9,32 +9,32 @@ using UnityEngine;
 
 public static class TrainCarsCardCollection {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
-		new Card("test"),
-		new Card("Manual Labour",
+		Card.MakeCard("test"),
+		Card.MakeCard("Manual Labour",
 			populationCost: 1,
 			materialsChange: 1
 		),
-		new Card("Make Fuel",
+		Card.MakeCard("Make Fuel",
 			populationCost: 1,
 			materialsChange: -1,
 			fuelChange: 1
 		),
-		new Card("Arm Militia",
+		Card.MakeCard("Arm Militia",
 			populationCost: 1,
 			materialsChange: -1,
 			armyChange: 1
 		),
-		new Card("Conduct Training",
+		Card.MakeCard("Conduct Training",
 			populationCost: 1,
 			materialsChange: -2,
 			armyChange: 3
 		),
-		new Card("Refine Materials",
+		Card.MakeCard("Refine Materials",
 			populationCost: 1,
 			fuelChange: -1,
 			materialsChange: 3
 		),
-		new Card("Refine Fuel",
+		Card.MakeCard("Refine Fuel",
 			populationCost: 1,
 			fuelChange: 3,
 			materialsChange: -2

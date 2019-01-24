@@ -70,7 +70,8 @@ public static class ValueClassExtensions {
 	}
 
 	public static T ToObject<T>(this IDictionary<string, object> source) where T : class {
-		var constructor = typeof(T).GetConstructors().First(constructorInfo => constructorInfo.GetParameters().Length == source.Count);
+		var constructors = typeof(T).GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToList();
+		var constructor = constructors.First(constructorInfo => constructorInfo.GetParameters().Length == source.Count);
 		var caseInsensitiveDictionary = new Dictionary<string, object>(source, StringComparer.OrdinalIgnoreCase);
 
 		var constructorArguments = constructor.GetParameters()
@@ -80,15 +81,73 @@ public static class ValueClassExtensions {
 		return (T)constructor.Invoke(constructorArguments);
 	}
 
-	public static IDictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance) {
+	public static IDictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.Instance) {
 		return source.GetType().GetProperties(bindingAttr).ToDictionary(
 				propInfo => propInfo.Name,
 				propInfo => propInfo.GetValue(source, null)
 		);
 	}
 
-	public static T SetValue<T>(this T source, string propertyName, object propertyValue) where T : class {
+	// TODO - try implement this and CopyWithModifiedValue using this: https://stackoverflow.com/questions/8523061/how-to-verify-whether-a-type-overloads-supports-a-certain-operator
+	public static T CopyWithModifiedValues<T>(
+		this T source,
+		Dictionary<string, int> values) where T : class {
 		var dictionary = source.AsDictionary();
+		values.ForEach(pair => {
+			var value = (int)dictionary.Get(pair.Key, typeof(T).ToString());
+			dictionary[pair.Key] = value + value;
+		});
+
+		return dictionary.ToObject<T>();
+	}
+
+	public static T CopyWithModifiedValue<T>(
+		this T source,
+		string propertyName,
+		int propertyValue) where T : class {
+		var dictionary = source.AsDictionary();
+		var value = (int)dictionary.Get(propertyName, typeof(T).ToString());
+		dictionary[propertyName] = value + propertyValue;
+		return dictionary.ToObject<T>();
+	}
+
+	public static T CopyWithModifiedValue<T>(
+		this T source,
+		string propertyName,
+		float propertyValue) where T : class {
+		var dictionary = source.AsDictionary();
+		var value = (float)dictionary.Get(propertyName, typeof(T).ToString());
+		dictionary[propertyName] = value + propertyValue;
+		return dictionary.ToObject<T>();
+	}
+
+	public static T CopyWithModifiedValue<T>(
+		this T source,
+		string propertyName,
+		double propertyValue) where T : class {
+		var dictionary = source.AsDictionary();
+		var value = (double)dictionary.Get(propertyName, typeof(T).ToString());
+		dictionary[propertyName] = value + propertyValue;
+		return dictionary.ToObject<T>();
+	}
+
+	public static T CopyWithModifiedValue<T>(
+		this T source,
+		string propertyName,
+		long propertyValue) where T : class {
+		var dictionary = source.AsDictionary();
+		var value = (long)dictionary.Get(propertyName, typeof(T).ToString());
+		dictionary[propertyName] = value + propertyValue;
+		return dictionary.ToObject<T>();
+	}
+
+	public static T CopyWithSetValue<T>(
+		this T source, 
+		string propertyName, 
+		object propertyValue) where T : class {
+		var dictionary = source.AsDictionary();
+		AssertUtils.AssertConditionMet(dictionary.ContainsKey(propertyName), 
+			$"{propertyName} not found");
 		dictionary[propertyName] = propertyValue;
 		return dictionary.ToObject<T>();
 	}
