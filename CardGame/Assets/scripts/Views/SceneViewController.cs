@@ -79,7 +79,11 @@ public class SceneViewController : MonoBehaviour {
 		viewModel.DisplayStayButton.Subscribe(topBarView.DisplayStayButton);
 		viewModel.CardMovementInstructions.Subscribe(moveCards);
 		viewModel.TextForDoneButton.Subscribe(topBarView.SetDoneButtonText);
-		viewModel.HideMultiDisplay.Subscribe(_ => multiCardDisplay.FinishWork());
+		viewModel.HideMultiDisplay.Subscribe(_ => {
+			multiCardDisplay.FinishWork();
+			deck.GetComponent<Collider2D>().enabled = true;
+			discardPile.GetComponent<Collider2D>().enabled = true;
+		});
 		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair)
 			.Subscribe(setMultiCardDisplayCardSelectionObservation);
 		viewModel.Traditions
@@ -215,6 +219,8 @@ public class SceneViewController : MonoBehaviour {
 
 	private void setMultiCardDisplayCardSelectionObservation(KeyValuePair<IEnumerable<CardDisplayModel>, string> pair) {
 		viewModel.setSelectedCardObservation(multiCardDisplay.setup(pair.Key, pair.Value));
+		deck.GetComponent<Collider2D>().enabled = false;
+		discardPile.GetComponent<Collider2D>().enabled = false;
 	}
 
 	private void updateTraditions(IEnumerable<Tradition> traditions) {
