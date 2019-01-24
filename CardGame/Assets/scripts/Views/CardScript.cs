@@ -74,6 +74,14 @@ public class CardScript : MonoBehaviour {
 			yield return $"Remove {carName(card.CarToRemove)}";
 		}
 
+		if (card.RequiresCar != CarType.None) {
+			yield return $"Requires {carName(card.RequiresCar)}";
+		}
+
+		if (card.ModifiedByCar != CarType.None) {
+			yield return $"Improved with {carName(card.ModifiedByCar)}";
+		}
+
 		if (card.DefaultChoice) {
 			yield return "Default choice";
 		}
@@ -98,7 +106,7 @@ public class CardScript : MonoBehaviour {
 			case CarType.Cannon:
 				return "Cannon";
 			case CarType.LivingQuarters:
-				return "LivingQuarters";
+				return "Housing";
 		}
 
 		AssertUtils.UnreachableCode($"unknown type {carType}");
