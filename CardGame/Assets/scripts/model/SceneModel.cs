@@ -51,8 +51,8 @@ public class SceneModel : ISceneModel {
 		locationsEnumerator.MoveNext();
 		var initialLocation = locationsEnumerator.Current;
 		locationsEnumerator.MoveNext();
-		var trainState = TrainState.InitialState(3, 3, 2, 0, 
-			initialLocation, 
+		var trainState = TrainState.InitialState(4, 6, 3, 1,
+					initialLocation, 
 			locationsEnumerator.Current);
 		var initialCards = TrainCarsCardCollection.BaseCards(trainState.Cars.Select(car => car.Type));
 		var cardState = CardsState.NewState(initialCards)
