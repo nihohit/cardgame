@@ -160,9 +160,10 @@ public class SceneViewModel : ISceneViewModel {
 	// TODO: Move using CardMovementInstructions.
 	private IEnumerable<CardDisplayModel> cardsInMultiCardDisplay(SceneState state) {
 		if (state.Mode == CardHandlingMode.Event) {
-			return state.CurrentEvent.Options.Select(displayModel);
+			return state.CurrentEvent.Options.Select(card => displayModel(card));
 		}
-		return state.Cards.Hand.Select(displayModel);
+
+		return state.Cards.Hand.Select(card => displayModel(card, state.Train));
 	}
 
 	public IObservable<string> TextForMultiDisplay => model.State
@@ -194,13 +195,15 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(_ => Unit.Default);
 
 	public IObservable<IEnumerable<CardMovementInstruction>> CardMovementInstructions => model.State
-		.Select(state => state.Cards)
-		.StartWith(CardsState.NewState(new Card[0]))
+		.StartWith<SceneState>((SceneState)null)
 		.DistinctUntilChanged()
 		.Pairwise()
 		.SelectMany(pair => movementsFromStateDifferences(pair));
 
-	private IObservable<IEnumerable<CardMovementInstruction>> movementsFromStateDifferences(Pair<CardsState> pair) {
+	private IObservable<IEnumerable<CardMovementInstruction>> movementsFromStateDifferences(Pair<SceneState> pair) {
+		var previousCards = pair.Previous != null ? pair.Previous.Cards : CardsState.NewState(new Card[0]);
+		var currentHand = pair.Current.Cards.Hand.ToList();
+		var previousHand = previousCards.Hand.ToList();
 		return Observable.Create<IEnumerable<CardMovementInstruction>>(obs => {
 			// Discarding cards from hand and in-hand movements.
 			var initialMovements = new List<CardMovementInstruction>();
@@ -209,8 +212,6 @@ public class SceneViewModel : ISceneViewModel {
 			// Cards added to hand.
 			var lastMovements = new List<CardMovementInstruction>();
 
-			var previousHand = pair.Previous.Hand.ToList();
-			var currentHand = pair.Current.Hand.ToList();
 			var discardedCards = new List<Card>();
 			var cardsMovedFromDiscardToDeck = new List<Card>();
 			var currentHandIndicesToCheck = Enumerable.Range(0, currentHand.Count).ToList();
@@ -218,41 +219,43 @@ public class SceneViewModel : ISceneViewModel {
 				var card = previousHand[i];
 				var currentIndex = currentHand.FindIndex(currentCard => currentCard == card);
 				if (currentIndex == -1) {
-					initialMovements.Add(new CardMovementInstruction(displayModel(card), handLocationFromIndex(i), ScreenLocation.DiscardPile));
+					initialMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), handLocationFromIndex(i), ScreenLocation.DiscardPile));
 					discardedCards.Add(card);
 					continue;
 				}
 				currentHandIndicesToCheck.Remove(currentIndex);
 
-				initialMovements.Add(new CardMovementInstruction(displayModel(card), handLocationFromIndex(i), handLocationFromIndex(currentIndex)));
+				initialMovements.Add(new CardMovementInstruction(displayModel(card, 
+					pair.Current.Train), 
+					handLocationFromIndex(i), handLocationFromIndex(currentIndex)));
 			}
 			if (initialMovements.Count > 0) {
 				obs.OnNext(initialMovements);
 			}
 
-			var newDiscardedCards = pair.Current.DiscardPile.ToList();
+			var newDiscardedCards = pair.Current.Cards.DiscardPile.ToList();
 			foreach (var card in discardedCards) {
 				newDiscardedCards.Remove(card);
 			}
-			foreach(var card in pair.Previous.DiscardPile) {
+			foreach(var card in previousCards.DiscardPile) {
 				if (!newDiscardedCards.Remove(card)) {
 					cardsMovedFromDiscardToDeck.Add(card);
 				}
 			}
 			foreach(var card in newDiscardedCards) {
-				midStepMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.Center, ScreenLocation.DiscardPile));
+				midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.Center, ScreenLocation.DiscardPile));
 			}
 
-			var previousDeck = pair.Previous.CurrentDeck.ToList();
-			foreach (var card in pair.Current.CurrentDeck) {
+			var previousDeck = previousCards.CurrentDeck.ToList();
+			foreach (var card in pair.Current.Cards.CurrentDeck) {
 				if (previousDeck.FindIndex(previousCard => previousCard == card) != -1) {
 					continue;
 				}
 				if (cardsMovedFromDiscardToDeck.FindIndex(discardedCard => discardedCard == card) != -1) {
-					midStepMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.DiscardPile, ScreenLocation.Deck));
+					midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.DiscardPile, ScreenLocation.Deck));
 					continue;
 				}
-				midStepMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.Center, ScreenLocation.Deck));
+				midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.Center, ScreenLocation.Deck));
 			}
 			if (midStepMovements.Count > 0) {
 				obs.OnNext(midStepMovements);
@@ -260,7 +263,7 @@ public class SceneViewModel : ISceneViewModel {
 
 			foreach (var index in currentHandIndicesToCheck) {
 				var card = currentHand[index];
-				lastMovements.Add(new CardMovementInstruction(displayModel(card), ScreenLocation.Deck, handLocationFromIndex(index)));
+				lastMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.Deck, handLocationFromIndex(index)));
 			}
 			if (lastMovements.Count > 0) {
 				obs.OnNext(lastMovements);
@@ -268,6 +271,13 @@ public class SceneViewModel : ISceneViewModel {
 
 			return null;
 		});
+	}
+
+	private CardDisplayModel displayModel(Card card, TrainState state) {
+		if (state.Cars.Select(car => car.Type).None(carType => carType == card.ModifiedByCar)) {
+			return displayModel(card);
+		}
+		return displayModel(card.CopyWithModifiedValues(card.CarModifications).CopyWithSetValue("Source", card));
 	}
 
 	private CardDisplayModel displayModel(Card card) {
