@@ -41,7 +41,7 @@ public class CardsState : BaseValueClass {
   }
 
   public CardsState ExhaustCardFromHand(Card card) {
-    var clearedHand = Hand.RemoveFirstIdentical(card);
+    var clearedHand = Hand.RemoveFirstWhere(checkedCard => card == checkedCard || card.Source == checkedCard);
     return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, clearedHand, Traditions);
   }
 
