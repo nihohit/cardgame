@@ -16,39 +16,69 @@ public static class LocationBasedCards {
 			carToAdd: new TrainCar(0, CarType.Engine),
 			exhaustible:true
 		),
-		Card.MakeCard("Build Refinery Car",
+		Card.MakeCard("Upgrade to Refinery",
 			populationCost: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Refinery),
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		Card.MakeCard("Build Workhouse Car",
+		Card.MakeCard("Upgrade to Workhouse",
 			populationCost: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Workhouse),
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		Card.MakeCard("Build Cannon Car",
+		Card.MakeCard("Upgrade to Cannon",
 			populationCost: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Cannon),
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		Card.MakeCard("Build Armory Car",
+		Card.MakeCard("Upgrade to Armory",
 			populationCost: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.Armory),
 			carToRemove: CarType.General,
 			exhaustible:true
 		),
-		Card.MakeCard("Build Housing Car",
+		Card.MakeCard("Upgrade to Housing",
 			populationCost: 1,
 			materialsChange: -1,
 			carToAdd: new TrainCar(1, CarType.LivingQuarters),
 			carToRemove: CarType.General,
+			exhaustible:true
+		),
+		Card.MakeCard("Build Refinery",
+			populationCost: 1,
+			materialsChange: -2,
+			carToAdd: new TrainCar(1, CarType.Refinery),
+			exhaustible:true
+		),
+		Card.MakeCard("Build Workhouse",
+			populationCost: 1,
+			materialsChange: -2,
+			carToAdd: new TrainCar(1, CarType.Workhouse),
+			exhaustible:true
+		),
+		Card.MakeCard("Build Cannon",
+			populationCost: 1,
+			materialsChange: -2,
+			carToAdd: new TrainCar(1, CarType.Cannon),
+			exhaustible:true
+		),
+		Card.MakeCard("Build Armory",
+			populationCost: 1,
+			materialsChange: -2,
+			carToAdd: new TrainCar(1, CarType.Armory),
+			exhaustible:true
+		),
+		Card.MakeCard("Build Housing",
+			populationCost: 1,
+			materialsChange: -2,
+			carToAdd: new TrainCar(1, CarType.LivingQuarters),
 			exhaustible:true
 		),
 		Card.MakeCard("Cut Trees",
@@ -262,14 +292,14 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> armoryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Armory Car", 1},
+			{"Build Armory", 1},
+			{"Upgrade to Armory", 1},
 			{"Make Weapons", 1},
 		});
 	}
 
 	private static IEnumerable<Card> trainWreckCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Engine", 1},
 			{"Build Basic Car", 2},
 			{"Drain Fuel Tank", 1},
 			{"Collect Materials", 1},
@@ -280,7 +310,8 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> howitizerCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Cannon Car", 1},
+			{"Build Cannon", 1},
+			{"Upgrade to Cannon", 1},
 			{"Abandoned Weapons", 1},
 			{"Drain Fuel Tank", 1}
 		}).Shuffle().Take(2);
@@ -288,14 +319,16 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> fuelRefineryCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Refinery Car", 1},
+			{"Build Refinery", 1},
+			{"Upgrade to Refinery", 1},
 			{"Drain Fuel Tank", 1}
 		});
 	}
 
 	private static IEnumerable<Card> workhouseCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Workhouse Car", 1},
+			{"Build Workhouse", 1},
+			{"Upgrade to Workhouse", 1},
 			{"Make Weapons", 1},
 			{"Work for Materials", 1},
 			{"Work for Fuel", 1},
@@ -305,7 +338,8 @@ public static class LocationBasedCards {
 
 	private static IEnumerable<Card> oldHousesCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"Build Housing Car", 1},
+			{"Build Housing", 1},
+			{"Upgrade to Housing", 1},
 			{"Abandoned Weapons", 1},
 			{"Collect Materials", 1 },
 			{"Find Survivors", 1}
