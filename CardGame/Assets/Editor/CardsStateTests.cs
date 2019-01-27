@@ -143,6 +143,28 @@ public class CardsStates {
 	}
 
 	[Test]
+	public void PlayExhaustibleModifiedCard() {
+		var source = Card.MakeCard("card",
+			addTradition: TraditionType.Test,
+			carToAdd: new TrainCar(0, CarType.Test),
+			exhaustible: false
+		);
+		var modified = source
+			.CopyWithSetValue("Exhaustible", true)
+			.CopyWithSource(source);
+		modified = modified.CopyWithSource(modified);
+		Randomizer.SetTestableRandom(5);
+		var state = CardsState.NewState(new[] { source }.Concat(initialDeck))
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(modified);
+
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(new[] { cardWithName("test") }, state.DiscardPile);
+	}
+
+	[Test]
 	public void PlayNonExhaustibleCard() {
 		var playedCard = Card.MakeCard("card",
 			carToAdd: new TrainCar(0, CarType.Test),
@@ -178,7 +200,7 @@ public class CardsStates {
 			.PlayCard(addedCard);
 
 		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
-		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("baz"), cardWithName("bro"), cardWithName("bar") }, state.Hand);
 		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
 	}
 

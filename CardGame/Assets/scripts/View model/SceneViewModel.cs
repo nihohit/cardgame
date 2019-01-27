@@ -274,10 +274,15 @@ public class SceneViewModel : ISceneViewModel {
 	}
 
 	private CardDisplayModel displayModel(Card card, TrainState state) {
-		if (state.Cars.Select(car => car.Type).None(carType => carType == card.ModifiedByCar)) {
-			return displayModel(card);
+		if (state.Cars
+					.Select(car => car.Type)
+					.Any(carType => carType == card.ModifiedByCar)) {
+			card = card
+				.CopyWithModifiedValues(card.CarModifications)
+				.CopyWithSource(card);
 		}
-		return displayModel(card.CopyWithModifiedValues(card.CarModifications).CopyWithSetValue("Source", card));
+		
+		return displayModel(card);
 	}
 
 	private CardDisplayModel displayModel(Card card) {
