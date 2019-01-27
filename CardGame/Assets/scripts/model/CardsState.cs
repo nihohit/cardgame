@@ -41,7 +41,7 @@ public class CardsState : BaseValueClass {
   }
 
   public CardsState ExhaustCardFromHand(Card card) {
-    var clearedHand = Hand.RemoveFirstWhere(checkedCard => card == checkedCard || card.Source == checkedCard);
+    var clearedHand = Hand.RemoveSingleCard(card);
     return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, clearedHand, Traditions);
   }
 
@@ -114,11 +114,7 @@ public class CardsState : BaseValueClass {
 				continue;
 			}
 
-			if (handAsList.Remove(card)) {
-				continue;
-			}
-			
-			AssertUtils.UnreachableCode();
+			handAsList = handAsList.RemoveSingleCard(card).ToList();
 		}
 		return new CardsState(PersistentDeck,
 			currentDeckAsList,
@@ -166,9 +162,9 @@ public class CardsState : BaseValueClass {
 
 	public CardsState LeaveLocation() {
 		return new CardsState(PersistentDeck,
-			CurrentDeck.Where(card => !card.LocationLimited),
-			DiscardPile.Where(card => !card.LocationLimited),
-			Hand.Where(card => !card.LocationLimited),
+			CurrentDeck.RemoveLocationCards(),
+			DiscardPile.RemoveLocationCards(),
+			Hand.RemoveLocationCards(),
 			Traditions);
 	}
 

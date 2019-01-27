@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -102,5 +103,29 @@ public class Card : BaseValueClass {
 
 	public Card MakeExhaustibleCopy() {
 		return this.CopyWithSetValue("Exhaustible", true);
+	}
+
+	public Card Original() {
+		var original = this;
+		while (original.Source != null) {
+			original = original.Source;
+		}
+		return original;
+	}
+
+	public Card CopyWithSource(Card source) {
+		return this.CopyWithSetValue("Source", source);
+	}
+}
+
+public static class CardExtensions {
+	public static IEnumerable<Card> RemoveLocationCards(this IEnumerable<Card> cards) {
+		return cards.Where(card => !card.LocationLimited);
+	}
+
+	public static IEnumerable<Card> RemoveSingleCard(this IEnumerable<Card> cards, Card card) {
+		var original = card.Original();
+		return cards
+			.RemoveFirstWhere(checkedCard => original.Equals(checkedCard.Original()));
 	}
 }
