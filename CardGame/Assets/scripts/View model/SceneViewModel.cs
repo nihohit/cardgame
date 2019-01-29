@@ -38,6 +38,8 @@ public interface ISceneViewModel {
 
 public class SceneViewModel : ISceneViewModel {
 	private readonly ISceneModel model;
+	private readonly IStoryEventLogger storyLogger = new StoryEventLogger();
+	private readonly Subject<string> mainTextSubject = new Subject<string>();;
 
 	#region ISceneViewModel
 	#region inputs
@@ -68,8 +70,7 @@ public class SceneViewModel : ISceneViewModel {
 	#endregion
 	#region outputs
 
-	public IObservable<string> MainTextContent => model.State
-		.CombineLatest(model.PopulationDied, locationsDescription);
+	public IObservable<string> MainTextContent => mainTextSubject;
 
 	public IObservable<string> PopulationValue => model.State
 		.Select(state => $"{state.Train.AvailablePopulation}/{state.Train.TotalPopulation}/{state.Train.LivingSpace}");
@@ -82,55 +83,6 @@ public class SceneViewModel : ISceneViewModel {
 
 	public IObservable<string> ArmyValue => model.State
 		.Select(state => state.Train.Army.ToString());
-
-	private string locationsDescription(SceneState state, bool populationDied) {
-		var end = populationDied ? "\nSome population left you for lack of materials" : "";
-		return
-			$"{locationDescription(state.Train.CurrentLocation)}\n" +
-			$"Next: {locationDescription(state.Train.NextLocation)}" +
-			end;
-	}
-
-	private string locationContentDescription(LocationContent content) {
-		switch (content) {
-			case LocationContent.Test:
-				break;
-			case LocationContent.TrainWreck:
-				return "wrecked train";
-			case LocationContent.Howitizer:
-				return "howitzer";
-			case LocationContent.Armory:
-				return "armory";
-			case LocationContent.Workhouse:
-				return "old workshop";
-			case LocationContent.OldHouses:
-				return "old houses";
-			case LocationContent.FuelRefinery:
-				return "refinery";
-			case LocationContent.Woods:
-				return "woods";
-			case LocationContent.WildAnimals:
-				return "wild animals";
-			case LocationContent.LivingPeople:
-				return "small settlement";
-			case LocationContent.FuelStorage:
-				return "fuel storage";
-			case LocationContent.Storehouse:
-				return "storehouse";
-			case LocationContent.Mine:
-				return "mines";
-		}
-
-		return "";
-	}
-
-	private string locationDescription(Location location) {
-		var contentDescription = location.Content
-			.Distinct()
-			.Select(locationContentDescription)
-			.ToJoinedString(", ");
-		return $"{location.Name} with {contentDescription}";
-	}
 
 	public IObservable<int> DeckCount => model.State
 		.Select(state => state.Cards.CurrentDeck.Count());
