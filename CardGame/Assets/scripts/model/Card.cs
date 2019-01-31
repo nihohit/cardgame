@@ -123,7 +123,15 @@ public static class CardExtensions {
 		return cards.Where(card => !card.LocationLimited);
 	}
 
-	public static IEnumerable<Card> RemoveSingleCard(this IEnumerable<Card> cards, Card card) {
+	public static IEnumerable<Card> RemoveSingleCardIdentity(this IEnumerable<Card> cards, 
+		Card card) {
+		var original = card.Original();
+		return cards
+			.RemoveFirstWhere(checkedCard => original == checkedCard.Original());
+	}
+
+	public static IEnumerable<Card> RemoveSingleCarEquality(this IEnumerable<Card> cards,
+	Card card) {
 		var original = card.Original();
 		return cards
 			.RemoveFirstWhere(checkedCard => original.Equals(checkedCard.Original()));

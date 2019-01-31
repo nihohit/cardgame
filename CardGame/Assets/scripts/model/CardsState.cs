@@ -41,7 +41,7 @@ public class CardsState : BaseValueClass {
   }
 
   public CardsState ExhaustCardFromHand(Card card) {
-    var clearedHand = Hand.RemoveSingleCard(card);
+    var clearedHand = Hand.RemoveSingleCardIdentity(card);
     return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, clearedHand, Traditions);
   }
 
@@ -114,7 +114,7 @@ public class CardsState : BaseValueClass {
 				continue;
 			}
 
-			handAsList = handAsList.RemoveSingleCard(card).ToList();
+			handAsList = handAsList.RemoveSingleCarEquality(card).ToList();
 		}
 		return new CardsState(PersistentDeck,
 			currentDeckAsList,

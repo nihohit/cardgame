@@ -200,7 +200,7 @@ public class CardsStates {
 			.PlayCard(addedCard);
 
 		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
-		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("baz"), cardWithName("bro"), cardWithName("bar") }, state.Hand);
+		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
 		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
 	}
 
