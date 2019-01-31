@@ -25,25 +25,25 @@ public class TrainCarScript : MonoBehaviour {
 	private int carIndex() {
 		switch(car.Type) {
 			case CarType.Cannon:
-				return 31;
+				return 7;
 			case CarType.Engine:
-				return 4;
+				return 0;
 			case CarType.General:
-				return 23;
+				return 6;
 			case CarType.Workhouse:
-				return 21;
+				return 3;
 			case CarType.Armory:
-				return 15;
+				return 2;
 			case CarType.Refinery:
-				return 28;
+				return 8;
 			case CarType.LivingQuarters:
-				return 17;
+				return 1;
 			case CarType.None:
 			case CarType.Test:
 				break;
 		}
 		
-		AssertUtils.UnreachableCode();
+		AssertUtils.UnreachableCode($"Unexpected type: {car.Type}");
 		return -1;
 	}
 
@@ -51,7 +51,7 @@ public class TrainCarScript : MonoBehaviour {
 	void Awake () {
 		lock (staticLock) {
 			if (sprites == null) {
-				sprites = Resources.LoadAll<Sprite>("Sprites/trainSprites");
+				sprites = Resources.LoadAll<Sprite>("Sprites/atlas");
 			}
 		}
 		spriteRenderer = GetComponent<SpriteRenderer>();
