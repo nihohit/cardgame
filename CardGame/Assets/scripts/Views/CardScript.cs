@@ -86,6 +86,10 @@ public class CardScript : MonoBehaviour {
 			yield return $"Improved with {carName(card.ModifiedByCar)}";
 		}
 
+		if (card.CustomDescription != null) {
+			yield return card.CustomDescription;
+		}
+
 		if (card.DefaultChoice) {
 			yield return "Default choice";
 		}
