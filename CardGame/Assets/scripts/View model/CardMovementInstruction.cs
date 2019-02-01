@@ -12,22 +12,15 @@ public class CardMovementInstruction: BaseValueClass {
 	public ScreenLocation From { get; }
 	public ScreenLocation To { get; }
 	public CardDisplayModel Card { get; }
+	public int NumberOfCardsInHand { get; }
 
-	public CardMovementInstruction (CardDisplayModel card, ScreenLocation from, ScreenLocation to) {
+	public CardMovementInstruction (CardDisplayModel card, 
+		ScreenLocation from, 
+		ScreenLocation to,
+		int numberOfCardsInHand) {
 		Card = card;
 		To = to;
 		From = from;
-	}
-
-	public override bool Equals(object obj) {
-		var instruction = obj as CardMovementInstruction;
-		return instruction != null &&
-			From == instruction.From &&
-			To == instruction.To &&
-			Card.Equals(instruction.Card);
-	}
-
-	public override int GetHashCode() {
-		return Hasher.GetHashCode(Card, From, To);
+		NumberOfCardsInHand = numberOfCardsInHand;
 	}
 }

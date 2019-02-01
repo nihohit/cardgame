@@ -112,17 +112,17 @@ public class SceneViewController : MonoBehaviour {
 				currentHand[fromIndex] = null;
 			} else {
 				cardScript = cardPool.CardForModel(instruction.Card);
-				cardScript.transform.position = positionForLocation(instruction.From);
+				cardScript.transform.position = positionForLocation(instruction.From, instruction.NumberOfCardsInHand);
 			}
 
 			StartCoroutine(cardScript.gameObject.MoveOverSpeed(
-			 positionForLocation(instruction.To),
+			 positionForLocation(instruction.To, instruction.NumberOfCardsInHand),
 			 30,
 			 () => {
 				 if (!locationInHand(instruction.To)) {
 					 cardPool.ReleaseCard(cardScript);
 				 } else {
-					viewModel.setSelectedCardObservation(cardScript.ClickObservation());
+					 viewModel.setSelectedCardObservation(cardScript.ClickObservation());
 					 currentHand[handIndexForLocation(instruction.To)] = cardScript;
 				 }
 				 markCardAnimationEnded();
@@ -168,7 +168,8 @@ public class SceneViewController : MonoBehaviour {
 			location != ScreenLocation.DiscardPile;
 	}
 
-	private Vector3 positionForLocation(ScreenLocation location) {
+	private Vector3 positionForLocation(ScreenLocation location,
+		int numberOfCardsInHand) {
 		switch(location) {
 			case ScreenLocation.Center:
 				return Vector3.zero;
@@ -185,7 +186,7 @@ public class SceneViewController : MonoBehaviour {
 			case ScreenLocation.Hand7:
 			case ScreenLocation.Hand8:
 			case ScreenLocation.Hand9:
-				return handLocationForIndex(handIndexForLocation(location));
+				return handLocationForIndex(handIndexForLocation(location), numberOfCardsInHand);
 			default:
 				throw new ArgumentException($"Received {location} as position");
 		}
@@ -207,10 +208,16 @@ public class SceneViewController : MonoBehaviour {
 		}
 	}
 
-	private Vector3 handLocationForIndex(int index) {
+	private Vector3 handLocationForIndex(int index, 
+		int numberOfCards) {
 		Vector3 deckRight = deck.transform.position + Vector3.right * deck.GetComponent<BoxCollider2D>().size.x / 2 * deck.transform.localScale.x;
+		Vector3 discardLeft = discardPile.transform.position + Vector3.left * discardPile.GetComponent<BoxCollider2D>().size.x / 2 * discardPile.transform.localScale.x;
+		var totalSpace = (discardLeft.x - deckRight.x);
 		var size = CardPrefab.GetComponent<BoxCollider2D>().size * CardPrefab.transform.localScale.x;
-		return deckRight + new Vector3((size.x * index) + (size.x / 2), 0, 0);
+		var totalSpacing = totalSpace - (size.x * numberOfCards);
+		var spacingPerCard = totalSpacing / (numberOfCards + 1);
+		var spacePerCard = size.x + spacingPerCard;
+		return deckRight + new Vector3((spacePerCard * index) + (size.x / 2) + spacingPerCard, 0, 0);
 	}
 
 	private KeyValuePair<IEnumerable<CardDisplayModel>, string> toCardsTextPair(IEnumerable<CardDisplayModel> cards, string text) {
