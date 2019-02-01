@@ -119,6 +119,8 @@ public class SceneViewModel : ISceneViewModel {
 				return "storehouse";
 			case LocationContent.Mine:
 				return "mines";
+			case LocationContent.ArmyBase:
+				return "Abandoned Army Base";
 		}
 
 		return "";

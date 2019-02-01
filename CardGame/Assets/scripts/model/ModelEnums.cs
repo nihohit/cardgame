@@ -19,6 +19,7 @@ public enum LocationContent {
 	FuelStorage,
 	Storehouse,
 	Mine,
+	ArmyBase,
 }
 
 public enum Dangers {

@@ -236,6 +236,8 @@ public static class LocationBasedCards {
 				return storehouseCards();
 			case LocationContent.Mine:
 				return mineCards();
+			case LocationContent.ArmyBase:
+				return armyBaseCards();
 			default:
 				throw new ArgumentOutOfRangeException(nameof(content), content, null);
 		}
@@ -336,6 +338,16 @@ public static class LocationBasedCards {
 			{"Work for Fuel", 1},
 			{"Find Survivors", 1},
 		}).Shuffle().Take(2);
+	}
+
+	private static IEnumerable<Card> armyBaseCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Build Command Center", 1},
+			{"Build Cannon", 1},
+			{"Make Weapons", 1},
+			{"Abandoned Weapons", 1},
+			{"Drain Fuel Tank", 1}
+		}).Shuffle().Take(3);
 	}
 
 	private static IEnumerable<Card> oldHousesCards() {
