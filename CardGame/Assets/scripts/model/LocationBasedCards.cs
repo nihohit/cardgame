@@ -10,10 +10,10 @@ public static class LocationBasedCards {
 			carToAdd: new TrainCar(1, CarType.General),
 			exhaustible:true
 		),
-		Card.MakeCard("Build Engine",
+		Card.MakeCard("Build Command Center",
 			populationCost: 1,
 			materialsChange: -1,
-			carToAdd: new TrainCar(0, CarType.Engine),
+			carToAdd: new TrainCar(1, CarType.CommandCenter),
 			exhaustible:true
 		),
 		Card.MakeCard("Upgrade to Refinery",

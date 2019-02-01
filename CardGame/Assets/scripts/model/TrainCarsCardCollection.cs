@@ -39,6 +39,23 @@ public static class TrainCarsCardCollection {
 			fuelChange: 3,
 			materialsChange: -2
 		),
+		Card.MakeCard("Reevaluate Options",
+			numberOfCardsToChooseToDraw: 3,
+			numberOfCardsToChooseToDiscard: 2,
+			materialsChange: -1
+		),
+		Card.MakeCard("Gather Workers",
+			numberOfCardsToChooseToDraw: 2,
+			cardDrawingFilter: card => !card.LocationLimited,
+			materialsChange: -1,
+			customDescription: "only train cards"
+		),
+		Card.MakeCard("Scout Ahead",
+			numberOfCardsToChooseToDraw: 2,
+			cardDrawingFilter: card => card.LocationLimited,
+			fuelChange: -1,
+			customDescription: "only location cards"
+		),
 	}.ToDictionary(card => card.Name, card => card));
 
 
@@ -65,6 +82,8 @@ public static class TrainCarsCardCollection {
 				return refineryCards();
 			case CarType.Armory:
 				return armoryCards();
+			case CarType.CommandCenter:
+				return commandCenterCards();
 			case CarType.Test:
 				return testDeck();
 			case CarType.None:
@@ -106,6 +125,14 @@ public static class TrainCarsCardCollection {
 
 	private static IEnumerable<Card> cannonCards() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
+		});
+	}
+
+	private static IEnumerable<Card> commandCenterCards() {
+		return cards.objectForDictionary(new Dictionary<string, int> {
+			{ "Reevaluate Options", 1 },
+			{ "Scout Ahead", 1 },
+			{ "Gather Workers", 1 }
 		});
 	}
 

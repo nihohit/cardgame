@@ -115,6 +115,8 @@ public class CardScript : MonoBehaviour {
 				return "Cannon";
 			case CarType.LivingQuarters:
 				return "Housing";
+			case CarType.CommandCenter:
+				return "Command";
 		}
 
 		AssertUtils.UnreachableCode($"unknown type {carType}");
