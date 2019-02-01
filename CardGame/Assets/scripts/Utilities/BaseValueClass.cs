@@ -75,7 +75,7 @@ public static class ValueClassExtensions {
 		var caseInsensitiveDictionary = new Dictionary<string, object>(source, StringComparer.OrdinalIgnoreCase);
 
 		var constructorArguments = constructor.GetParameters()
-			.Select(parameter => caseInsensitiveDictionary[parameter.Name])
+			.Select(parameter => caseInsensitiveDictionary.Get(parameter.Name))
 			.ToArray();
 
 		return (T)constructor.Invoke(constructorArguments);
