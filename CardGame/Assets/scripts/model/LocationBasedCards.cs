@@ -199,11 +199,13 @@ public static class LocationBasedCards {
 				{"MaterialsChange",1}
 			}
 		),
-	}.ToDictionary(card => card.Name, card => card));
+	}
+		.Select(card => card.MakeExhaustibleCopy())
+		.Select(card => card.MakeLocationLimitedCopy())
+		.ToDictionary(card => card.Name, card => card));
 
 	public static IEnumerable<Card> CardsForContent(LocationContent content) {
-		return internalCardsForContent(content)
-			.Select(card => card.MakeExhaustibleCopy());
+		return internalCardsForContent(content);
 	}
 
 	private static IEnumerable<Card> internalCardsForContent(LocationContent content) { 

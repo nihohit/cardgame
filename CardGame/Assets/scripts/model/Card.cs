@@ -105,6 +105,10 @@ public class Card : BaseValueClass {
 		return this.CopyWithSetValue("Exhaustible", true);
 	}
 
+	public Card MakeLocationLimitedCopy() {
+		return this.CopyWithSetValue("LocationLimited", true);
+	}
+
 	public Card Original() {
 		var original = this;
 		while (original.Source != null) {
