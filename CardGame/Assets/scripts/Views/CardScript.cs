@@ -27,7 +27,7 @@ public class CardScript : MonoBehaviour {
 			return _model;
 		} set {
 			if (needsSetup) {
-				InitialCardSetup();
+				initialCardSetup();
 			}
 			_model = value;
 			var card = value.Card;
@@ -60,8 +60,12 @@ public class CardScript : MonoBehaviour {
 			yield return $"Remove {card.NumberOfCardsToChooseToExhaust} cards";
 		}
 
-		if (card.NumberOfCardsToChooseToReplace > 0) {
-			yield return $"Replace {card.NumberOfCardsToChooseToReplace} cards";
+		if (card.NumberOfCardsToDraw > 0) {
+			yield return $"Draw {card.NumberOfCardsToDraw} cards";
+		}
+
+		if (card.NumberOfCardsToChooseToDiscard > 0) {
+			yield return $"Discard {card.NumberOfCardsToChooseToDiscard} cards";
 		}
 
 		if (card.CarToAdd != null && card.CarToAdd.Type != CarType.None) {
@@ -80,6 +84,10 @@ public class CardScript : MonoBehaviour {
 
 		if (card.ModifiedByCar != CarType.None) {
 			yield return $"Improved with {carName(card.ModifiedByCar)}";
+		}
+
+		if (card.CustomDescription != null) {
+			yield return card.CustomDescription;
 		}
 
 		if (card.DefaultChoice) {
@@ -107,13 +115,15 @@ public class CardScript : MonoBehaviour {
 				return "Cannon";
 			case CarType.LivingQuarters:
 				return "Housing";
+			case CarType.CommandCenter:
+				return "Command";
 		}
 
 		AssertUtils.UnreachableCode($"unknown type {carType}");
 		return "";
 	}
 
-	private void InitialCardSetup() {
+	private void initialCardSetup() {
 		nameField = transform.Find("Name").GetComponent<TextMeshPro>();
 		traitField = transform.Find("Traits").GetComponent<TextMeshPro>();
 		fuelCost = transform.Find("FuelCost").GetComponent<CardValueScript>();
@@ -125,6 +135,7 @@ public class CardScript : MonoBehaviour {
 		populationGain = transform.Find("PopulationGain").GetComponent<CardValueScript>();
 		armyGain = transform.Find("ArmyGain").GetComponent<CardValueScript>();
 		spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
+		needsSetup = false;
 	}
 
 	public IObservable<Card> ClickObservation() {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -14,7 +15,9 @@ public class Card : BaseValueClass {
 	public TraditionType AddTradition { get; }
 	public bool Exhaustible { get; }
 	public int NumberOfCardsToChooseToExhaust { get; }
-	public int NumberOfCardsToChooseToReplace { get; }
+	public int NumberOfCardsToDraw { get; }
+	public int NumberOfCardsToChooseToDiscard { get; }
+	public Func<Card, bool> CardDrawingFilter { get; }
 	public bool DefaultChoice { get; }
 	public TrainCar CarToAdd { get; }
 	public CarType CarToRemove { get; }
@@ -22,6 +25,7 @@ public class Card : BaseValueClass {
 	public CarType RequiresCar { get; }
 	public CarType ModifiedByCar { get; }
 	public Dictionary<string, int> CarModifications { get; }
+	public string CustomDescription { get; }
 
 	protected Card(string name,
 		Card source,
@@ -33,14 +37,17 @@ public class Card : BaseValueClass {
 		TraditionType addTradition,
 		bool exhaustible,
 		int numberOfCardsToChooseToExhaust,
-		int numberOfCardsToChooseToReplace,
+		int numberOfCardsToDraw,
+		int numberOfCardsToChooseToDiscard,
+		Func<Card, bool> cardDrawingFilter,
 		bool defaultChoice,
 		CarType carToRemove,
 		TrainCar carToAdd,
 		bool locationLimited,
 		CarType requiresCar,
 		CarType modifiedByCar,
-		Dictionary<string, int> carModifications) {
+		Dictionary<string, int> carModifications,
+		string customDescription) {
 		AssertUtils.AreEqual(ModifiedByCar == CarType.None, 
 			CarModifications == null);
 		Name = name;
@@ -53,7 +60,9 @@ public class Card : BaseValueClass {
 		AddTradition = addTradition;
 		Exhaustible = exhaustible;
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;
-		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;
+		NumberOfCardsToDraw = numberOfCardsToDraw;
+		NumberOfCardsToChooseToDiscard = numberOfCardsToChooseToDiscard;
+		CardDrawingFilter = cardDrawingFilter;
 		DefaultChoice = defaultChoice;
 		CarToAdd = carToAdd;
 		CarToRemove = carToRemove;
@@ -61,6 +70,7 @@ public class Card : BaseValueClass {
 		RequiresCar = requiresCar;
 		ModifiedByCar = modifiedByCar;
 		CarModifications = carModifications;
+		CustomDescription = customDescription;
 	}
 
 	public static Card MakeCard(
@@ -73,14 +83,17 @@ public class Card : BaseValueClass {
 		TraditionType addTradition = TraditionType.None,
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
-		int numberOfCardsToChooseToReplace = 0,
+		int numberOfCardsToChooseToDraw = 0,
+		int numberOfCardsToChooseToDiscard = 0,
+		Func<Card, bool> cardDrawingFilter = null,
 		bool defaultChoice = false,
 		CarType carToRemove = CarType.None,
 		TrainCar carToAdd = null,
 		bool locationLimited = false,
 		CarType requiresCar = CarType.None,
 		CarType modifiedByCar = CarType.None,
-		Dictionary<string, int> carModifications = null) {
+		Dictionary<string, int> carModifications = null,
+		string customDescription = null) {
 		return new Card(name,
 			null,
 			populationCost,
@@ -91,18 +104,25 @@ public class Card : BaseValueClass {
 			addTradition,
 			exhaustible,
 			numberOfCardsToChooseToExhaust,
-			numberOfCardsToChooseToReplace,
+			numberOfCardsToChooseToDraw,
+			numberOfCardsToChooseToDiscard,
+			cardDrawingFilter,
 			defaultChoice,
 			carToRemove,
 			carToAdd,
 			locationLimited,
 			requiresCar,
 			modifiedByCar,
-			carModifications);
+			carModifications, 
+			customDescription);
 	}
 
 	public Card MakeExhaustibleCopy() {
 		return this.CopyWithSetValue("Exhaustible", true);
+	}
+
+	public Card MakeLocationLimitedCopy() {
+		return this.CopyWithSetValue("LocationLimited", true);
 	}
 
 	public Card Original() {

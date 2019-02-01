@@ -119,6 +119,8 @@ public class SceneViewModel : ISceneViewModel {
 				return "storehouse";
 			case LocationContent.Mine:
 				return "mines";
+			case LocationContent.ArmyBase:
+				return "Abandoned Army Base";
 		}
 
 		return "";
@@ -174,8 +176,8 @@ public class SceneViewModel : ISceneViewModel {
 		switch (state.Mode) {
 			case CardHandlingMode.Exhaust:
 				return "Choose cards to exhaust";
-			case CardHandlingMode.Replace:
-				return "Choose cards to replace";
+			case CardHandlingMode.Discard:
+				return "Choose cards to discard";
 			case CardHandlingMode.Event:
 				return state.CurrentEvent.Name;
 			default:
@@ -211,7 +213,7 @@ public class SceneViewModel : ISceneViewModel {
 			var midStepMovements = new List<CardMovementInstruction>();
 			// Cards added to hand.
 			var lastMovements = new List<CardMovementInstruction>();
-
+			Func<Card, CardDisplayModel> makeDisplayModel = card => displayModel(card, pair.Current.Train);
 			var discardedCards = new List<Card>();
 			var cardsMovedFromDiscardToDeck = new List<Card>();
 			var currentHandIndicesToCheck = Enumerable.Range(0, currentHand.Count).ToList();
@@ -219,15 +221,19 @@ public class SceneViewModel : ISceneViewModel {
 				var card = previousHand[i];
 				var currentIndex = currentHand.FindIndex(currentCard => currentCard == card);
 				if (currentIndex == -1) {
-					initialMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), handLocationFromIndex(i), ScreenLocation.DiscardPile));
+					initialMovements.Add(new CardMovementInstruction(makeDisplayModel(card), 
+						handLocationFromIndex(i), 
+						ScreenLocation.DiscardPile,
+						currentHand.Count));
 					discardedCards.Add(card);
 					continue;
 				}
 				currentHandIndicesToCheck.Remove(currentIndex);
 
-				initialMovements.Add(new CardMovementInstruction(displayModel(card, 
-					pair.Current.Train), 
-					handLocationFromIndex(i), handLocationFromIndex(currentIndex)));
+				initialMovements.Add(new CardMovementInstruction(makeDisplayModel(card), 
+					handLocationFromIndex(i), 
+					handLocationFromIndex(currentIndex),
+					currentHand.Count));
 			}
 			if (initialMovements.Count > 0) {
 				obs.OnNext(initialMovements);
@@ -243,7 +249,10 @@ public class SceneViewModel : ISceneViewModel {
 				}
 			}
 			foreach(var card in newDiscardedCards) {
-				midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.Center, ScreenLocation.DiscardPile));
+				midStepMovements.Add(new CardMovementInstruction(makeDisplayModel(card), 
+					ScreenLocation.Center, 
+					ScreenLocation.DiscardPile,
+					currentHand.Count));
 			}
 
 			var previousDeck = previousCards.CurrentDeck.ToList();
@@ -252,10 +261,16 @@ public class SceneViewModel : ISceneViewModel {
 					continue;
 				}
 				if (cardsMovedFromDiscardToDeck.FindIndex(discardedCard => discardedCard == card) != -1) {
-					midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.DiscardPile, ScreenLocation.Deck));
+					midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), 
+					ScreenLocation.DiscardPile, 
+					ScreenLocation.Deck,
+					currentHand.Count));
 					continue;
 				}
-				midStepMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.Center, ScreenLocation.Deck));
+				midStepMovements.Add(new CardMovementInstruction(makeDisplayModel(card), 
+					ScreenLocation.Center, 
+					ScreenLocation.Deck,
+					currentHand.Count));
 			}
 			if (midStepMovements.Count > 0) {
 				obs.OnNext(midStepMovements);
@@ -263,7 +278,10 @@ public class SceneViewModel : ISceneViewModel {
 
 			foreach (var index in currentHandIndicesToCheck) {
 				var card = currentHand[index];
-				lastMovements.Add(new CardMovementInstruction(displayModel(card, pair.Current.Train), ScreenLocation.Deck, handLocationFromIndex(index)));
+				lastMovements.Add(new CardMovementInstruction(makeDisplayModel(card), 
+					ScreenLocation.Deck, 
+					handLocationFromIndex(index),
+					currentHand.Count));
 			}
 			if (lastMovements.Count > 0) {
 				obs.OnNext(lastMovements);

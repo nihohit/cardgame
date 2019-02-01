@@ -40,7 +40,7 @@ public class TrainState : BaseValueClass {
 		var cars = new List<TrainCar> {
 			new TrainCar(0, CarType.Engine),
 			new TrainCar(1, CarType.General),
-			new TrainCar(1, CarType.General)
+			new TrainCar(1, CarType.CommandCenter)
 		};
 		return new TrainState(
 			fuel,
@@ -96,6 +96,7 @@ public class TrainState : BaseValueClass {
 				return 2;
 			case CarType.Engine:
 				return 0;
+			case CarType.CommandCenter:
 			case CarType.Workhouse:
 			case CarType.Armory:
 			case CarType.Refinery:

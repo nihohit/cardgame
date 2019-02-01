@@ -51,12 +51,25 @@ public class CardsState : BaseValueClass {
     return new CardsState(PersistentDeck, CurrentDeck, discardList , null, Traditions);
   }
 
-  public CardsState DrawCardsToHand(int numberOfCardsToDraw) {
+	public CardsState DrawCardsToHand(int numberOfCardsToDraw) {
+		return drawCardsToHand(numberOfCardsToDraw, null);
+	}
+
+	private CardsState drawCardsToHand(int numberOfCardsToDraw, Func<Card, bool> cardDrawingFilter) {
+		if (numberOfCardsToDraw == 0) {
+			return this;
+		}
+
     var currentDeckList = CurrentDeck.ToList();
-    var firstCards = currentDeckList.Take(numberOfCardsToDraw).ToList();
+    var firstCards = currentDeckList
+			.Where(cardDrawingFilter ?? (_ => true))
+			.Take(numberOfCardsToDraw)
+			.ToList();
     var newHand = Hand.ToList();
     newHand.AddRange(firstCards);
-    currentDeckList.RemoveRange(0, firstCards.Count);
+		firstCards.ForEach(card => {
+			currentDeckList.Remove(card);
+		});
     return new CardsState(PersistentDeck, currentDeckList, DiscardPile, newHand, Traditions);
   }
 
@@ -90,6 +103,7 @@ public class CardsState : BaseValueClass {
     return state
 			.AddCardsToDiscard(card.CarToAdd == null ? new Card[0] : TrainCarsCardCollection.CardsForTrainCar(card.CarToAdd.Type))
 	    .removeCards(TrainCarsCardCollection.CardsForTrainCar(card.CarToRemove))
+			.drawCardsToHand(card.NumberOfCardsToDraw, card.CardDrawingFilter)
 			.addTraditions(TraditionsCollection.TraditionsForDeck(card.AddTradition));
   }
 

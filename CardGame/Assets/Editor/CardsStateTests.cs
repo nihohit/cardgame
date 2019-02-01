@@ -7,7 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class CardsStates {
-  private static Card[] initialDeck = new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") };
+	private readonly static Card[] empty = new Card[0];
+
+  private readonly static IReadOnlyList<Card> initialDeck = new [] {
+		cardWithName("foo"),
+		cardWithName("bar"),
+		cardWithName("baz"),
+		cardWithName("bro")
+	};
 
   private static Card cardWithName(string name) {
     return Card.MakeCard(name);
@@ -23,9 +30,9 @@ public class CardsStates {
     var state = CardsState.NewState(initialDeck);
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
-    CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
-    CollectionAssert.AreEqual(new Card[0], state.Hand);
-    CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+    CollectionAssert.AreEqual(empty, state.CurrentDeck);
+    CollectionAssert.AreEqual(empty, state.Hand);
+    CollectionAssert.AreEqual(empty, state.DiscardPile);
 		CollectionAssert.AreEqual(new Tradition[0], state.Traditions);
   }
 
@@ -37,8 +44,8 @@ public class CardsStates {
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
     CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
-    CollectionAssert.AreEqual(new Card[0], state.Hand);
-    CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+    CollectionAssert.AreEqual(empty, state.Hand);
+    CollectionAssert.AreEqual(empty, state.DiscardPile);
   }
 
   [Test]
@@ -51,7 +58,7 @@ public class CardsStates {
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
     CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
     CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar") }, state.Hand);
-    CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+    CollectionAssert.AreEqual(empty, state.DiscardPile);
   }
 
 	[Test]
@@ -65,7 +72,7 @@ public class CardsStates {
 		CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
 		CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
 		CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar") }, state.Hand);
-		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
 	}
 
 	[Test]
@@ -92,7 +99,7 @@ public class CardsStates {
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
 		CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new [] { cardWithName("foo"), cardWithName("bar") }, state.DiscardPile);
 	}
 
@@ -107,8 +114,8 @@ public class CardsStates {
 
     CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
     CollectionAssert.AreEqual(new [] { cardWithName("baz"), cardWithName("bro"), cardWithName("foo"), cardWithName("bar") }, state.CurrentDeck);
-    CollectionAssert.AreEqual(new Card[0], state.Hand);
-    CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+    CollectionAssert.AreEqual(empty, state.Hand);
+    CollectionAssert.AreEqual(empty, state.DiscardPile);
   }
 
 	[Test]
@@ -120,7 +127,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(initialDeck, state.PersistentDeck);
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new [] { cardWithName("Hey") }, state.DiscardPile);
 	}
 
@@ -138,7 +145,7 @@ public class CardsStates {
 			.PlayCard(playedCard);
 
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new[] { cardWithName("test") }, state.DiscardPile);
 	}
 
@@ -160,7 +167,7 @@ public class CardsStates {
 			.PlayCard(modified);
 
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new[] { cardWithName("test") }, state.DiscardPile);
 	}
 
@@ -177,7 +184,7 @@ public class CardsStates {
 			.PlayCard(playedCard);
 
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new[] { playedCard, cardWithName("test") }, state.DiscardPile);
 	}
 
@@ -190,7 +197,7 @@ public class CardsStates {
 			.DrawCardsToHand(5)
 			.PlayCard(addedCard);
 
-		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
 		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
 
@@ -199,7 +206,7 @@ public class CardsStates {
 			.DrawCardsToHand(5)
 			.PlayCard(addedCard);
 
-		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.Hand);
 		CollectionAssert.AreEqual(new[] { addedCard }, state.DiscardPile);
 	}
@@ -207,7 +214,7 @@ public class CardsStates {
 	[Test]
 	public void AddTradition() {
 		var tradition = new Tradition("foo");
-		var state = CardsState.NewState(new Card[0])
+		var state = CardsState.NewState(empty)
 			.AddTradition(tradition);
 
 		CollectionAssert.AreEqual(new[] { tradition }, state.Traditions);
@@ -216,7 +223,7 @@ public class CardsStates {
 	[Test]
 	public void RemoveTradition() {
 		var tradition = new Tradition("foo");
-		var state = CardsState.NewState(new Card[0])
+		var state = CardsState.NewState(empty)
 			.AddTradition(tradition)
 			.RemoveTradition(tradition);
 
@@ -236,8 +243,8 @@ public class CardsStates {
 			Card.MakeCard("bar", fuelChange: 2),
 			Card.MakeCard("foo")
 		}, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
-		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
 	}
 
 	[Test]
@@ -252,7 +259,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(new[] { Card.MakeCard("foo"), }, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] { Card.MakeCard("bar", fuelChange: 2), }, state.Hand);
-		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
 	}
 
 	[Test]
@@ -267,7 +274,7 @@ public class CardsStates {
 			.AddTradition(new Tradition("hi", cardToEnhance: "bar", propertyToEnhance: "FuelChange", increaseInValue: 2));
 
 		CollectionAssert.AreEqual(new[] { Card.MakeCard("foo"), }, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new[] { Card.MakeCard("bar", fuelChange: 2), }, state.DiscardPile);
 	}
 
@@ -286,8 +293,8 @@ public class CardsStates {
 			.DrawCardsToHand(1)
 			.PlayCard(card);
 
-		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(new[] { card, Card.MakeCard("test", fuelChange: 1), }, state.DiscardPile);
 	}
 
@@ -309,7 +316,7 @@ public class CardsStates {
 			.DrawCardsToHand(2);
 		state = state.PlayCard(state.Hand.ToList()[1]);
 
-		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] { card }, state.Hand);
 		CollectionAssert.AreEqual(new[] { Card.MakeCard("test", fuelChange: 1), }, state.DiscardPile);
 	}
@@ -327,8 +334,8 @@ public class CardsStates {
 			Card.MakeCard("foo"),
 			Card.MakeCard("bar", fuelChange: -2)
 		}, state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[0], state.Hand);
-		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
 	}
 	
 	[Test]
@@ -350,7 +357,7 @@ public class CardsStates {
 			.DrawCardsToHand(3)
 			.PlayCard(card);
 			
-		CollectionAssert.AreEqual(new Card[0], state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] {Card.MakeCard("foo")}, state.Hand);
 		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
 	}
@@ -396,7 +403,7 @@ public class CardsStates {
 			
 		CollectionAssert.AreEqual(new[] {testCard}, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] {testCard, card}, state.Hand);
-		CollectionAssert.AreEqual(new Card[0], state.DiscardPile);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
 		
 		state = state
 			.PlayCard(card);
@@ -413,5 +420,57 @@ public class CardsStates {
 		CollectionAssert.AreEqual(new Card[] {}, state.CurrentDeck);
 		CollectionAssert.AreEqual(new Card[] {}, state.Hand);
 		CollectionAssert.AreEqual(new[] {card}, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldDrawCardsAccordingToCard() {
+		Randomizer.SetTestableRandom(5);
+		var card = Card.MakeCard("hi",
+			numberOfCardsToChooseToDraw: 2);
+
+		var state = CardsState.NewState(new[] { card }.Concat(initialDeck))
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(initialDeck.Skip(2), state.CurrentDeck);
+		CollectionAssert.AreEqual(initialDeck.Take(2), state.Hand);
+		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldDrawCardsUpToDeckLimit() {
+		Randomizer.SetTestableRandom(5);
+		var card = Card.MakeCard("hi",
+			numberOfCardsToChooseToDraw: 5);
+
+		var state = CardsState.NewState(new[] { card }.Concat(initialDeck))
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(2)
+			.DiscardCardFromHand(initialDeck[0])
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(initialDeck.Skip(1).Take(3), state.Hand);
+		CollectionAssert.AreEqual(new[] { initialDeck[0], card }, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldDrawCardsAccordingToFilter() {
+		Randomizer.SetTestableRandom(5);
+		var card = Card.MakeCard("hi",
+			numberOfCardsToChooseToDraw: 1,
+			cardDrawingFilter: checkedCard => checkedCard.Name.Equals("baz"));
+
+		var state = CardsState.NewState(new[] { card }.Concat(initialDeck))
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(
+			new Card[] { initialDeck[0], initialDeck[1], initialDeck[3] }, 
+			state.CurrentDeck);
+		CollectionAssert.AreEqual(new Card[] { initialDeck[2] }, state.Hand);
+		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
 	}
 }

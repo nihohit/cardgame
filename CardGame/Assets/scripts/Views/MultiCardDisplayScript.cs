@@ -30,6 +30,7 @@ public class MultiCardDisplayScript : MonoBehaviour {
 	public IObservable<Card> setup(IEnumerable<CardDisplayModel> cards, string description) {
 		gameObject.SetActive(true);
 		textMesh.text = description;
+		releaseCards();
 		return setupCardScripts(cards);
 	}
 
@@ -59,12 +60,16 @@ public class MultiCardDisplayScript : MonoBehaviour {
 	}
 
 	public void FinishWork() {
+		releaseCards();
+		gameObject.SetActive(false);
+	}
+
+	private void releaseCards() {
 		foreach (var cardScript in cardScripts) {
 			setupCardScriptLayers(cardScript, "Default");
 			cardPool.ReleaseCard(cardScript);
 		}
 		cardScripts.Clear();
-		gameObject.SetActive(false);
 	}
 
 	private void setupCardScriptLayers(CardScript script, string layerName) {

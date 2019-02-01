@@ -41,9 +41,10 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.Woods, 0.1},
 				{LocationContent.LivingPeople, 0.6},
 				{LocationContent.WildAnimals, 0.05},
-				{LocationContent.OldHouses, 0.1},
-				{LocationContent.Workhouse, 0.1},
+				{LocationContent.OldHouses, 0.07},
+				{LocationContent.Workhouse, 0.07},
 				{LocationContent.FuelRefinery, 0.05},
+				{LocationContent.ArmyBase, 0.06}
 			});
 	}
 	
@@ -53,11 +54,12 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.Woods, 0.15},
 				{LocationContent.LivingPeople, 0.05},
 				{LocationContent.WildAnimals, 0.1},
-				{LocationContent.FuelStorage, 0.2},
-				{LocationContent.Storehouse, 0.2},
+				{LocationContent.FuelStorage, 0.15},
+				{LocationContent.Storehouse, 0.15},
 				{LocationContent.Mine, 0.1},
 				{LocationContent.Workhouse, 0.1},
 				{LocationContent.OldHouses, 0.1},
+				{LocationContent.ArmyBase, 0.1}
 			});
 	}
 
@@ -69,8 +71,9 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.WildAnimals, 0.15},
 				{LocationContent.Storehouse, 0.05},
 				{LocationContent.Mine, 0.05},
-				{LocationContent.TrainWreck, 0.1},
-				{LocationContent.FuelStorage, 0.1},
+				{LocationContent.TrainWreck, 0.07},
+				{LocationContent.FuelStorage, 0.07},
+				{LocationContent.ArmyBase, 0.06}
 			});
 	}
 
@@ -109,9 +112,10 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.WildAnimals, 0.15},
 				{LocationContent.Storehouse, 0.05},
 				{LocationContent.FuelStorage, 0.05},
-				{LocationContent.Mine, 0.3},
+				{LocationContent.Mine, 0.2},
 				{LocationContent.Howitizer, 0.1},
-				{LocationContent.FuelRefinery, 0.1}
+				{LocationContent.FuelRefinery, 0.1},
+				{LocationContent.ArmyBase, 0.1}
 			});
 	}
 

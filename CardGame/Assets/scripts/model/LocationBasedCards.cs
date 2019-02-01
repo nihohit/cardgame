@@ -10,10 +10,10 @@ public static class LocationBasedCards {
 			carToAdd: new TrainCar(1, CarType.General),
 			exhaustible:true
 		),
-		Card.MakeCard("Build Engine",
+		Card.MakeCard("Build Command Center",
 			populationCost: 1,
 			materialsChange: -1,
-			carToAdd: new TrainCar(0, CarType.Engine),
+			carToAdd: new TrainCar(1, CarType.CommandCenter),
 			exhaustible:true
 		),
 		Card.MakeCard("Upgrade to Refinery",
@@ -199,11 +199,13 @@ public static class LocationBasedCards {
 				{"MaterialsChange",1}
 			}
 		),
-	}.ToDictionary(card => card.Name, card => card));
+	}
+		.Select(card => card.MakeExhaustibleCopy())
+		.Select(card => card.MakeLocationLimitedCopy())
+		.ToDictionary(card => card.Name, card => card));
 
 	public static IEnumerable<Card> CardsForContent(LocationContent content) {
-		return internalCardsForContent(content)
-			.Select(card => card.MakeExhaustibleCopy());
+		return internalCardsForContent(content);
 	}
 
 	private static IEnumerable<Card> internalCardsForContent(LocationContent content) { 
@@ -234,6 +236,8 @@ public static class LocationBasedCards {
 				return storehouseCards();
 			case LocationContent.Mine:
 				return mineCards();
+			case LocationContent.ArmyBase:
+				return armyBaseCards();
 			default:
 				throw new ArgumentOutOfRangeException(nameof(content), content, null);
 		}
@@ -334,6 +338,16 @@ public static class LocationBasedCards {
 			{"Work for Fuel", 1},
 			{"Find Survivors", 1},
 		}).Shuffle().Take(2);
+	}
+
+	private static IEnumerable<Card> armyBaseCards() {
+		return cards.objectForDictionary(new Dictionary<string, int>{
+			{"Build Command Center", 1},
+			{"Build Cannon", 1},
+			{"Make Weapons", 1},
+			{"Abandoned Weapons", 1},
+			{"Drain Fuel Tank", 1}
+		}).Shuffle().Take(3);
 	}
 
 	private static IEnumerable<Card> oldHousesCards() {

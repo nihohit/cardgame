@@ -38,6 +38,8 @@ public class TrainCarScript : MonoBehaviour {
 				return 8;
 			case CarType.LivingQuarters:
 				return 1;
+			case CarType.CommandCenter:
+				return 5;
 			case CarType.None:
 			case CarType.Test:
 				break;
