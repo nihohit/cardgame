@@ -89,8 +89,8 @@ public class SceneModel : ISceneModel {
 			case CardHandlingMode.Event:
 				succeeded = playEventCard(card);
 				break;
-			case CardHandlingMode.Replace:
-				succeeded = replaceCard(card);
+			case CardHandlingMode.Discard:
+				succeeded = discardCard(card);
 				break;
 			case CardHandlingMode.Exhaust:
 				succeeded = exhaustCard(card);
@@ -119,9 +119,9 @@ public class SceneModel : ISceneModel {
 		if (card.NumberOfCardsToChooseToExhaust > 0) {
 			mode = CardHandlingMode.Exhaust;
 			cardsToHandle = card.NumberOfCardsToChooseToExhaust;
-		} else if (card.NumberOfCardsToChooseToReplace > 0) {
-			mode = CardHandlingMode.Replace;
-			cardsToHandle = card.NumberOfCardsToChooseToReplace;
+		} else if (card.NumberOfCardsToChooseToDiscard > 0) {
+			mode = CardHandlingMode.Discard;
+			cardsToHandle = card.NumberOfCardsToChooseToDiscard;
 		}
 	}
 
@@ -137,10 +137,8 @@ public class SceneModel : ISceneModel {
 		return true;
 	}
 
-	private bool replaceCard(Card card) {
-		cards = cards
-			.DiscardCardFromHand(card)
-			.DrawCardsToHand(1);
+	private bool discardCard(Card card) {
+		cards = cards.DiscardCardFromHand(card);
 		changeModeIfNeeded();
 		return true;
 	}
@@ -182,7 +180,7 @@ public class SceneModel : ISceneModel {
 	public void UserFinishedMode() {
 		switch (mode) {
 			case CardHandlingMode.Exhaust:
-			case CardHandlingMode.Replace:
+			case CardHandlingMode.Discard:
 				mode = CardHandlingMode.Regular;
 				break;
 			case CardHandlingMode.Regular:

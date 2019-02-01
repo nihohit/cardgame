@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -14,7 +15,9 @@ public class Card : BaseValueClass {
 	public TraditionType AddTradition { get; }
 	public bool Exhaustible { get; }
 	public int NumberOfCardsToChooseToExhaust { get; }
-	public int NumberOfCardsToChooseToReplace { get; }
+	public int NumberOfCardsToDraw { get; }
+	public int NumberOfCardsToChooseToDiscard { get; }
+	public Func<Card, bool> CardDrawingFilter { get; }
 	public bool DefaultChoice { get; }
 	public TrainCar CarToAdd { get; }
 	public CarType CarToRemove { get; }
@@ -33,7 +36,9 @@ public class Card : BaseValueClass {
 		TraditionType addTradition,
 		bool exhaustible,
 		int numberOfCardsToChooseToExhaust,
-		int numberOfCardsToChooseToReplace,
+		int numberOfCardsToDraw,
+		int numberOfCardsToChooseToDiscard,
+		Func<Card, bool> cardDrawingFilter,
 		bool defaultChoice,
 		CarType carToRemove,
 		TrainCar carToAdd,
@@ -53,7 +58,9 @@ public class Card : BaseValueClass {
 		AddTradition = addTradition;
 		Exhaustible = exhaustible;
 		NumberOfCardsToChooseToExhaust = numberOfCardsToChooseToExhaust;
-		NumberOfCardsToChooseToReplace = numberOfCardsToChooseToReplace;
+		NumberOfCardsToDraw = numberOfCardsToDraw;
+		NumberOfCardsToChooseToDiscard = numberOfCardsToChooseToDiscard;
+		CardDrawingFilter = cardDrawingFilter;
 		DefaultChoice = defaultChoice;
 		CarToAdd = carToAdd;
 		CarToRemove = carToRemove;
@@ -73,7 +80,9 @@ public class Card : BaseValueClass {
 		TraditionType addTradition = TraditionType.None,
 		bool exhaustible = false, 
 		int numberOfCardsToChooseToExhaust = 0,
-		int numberOfCardsToChooseToReplace = 0,
+		int numberOfCardsToChooseToDraw = 0,
+		int numberOfCardsToChooseToDiscard = 0,
+		Func<Card, bool> cardDrawingFilter = null,
 		bool defaultChoice = false,
 		CarType carToRemove = CarType.None,
 		TrainCar carToAdd = null,
@@ -91,7 +100,9 @@ public class Card : BaseValueClass {
 			addTradition,
 			exhaustible,
 			numberOfCardsToChooseToExhaust,
-			numberOfCardsToChooseToReplace,
+			numberOfCardsToChooseToDraw,
+			numberOfCardsToChooseToDiscard,
+			cardDrawingFilter,
 			defaultChoice,
 			carToRemove,
 			carToAdd,

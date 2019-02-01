@@ -176,8 +176,8 @@ public class SceneViewModel : ISceneViewModel {
 		switch (state.Mode) {
 			case CardHandlingMode.Exhaust:
 				return "Choose cards to exhaust";
-			case CardHandlingMode.Replace:
-				return "Choose cards to replace";
+			case CardHandlingMode.Discard:
+				return "Choose cards to discard";
 			case CardHandlingMode.Event:
 				return state.CurrentEvent.Name;
 			default:
