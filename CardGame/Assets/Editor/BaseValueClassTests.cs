@@ -50,6 +50,23 @@ public class BaseValueClassTests {
 			EnumerableProperty = enumerableProperty;
 		}
 	}
+
+	private class ReadonlyValueClass : BaseValueClass {
+		public int IntegerProperty { get; }
+		public Value StructProperty { get; }
+		public ReferenceValue ClassProperty { get; }
+		public IEnumerable<object> EnumerableProperty { get; }
+
+		public ReadonlyValueClass(int integerProperty,
+													Value structProperty,
+													ReferenceValue classProperty,
+												 IEnumerable<object> enumerableProperty) {
+			IntegerProperty = integerProperty;
+			StructProperty = structProperty;
+			ClassProperty = classProperty;
+			EnumerableProperty = enumerableProperty;
+		}
+	}
 	#endregion
 
 	private TestValueClass first;
@@ -158,11 +175,12 @@ public class BaseValueClassTests {
 		var expectedValue = 3;
 		var result = first.CopyWithSetValue("IntegerProperty", expectedValue);
 
-		var expected = new TestValueClass();
-		expected.IntegerProperty = expectedValue;
-		expected.ClassProperty = first.ClassProperty;
-		expected.StructProperty = first.StructProperty;
-		expected.EnumerableProperty = first.EnumerableProperty;
+		var expected = new TestValueClass {
+			IntegerProperty = expectedValue,
+			ClassProperty = first.ClassProperty,
+			StructProperty = first.StructProperty,
+			EnumerableProperty = first.EnumerableProperty
+		};
 
 		Assert.AreEqual(expected, result);
 	}
@@ -179,11 +197,12 @@ public class BaseValueClassTests {
 		var modificationValue = 3;
 		var result = first.CopyWithModifiedValue("IntegerProperty", modificationValue);
 
-		var expected = new TestValueClass();
-		expected.IntegerProperty = 5;
-		expected.ClassProperty = first.ClassProperty;
-		expected.StructProperty = first.StructProperty;
-		expected.EnumerableProperty = first.EnumerableProperty;
+		var expected = new TestValueClass {
+			IntegerProperty = 5,
+			ClassProperty = first.ClassProperty,
+			StructProperty = first.StructProperty,
+			EnumerableProperty = first.EnumerableProperty
+		};
 
 		Assert.AreEqual(expected, result);
 	}
@@ -202,11 +221,12 @@ public class BaseValueClassTests {
 		};
 		var result = first.CopyWithSetValue("StructProperty", expectedValue);
 
-		var expected = new TestValueClass();
-		expected.IntegerProperty = first.IntegerProperty;
-		expected.ClassProperty = first.ClassProperty;
-		expected.StructProperty = expectedValue;
-		expected.EnumerableProperty = first.EnumerableProperty;
+		var expected = new TestValueClass {
+			IntegerProperty = first.IntegerProperty,
+			ClassProperty = first.ClassProperty,
+			StructProperty = expectedValue,
+			EnumerableProperty = first.EnumerableProperty
+		};
 
 		Assert.AreEqual(expected, result);
 	}
@@ -220,15 +240,17 @@ public class BaseValueClassTests {
 		};
 		first.EnumerableProperty = new object[] { 1 };
 
-		var expectedValue = new ReferenceValue();
-		expectedValue.IntegerValue = 5;
+		var expectedValue = new ReferenceValue {
+			IntegerValue = 5
+		};
 		var result = first.CopyWithSetValue("ClassProperty", expectedValue);
 
-		var expected = new TestValueClass();
-		expected.IntegerProperty = first.IntegerProperty;
-		expected.ClassProperty = expectedValue;
-		expected.StructProperty = first.StructProperty;
-		expected.EnumerableProperty = first.EnumerableProperty;
+		var expected = new TestValueClass {
+			IntegerProperty = first.IntegerProperty,
+			ClassProperty = expectedValue,
+			StructProperty = first.StructProperty,
+			EnumerableProperty = first.EnumerableProperty
+		};
 
 		Assert.AreEqual(expected, result);
 	}
@@ -244,12 +266,69 @@ public class BaseValueClassTests {
 		var expectedValue = new List<object> { 1 };
 		var result = first.CopyWithSetValue("EnumerableProperty", expectedValue);
 
-		var expected = new TestValueClass();
-		expected.IntegerProperty = first.IntegerProperty;
-		expected.ClassProperty = first.ClassProperty;
-		expected.StructProperty = first.StructProperty;
-		expected.EnumerableProperty = expectedValue;
+		var expected = new TestValueClass {
+			IntegerProperty = first.IntegerProperty,
+			ClassProperty = first.ClassProperty,
+			StructProperty = first.StructProperty,
+			EnumerableProperty = expectedValue
+		};
 
 		Assert.AreEqual(expected, result);
+	}
+
+	[Test]
+	public void CreateObjectFromObject() {
+		first.IntegerProperty = 2;
+		first.ClassProperty = new ReferenceValue();
+		first.StructProperty = new Value {
+			IntegerValue = 1
+		};
+		first.EnumerableProperty = new object[] { 1 };
+		var copy = first.AsDictionary().ToObject<TestValueClass>();
+
+		Assert.AreEqual(first, copy);
+	}
+
+	[Test]
+	public void CreateObjectFromObjectWithPartialDictionary() {
+		first.IntegerProperty = 2;
+		first.ClassProperty = new ReferenceValue();
+		first.StructProperty = new Value {
+			IntegerValue = 1
+		};
+		first.EnumerableProperty = new object[] { 1 };
+		var dictionary = first.AsDictionary();
+		dictionary.Remove("ClassProperty");
+		var copy = dictionary.ToObject<TestValueClass>();
+
+		Assert.AreEqual(first.IntegerProperty, copy.IntegerProperty);
+		Assert.AreEqual(first.StructProperty, copy.StructProperty);
+		Assert.AreEqual(first.EnumerableProperty, copy.EnumerableProperty);
+		Assert.AreEqual(copy.ClassProperty, null);
+	}
+
+	[Test]
+	public void CreateReadonlyObjectFromObject() {
+		var source = new ReadonlyValueClass(2, new Value {
+			IntegerValue = 1
+		}, new ReferenceValue(), new object[] { 1 });
+		var copy = source.AsDictionary().ToObject<ReadonlyValueClass>();
+
+		Assert.AreEqual(source, copy);
+	}
+
+	[Test]
+	public void CreateReadonlyObjectFromObjectWithPartialDictionary() {
+		var source = new ReadonlyValueClass(2, new Value {
+			IntegerValue = 1
+		}, new ReferenceValue(), new object[] { 1 });
+		var dictionary = source.AsDictionary();
+		dictionary.Remove("ClassProperty");
+		var copy = dictionary.ToObject<ReadonlyValueClass>();
+
+		Assert.AreEqual(source.IntegerProperty, copy.IntegerProperty);
+		Assert.AreEqual(source.StructProperty, copy.StructProperty);
+		Assert.AreEqual(source.EnumerableProperty, copy.EnumerableProperty);
+		Assert.AreEqual(copy.ClassProperty, null);
 	}
 }
