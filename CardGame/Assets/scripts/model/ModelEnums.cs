@@ -26,5 +26,30 @@ public enum Dangers {
 	Avalanche,
 	Robbers,
 	WildAnimalsAttack,
-	
+}
+
+public static class ModelGlobal {
+	public static string CarName(CarType carType) {
+		switch (carType) {
+			case CarType.Engine:
+				return "Engine";
+			case CarType.General:
+				return "Basic";
+			case CarType.Workhouse:
+				return "Workhouse";
+			case CarType.Armory:
+				return "Armory";
+			case CarType.Refinery:
+				return "Refinery";
+			case CarType.Cannon:
+				return "Cannon";
+			case CarType.LivingQuarters:
+				return "Housing";
+			case CarType.CommandCenter:
+				return "Command";
+		}
+
+		AssertUtils.UnreachableCode($"unknown type {carType}");
+		return "";
+	}
 }
