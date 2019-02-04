@@ -63,6 +63,8 @@ public static class ModelGlobal {
 				return "Housing";
 			case CarType.CommandCenter:
 				return "Command";
+			case CarType.None:
+				return "No car";
 		}
 
 		AssertUtils.UnreachableCode($"unknown type {carType}");

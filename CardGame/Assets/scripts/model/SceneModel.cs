@@ -36,6 +36,7 @@ public interface ISceneModel {
 	void UserFinishedMode();
 	void UserChoseToDrive();
 	void TryDrawCard();
+	void Initialize(IEnumerable<CarType> initialCars);
 }
 
 public class SceneModel : ISceneModel {
@@ -46,27 +47,36 @@ public class SceneModel : ISceneModel {
 	private readonly List<Card> playedCards = new List<Card>();
 	private int cardsToHandle;
 	private readonly ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
-	private readonly IEnumerator<Location> locations;
+	private IEnumerator<Location> locations;
 	private Subject<bool> populationDiedSubject = new Subject<bool>();
 	private IEnumerable<Card> carCards;
 
-	public static SceneModel InitialSceneModel() {
+	#region ISceneModel
+	public void Initialize(IEnumerable<CarType> initialCars) {
 		var locationsEnumerator = new RandomLocationsGenerator().Locations().GetEnumerator();
 		locationsEnumerator.MoveNext();
 		var initialLocation = locationsEnumerator.Current;
 		locationsEnumerator.MoveNext();
+		var actualCars = initialCars
+			.Where(type => type != CarType.None)
+			.Select(type => new TrainCar(1, type));
+		var train = new[] { new TrainCar(0, CarType.Engine) }
+			.Concat(actualCars)
+			.ToList();
 		var trainState = TrainState.InitialState(4, 6, 3, 1,
-					initialLocation, 
+			train,
+			initialLocation,
 			locationsEnumerator.Current);
 		var initialCards = TrainCarsCardCollection.BaseCards(trainState.Cars.Select(car => car.Type));
 		var cardState = CardsState.NewState(initialCards)
 			.ShuffleCurrentDeck()
 			.EnterLocation(trainState.CurrentLocation)
 			.DrawCardsToHand(Constants.MAX_CARDS_IN_HAND);
-		return new SceneModel(cardState, trainState, CardHandlingMode.Regular, locationsEnumerator);
+		setup(cardState, trainState, CardHandlingMode.Regular, locationsEnumerator);
+
 	}
 
-	public SceneModel(CardsState cards, TrainState trainState, 
+	private void setup(CardsState cards, TrainState trainState,
 		CardHandlingMode mode, IEnumerator<Location> locations) {
 		this.locations = locations;
 		nextEvent = EventCardsCollections.EventCardForState(trainState);
@@ -77,7 +87,6 @@ public class SceneModel : ISceneModel {
 		sendCompletedState();
 	}
 
-	#region ISceneModel
 	public IObservable<SceneState> State => stateSubject;
 
 	public bool CanPlayCard(Card card) {
@@ -195,6 +204,9 @@ public class SceneModel : ISceneModel {
 	}
 
 	private void startTurn() {
+		if (trainState.TotalPopulation <= 0) {
+			UnityEngine.SceneManagement.SceneManager.LoadScene("base");
+		}
 		drawNewHand();
 		var lastPopulationCount = trainState.TotalPopulation;
 		trainState = trainState.NextTurnState();
