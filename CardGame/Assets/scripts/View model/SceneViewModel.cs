@@ -99,8 +99,6 @@ public class SceneViewModel : ISceneViewModel {
 				return "wrecked train";
 			case LocationContent.Howitizer:
 				return "howitzer";
-			case LocationContent.Armory:
-				return "armory";
 			case LocationContent.Workhouse:
 				return "old workshop";
 			case LocationContent.OldHouses:
@@ -144,15 +142,26 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => state.Cards.Hand);
 
 	public IObservable<bool> DisplayDoneButton => model.State
-		.Select(state => state.Mode != CardHandlingMode.Event &&
-						!state.Train.CanDrive());
+		.Select(state => {
+			switch (state.Mode) {
+				case CardHandlingMode.Regular:
+					return !state.Train.CanDrive();
+				case CardHandlingMode.Exhaust:
+				case CardHandlingMode.Discard:
+				case CardHandlingMode.Event:
+					return false;
+				case CardHandlingMode.CarBuilding:
+					return true;
+			}
+			return false;
+		});
 	
 	public IObservable<bool> DisplayDriveButton => model.State
-		.Select(state => state.Mode != CardHandlingMode.Event &&
+		.Select(state => state.Mode == CardHandlingMode.Regular &&
 						state.Train.CanDrive());
 	
 	public IObservable<bool> DisplayStayButton => model.State
-		.Select(state => state.Mode != CardHandlingMode.Event &&
+		.Select(state => state.Mode == CardHandlingMode.Regular &&
 		                 state.Train.CanDrive());
 
 	public IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay => model.State
@@ -161,11 +170,7 @@ public class SceneViewModel : ISceneViewModel {
 
 	// TODO: Move using CardMovementInstructions.
 	private IEnumerable<CardDisplayModel> cardsInMultiCardDisplay(SceneState state) {
-		if (state.Mode == CardHandlingMode.Event) {
-			return state.CurrentEvent.Options.Select(card => displayModel(card));
-		}
-
-		return state.Cards.Hand.Select(card => displayModel(card, state.Train));
+		return state.CurrentModeCards.Select(card => displayModel(card, state.Train));
 	}
 
 	public IObservable<string> TextForMultiDisplay => model.State
@@ -180,6 +185,8 @@ public class SceneViewModel : ISceneViewModel {
 				return "Choose cards to discard";
 			case CardHandlingMode.Event:
 				return state.CurrentEvent.Name;
+			case CardHandlingMode.CarBuilding:
+				return "Choose train car to build";
 			default:
 				AssertUtils.UnreachableCode();
 				break;

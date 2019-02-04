@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using UnityEngine;
 
@@ -29,11 +30,11 @@ public static class ValueClassExtensions {
 					var otherValue = info.GetValue(other);
 					return thisValue == otherValue ||
 						(thisValue != null && thisValue.Equals(otherValue)) ||
-						EnumerableEquality(thisValue, otherValue);
+						enumerableEquality(thisValue, otherValue);
 				});
 	}
 
-	private static bool EnumerableEquality(object obj, object other) {
+	private static bool enumerableEquality(object obj, object other) {
 		var enumerable  = obj as IEnumerable;
 		var otherEnumerable = other as IEnumerable;
 		if (enumerable == null || otherEnumerable == null) {
@@ -71,9 +72,35 @@ public static class ValueClassExtensions {
 
 	public static T ToObject<T>(this IDictionary<string, object> source) where T : class {
 		var constructors = typeof(T).GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToList();
-		var constructor = constructors.First(constructorInfo => constructorInfo.GetParameters().Length == source.Count);
+		var constructor = constructors.FirstOrDefault(constructorInfo => constructorInfo.GetParameters().Length == source.Count);
 		var caseInsensitiveDictionary = new Dictionary<string, object>(source, StringComparer.OrdinalIgnoreCase);
+		if (constructor == null) {
+			return initializeWithoutConstructor<T>(caseInsensitiveDictionary);
+		}
+		return initializeWithConstructor<T>(caseInsensitiveDictionary, constructor);
+	}
 
+	private static T initializeWithoutConstructor<T>(Dictionary<string, object> caseInsensitiveDictionary) where T : class {
+		var type = typeof(T);
+		var newObject = FormatterServices.GetUninitializedObject(type) as T;
+		var fields = type.GetRuntimeFields();
+		foreach(var field in fields) {
+			object value;
+			var fieldName = field.Name;
+			var prefixEnd = fieldName.IndexOf('<');
+			var postfixStart = fieldName.IndexOf('>');
+			fieldName = fieldName.Substring(prefixEnd + 1, postfixStart - prefixEnd - 1);
+			if (!caseInsensitiveDictionary.TryGetValue(fieldName, out value)) {
+				continue;
+			}
+
+			field.SetValue(newObject, value);
+		}
+		return newObject;
+	}
+
+	private static T initializeWithConstructor<T>(IDictionary<string, object> caseInsensitiveDictionary, 
+		ConstructorInfo constructor) {
 		var constructorArguments = constructor.GetParameters()
 			.Select(parameter => caseInsensitiveDictionary.Get(parameter.Name))
 			.ToArray();

@@ -70,20 +70,20 @@ public class CardScript : MonoBehaviour {
 
 		if (card.CarToAdd != null && card.CarToAdd.Type != CarType.None) {
 			if (card.CarToRemove != CarType.None) {
-				yield return $"Replace {carName(card.CarToRemove)} with {carName(card.CarToAdd.Type)}";
+				yield return $"Replace {ModelGlobal.CarName(card.CarToRemove)} with {ModelGlobal.CarName(card.CarToAdd.Type)}";
 			} else {
-				yield return $"Add {carName(card.CarToAdd.Type)}";
+				yield return $"Add {ModelGlobal.CarName(card.CarToAdd.Type)}";
 			}
 		} else if (card.CarToRemove != CarType.None) {
-			yield return $"Remove {carName(card.CarToRemove)}";
+			yield return $"Remove {ModelGlobal.CarName(card.CarToRemove)}";
 		}
 
 		if (card.RequiresCar != CarType.None) {
-			yield return $"Requires {carName(card.RequiresCar)}";
+			yield return $"Requires {ModelGlobal.CarName(card.RequiresCar)}";
 		}
 
 		if (card.ModifiedByCar != CarType.None) {
-			yield return $"Improved with {carName(card.ModifiedByCar)}";
+			yield return $"Improved with {ModelGlobal.CarName(card.ModifiedByCar)}";
 		}
 
 		if (card.CustomDescription != null) {
@@ -97,30 +97,6 @@ public class CardScript : MonoBehaviour {
 		if (card.Exhaustible) {
 			yield return "Single use";
 		}
-	}
-
-	private string carName(CarType carType) {
-		switch (carType) {
-			case CarType.Engine:
-				return "Engine";
-			case CarType.General:
-				return "Basic";
-			case CarType.Workhouse:
-				return "Workhouse";
-			case CarType.Armory:
-				return "Armory";
-			case CarType.Refinery:
-				return "Refinery";
-			case CarType.Cannon:
-				return "Cannon";
-			case CarType.LivingQuarters:
-				return "Housing";
-			case CarType.CommandCenter:
-				return "Command";
-		}
-
-		AssertUtils.UnreachableCode($"unknown type {carType}");
-		return "";
 	}
 
 	private void initialCardSetup() {
