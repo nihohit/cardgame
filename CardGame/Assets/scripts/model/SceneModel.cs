@@ -12,15 +12,18 @@ public class SceneState {
 	public TrainState Train { get; }
 	public CardHandlingMode Mode { get; }
 	public EventCard CurrentEvent { get; }
+	public IEnumerable<Card> CurrentModeCards { get; }
 
 	public SceneState(CardsState cards, 
 		TrainState empire, 
 		CardHandlingMode mode,
-		EventCard currentEvent) {
+		EventCard currentEvent,
+		IEnumerable<Card> currentModeCards) {
 		Cards = cards;
 		Train = empire;
 		Mode = mode;
 		CurrentEvent = currentEvent;
+		CurrentModeCards = currentModeCards;
 	}
 }
 
@@ -45,6 +48,7 @@ public class SceneModel : ISceneModel {
 	private readonly ReplaySubject<SceneState> stateSubject = new ReplaySubject<SceneState>(1);
 	private readonly IEnumerator<Location> locations;
 	private Subject<bool> populationDiedSubject = new Subject<bool>();
+	private IEnumerable<Card> carCards;
 
 	public static SceneModel InitialSceneModel() {
 		var locationsEnumerator = new RandomLocationsGenerator().Locations().GetEnumerator();
@@ -83,6 +87,7 @@ public class SceneModel : ISceneModel {
 	public bool PlayCard(Card card) {
 		bool succeeded = false;
 		switch (mode) {
+			case CardHandlingMode.CarBuilding:
 			case CardHandlingMode.Regular:
 				succeeded = playRegularCard(card);
 				break;
@@ -108,10 +113,15 @@ public class SceneModel : ISceneModel {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
 		}
+		switchModeAccordingToCard(card);
+		if (card.CarOptionsToAdd != null) {
+			carCards = carBuildingCards(card)
+				.Select(carBuilding => carBuilding.CopyWithSource(card));
+			return true;
+		}
 		trainState = trainState.PlayCard(card);
 		cards = cards.PlayCard(card);
 		playedCards.Add(card);
-		switchModeAccordingToCard(card);
 		return true;
 	}
 
@@ -122,6 +132,33 @@ public class SceneModel : ISceneModel {
 		} else if (card.NumberOfCardsToChooseToDiscard > 0) {
 			mode = CardHandlingMode.Discard;
 			cardsToHandle = card.NumberOfCardsToChooseToDiscard;
+		} else if (card.CarOptionsToAdd != null) {
+			mode = CardHandlingMode.CarBuilding;
+		} else if (mode == CardHandlingMode.CarBuilding) {
+			mode = CardHandlingMode.Regular;
+		}
+	}
+
+	private IEnumerable<Card> carBuildingCards(Card card) {
+		yield return Card.MakeCard("Basic Car",
+			materialsChange: -1,
+			populationCost: 1,
+			carToAdd: new TrainCar(1, CarType.General));
+
+		var canUpgrade = trainState.Cars.Any(car => car.Type == CarType.General);
+		foreach(var carType in card.CarOptionsToAdd) {
+			if (canUpgrade) {
+				yield return Card.MakeCard($"Upgrade to {ModelGlobal.CarName(carType)}",
+					materialsChange: -1,
+					populationCost: 1,
+					carToAdd: new TrainCar(1, carType),
+					carToRemove: CarType.General);
+			}
+
+			yield return Card.MakeCard($"Build {ModelGlobal.CarName(carType)}",
+				materialsChange: -2,
+				populationCost: 1,
+				carToAdd: new TrainCar(1, carType));
 		}
 	}
 
@@ -181,6 +218,7 @@ public class SceneModel : ISceneModel {
 		switch (mode) {
 			case CardHandlingMode.Exhaust:
 			case CardHandlingMode.Discard:
+			case CardHandlingMode.CarBuilding:
 				mode = CardHandlingMode.Regular;
 				break;
 			case CardHandlingMode.Regular:
@@ -233,7 +271,23 @@ public class SceneModel : ISceneModel {
 	#endregion
 
 	private void sendCompletedState() {
-		stateSubject.OnNext(new SceneState(cards, trainState, mode, nextEvent));
+		IEnumerable<Card> currentModeCards = null;
+		switch(mode) {
+			case CardHandlingMode.CarBuilding:
+				currentModeCards = carCards;
+				break;
+			case CardHandlingMode.Discard:
+			case CardHandlingMode.Exhaust:
+				currentModeCards = cards.Hand;
+				break;
+			case CardHandlingMode.Regular:
+				break;
+			case CardHandlingMode.Event:
+				currentModeCards = nextEvent.Options;
+				break;
+		}
+
+		stateSubject.OnNext(new SceneState(cards, trainState, mode, nextEvent, currentModeCards));
 	}
 
 	private string eventCardName() {

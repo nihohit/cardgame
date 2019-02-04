@@ -1,14 +1,30 @@
 public enum TraditionType { None, Test, BaseTraditions }
 
-public enum CarType { None, Test, Engine, General, Workhouse, Armory, Refinery, Cannon, LivingQuarters, CommandCenter }
+public enum CarType {
+	None,
+	Test,
+	Engine,
+	General,
+	Workhouse,
+	Armory,
+	Refinery,
+	Cannon,
+	LivingQuarters,
+	CommandCenter
+}
 
-public enum CardHandlingMode { Regular, Event, Discard, Exhaust }
+public enum CardHandlingMode {
+	Regular,
+	Event,
+	Discard,
+	Exhaust,
+	CarBuilding
+}
 
 //TODO consider making into flags
 public enum LocationContent {
 	Test, 
 	Howitizer, 
-	Armory, 
 	Workhouse, 
 	TrainWreck, 
 	OldHouses, 

@@ -20,6 +20,7 @@ public class Card : BaseValueClass {
 	public Func<Card, bool> CardDrawingFilter { get; }
 	public bool DefaultChoice { get; }
 	public TrainCar CarToAdd { get; }
+	public IEnumerable<CarType> CarOptionsToAdd { get; }
 	public CarType CarToRemove { get; }
 	public bool LocationLimited { get; }
 	public CarType RequiresCar { get; }
@@ -43,6 +44,7 @@ public class Card : BaseValueClass {
 		bool defaultChoice,
 		CarType carToRemove,
 		TrainCar carToAdd,
+		IEnumerable<CarType> carOptionsToAdd,
 		bool locationLimited,
 		CarType requiresCar,
 		CarType modifiedByCar,
@@ -65,6 +67,7 @@ public class Card : BaseValueClass {
 		CardDrawingFilter = cardDrawingFilter;
 		DefaultChoice = defaultChoice;
 		CarToAdd = carToAdd;
+		CarOptionsToAdd = carOptionsToAdd;
 		CarToRemove = carToRemove;
 		LocationLimited = locationLimited;
 		RequiresCar = requiresCar;
@@ -89,6 +92,7 @@ public class Card : BaseValueClass {
 		bool defaultChoice = false,
 		CarType carToRemove = CarType.None,
 		TrainCar carToAdd = null,
+		IEnumerable<CarType> carOptionsToAdd = null,
 		bool locationLimited = false,
 		CarType requiresCar = CarType.None,
 		CarType modifiedByCar = CarType.None,
@@ -110,6 +114,7 @@ public class Card : BaseValueClass {
 			defaultChoice,
 			carToRemove,
 			carToAdd,
+			carOptionsToAdd,
 			locationLimited,
 			requiresCar,
 			modifiedByCar,
