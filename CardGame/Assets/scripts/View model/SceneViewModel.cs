@@ -12,6 +12,7 @@ public interface ISceneViewModel {
 	void setStayButtonClicked(IObservable<Unit> observable);
 	void setSelectedCardObservation(IObservable<Card> observable);
 	void setDeckWasClicked(IObservable<Unit> observable);
+	void StartNewGame(IEnumerable<CarType> initialCars);
 	#endregion
 
 	#region outputs
@@ -63,6 +64,13 @@ public class SceneViewModel : ISceneViewModel {
 
 	public void setStayButtonClicked(IObservable<Unit> observable) {
 		observable.Subscribe(_ => model.UserFinishedMode());
+	}
+
+	public void StartNewGame(IEnumerable<CarType> initialCars) {
+		if (initialCars.None(type => type != CarType.None)) {
+			return;
+		}
+		model.Initialize(initialCars);
 	}
 
 	#endregion
@@ -338,11 +346,12 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => state.Train.Cars);
 
 	public IObservable<bool> ShowEndGameScreen => model.State
-		.Select(state => state.Train.TotalPopulation <= 0);
+		.Select(state => state.Train.TotalPopulation <= 0)
+		.StartWith(true);
 	#endregion
 	#endregion
 
-	public SceneViewModel() : this(SceneModel.InitialSceneModel()) { }
+	public SceneViewModel() : this(new SceneModel()) { }
 
 	public SceneViewModel(ISceneModel model) {
 		this.model = model;

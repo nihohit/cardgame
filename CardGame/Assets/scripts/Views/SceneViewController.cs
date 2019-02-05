@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.UI.Dropdown;
 
 public class SceneViewController : MonoBehaviour {
 	public GameObject CardPrefab;
@@ -27,9 +28,13 @@ public class SceneViewController : MonoBehaviour {
 	private int currentCardAnimationsInProgress;
 	private TraditionScript[] traditionScripts;
 	private TrainViewScript trainView;
+	private Dropdown car1Dropdown;
+	private Dropdown car2Dropdown;
+	private Dropdown car3Dropdown;
 
 	void Start() {
 		setPrivateGameObjects();
+		setupViews();
 		setupViewModel();
 	}
 
@@ -45,6 +50,19 @@ public class SceneViewController : MonoBehaviour {
 			.ToArray();
 		trainView = FindObjectOfType<TrainViewScript>();
 		textBox = GameObject.Find("MainText").GetComponent<TextMeshProUGUI>();
+		car1Dropdown = GameObject.Find("Car1Dropdown").GetComponent<Dropdown>();
+		car2Dropdown = GameObject.Find("Car2Dropdown").GetComponent<Dropdown>();
+		car3Dropdown = GameObject.Find("Car3Dropdown").GetComponent<Dropdown>();
+	}
+
+	private void setupViews() {
+		var options = MyExtensions.GetValues<CarType>()
+			.Where(type => type != CarType.Test && type != CarType.Engine)
+			.Select(type => new OptionData(ModelGlobal.CarName(type)))
+			.ToList();
+		car1Dropdown.options = options;
+		car2Dropdown.options = options;
+		car3Dropdown.options = options;
 	}
 
 	private void setupViewModel() {
@@ -242,6 +260,18 @@ public class SceneViewController : MonoBehaviour {
 	}
 
 	public void EndGameButtonPressed() {
-		SceneManager.LoadScene("base");
+		viewModel.StartNewGame(new[]{
+			typeFromChoice(car1Dropdown.value),
+			typeFromChoice(car2Dropdown.value),
+			typeFromChoice(car3Dropdown.value),
+		});
+	}
+
+	private CarType typeFromChoice(int choice) {
+		if (choice == 0) {
+			return CarType.None;
+		}
+
+		return (CarType)(choice + 2);
 	}
 }

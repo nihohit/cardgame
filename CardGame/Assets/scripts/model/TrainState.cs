@@ -35,13 +35,10 @@ public class TrainState : BaseValueClass {
 		int materials,
 		int population,
 		int army,
+		IReadOnlyList<TrainCar> cars,
 		Location initialLocation,
 		Location nextLocation) {
-		var cars = new List<TrainCar> {
-			new TrainCar(0, CarType.Engine),
-			new TrainCar(1, CarType.General),
-			new TrainCar(1, CarType.CommandCenter)
-		};
+		population = Math.Min(population, livingSpaceForCars(cars));
 		return new TrainState(
 			fuel,
 			materials,
@@ -84,11 +81,11 @@ public class TrainState : BaseValueClass {
 		AssertUtils.EqualOrGreater(LivingSpace, TotalPopulation);
 	}
 
-	private int livingSpaceForCars(IEnumerable<TrainCar> cars) {
+	private static int livingSpaceForCars(IEnumerable<TrainCar> cars) {
 		return cars.Sum(car => spacePerCar(car.Type));
 	}
 
-	private int spacePerCar(CarType car) {
+	private static int spacePerCar(CarType car) {
 		switch (car) {
 			case CarType.LivingQuarters:
 				return 3;
