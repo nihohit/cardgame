@@ -146,7 +146,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
 		CollectionAssert.AreEqual(empty, state.Hand);
-		CollectionAssert.AreEqual(new[] { cardWithName("test") }, state.DiscardPile);
+		CollectionAssert.AreEqual(new[] { cardWithName("trainTest") }, state.DiscardPile);
 	}
 
 	[Test]
@@ -168,7 +168,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
 		CollectionAssert.AreEqual(empty, state.Hand);
-		CollectionAssert.AreEqual(new[] { cardWithName("test") }, state.DiscardPile);
+		CollectionAssert.AreEqual(new[] { cardWithName("trainTest") }, state.DiscardPile);
 	}
 
 	[Test]
@@ -185,7 +185,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(new[] { cardWithName("foo"), cardWithName("bar"), cardWithName("baz"), cardWithName("bro") }, state.CurrentDeck);
 		CollectionAssert.AreEqual(empty, state.Hand);
-		CollectionAssert.AreEqual(new[] { playedCard, cardWithName("test") }, state.DiscardPile);
+		CollectionAssert.AreEqual(new[] { playedCard, cardWithName("trainTest") }, state.DiscardPile);
 	}
 
 	[Test]
@@ -285,7 +285,7 @@ public class CardsStates {
 			carToAdd: new TrainCar(0, CarType.Test),
 			addTradition: TraditionType.Test
 		);
-		var tradition = new Tradition("foo", "test", "FuelChange", 1);
+		var tradition = new Tradition("foo", "trainTest", "FuelChange", 1);
 		Randomizer.SetTestableRandom(1);
 		var state = CardsState.NewState(new[] { card })
 			.AddTradition(tradition)
@@ -295,7 +295,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(empty, state.Hand);
-		CollectionAssert.AreEqual(new[] { card, Card.MakeCard("test", fuelChange: 1), }, state.DiscardPile);
+		CollectionAssert.AreEqual(new[] { card, Card.MakeCard("trainTest", fuelChange: 1), }, state.DiscardPile);
 	}
 
 	[Test]
@@ -305,7 +305,7 @@ public class CardsStates {
 			carToAdd: new TrainCar(0, CarType.Test),
 			addTradition: TraditionType.Test
 		);
-		var tradition = new Tradition("foo", "test", "FuelChange", 1);
+		var tradition = new Tradition("foo", "trainTest", "FuelChange", 1);
 		Randomizer.SetTestableRandom(1);
 		var state = CardsState.NewState(new[] { card })
 			.AddTradition(tradition)
@@ -318,7 +318,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] { card }, state.Hand);
-		CollectionAssert.AreEqual(new[] { Card.MakeCard("test", fuelChange: 1), }, state.DiscardPile);
+		CollectionAssert.AreEqual(new[] { Card.MakeCard("trainTest", fuelChange: 1), }, state.DiscardPile);
 	}
 
 	[Test]
@@ -382,7 +382,7 @@ public class CardsStates {
 			.DrawCardsToHand(1)
 			.DiscardHand();
 		
-		var testCard = Card.MakeCard("test");
+		var testCard = Card.MakeCard("trainTest");
 		CollectionAssert.AreEqual(new[] {card, testCard, testCard }, state.CurrentDeck);
 		CollectionAssert.AreEqual(new Card[] {}, state.Hand);
 		CollectionAssert.AreEqual(new[] { testCard }, state.DiscardPile);

@@ -9,7 +9,7 @@ using UnityEngine;
 
 public static class TrainCarsCardCollection {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
-		Card.MakeCard("test"),
+		Card.MakeCard("trainTest"),
 		Card.MakeCard("Manual Labour",
 			populationCost: 1,
 			materialsChange: 1
@@ -138,7 +138,7 @@ public static class TrainCarsCardCollection {
 
 	private static IEnumerable<Card> testDeck() {
 		return cards.objectForDictionary(new Dictionary<string, int>{
-			{"test", 1}
+			{"trainTest", 1}
 		});
 	}
 }
