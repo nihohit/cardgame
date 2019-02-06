@@ -21,7 +21,8 @@ public static class EventCardsCollections {
 					populationChange: -1
 				),
 				Card.MakeCard("Blow Them Away",
-					requiresCar:CarType.Cannon
+					requiresCar:CarType.Cannon,
+					materialsChange: -1
 				)
 			}
 		},
@@ -38,7 +39,8 @@ public static class EventCardsCollections {
 					populationChange: -1
 				),
 				Card.MakeCard("Blow Them Away",
-					requiresCar:CarType.Cannon
+					requiresCar:CarType.Cannon,
+					materialsChange: -1
 				)
 			}
 		},
@@ -129,7 +131,94 @@ public static class EventCardsCollections {
 				)
 			}
 		},
-	}.ToDictionary(card => card.Name, card => card));
+		new EventCard {
+			Name = "Trading Caravan",
+			Options = new Card[] {
+				Card.MakeCard("Pillage Them",
+					armyChange: -3,
+					materialsChange: 3,
+					fuelChange: 3,
+					modifiedByCar: CarType.Cannon,
+					carModifications: new Dictionary<string, int> {
+						{"ArmyChange", 2}
+					}
+				),
+				Card.MakeCard("Trade Materials",
+					materialsChange: -2,
+					fuelChange: 2
+				),
+				Card.MakeCard("Trade Fuel",
+					materialsChange: 2,
+					fuelChange: -2
+				),
+				Card.MakeCard("Leave")
+			}
+		},
+		new EventCard {
+			Name = "Convoy under Attack",
+			Options = new Card[] {
+				Card.MakeCard("Help with Defense",
+					armyChange: -2,
+					materialsChange: 3,
+					modifiedByCar: CarType.Cannon,
+					carModifications: new Dictionary<string, int> {
+						{"ArmyChange", 1}
+					}
+				),
+				Card.MakeCard("Accept Refugees",
+					populationChange: 1,
+					armyChange: -1
+				),
+				Card.MakeCard("Ignore")
+			}
+		},
+		new EventCard {
+			Name = "Obstacle on Tracks",
+			Options = new Card[] {
+				Card.MakeCard("Ram it through",
+					fuelChange: -2
+				),
+				Card.MakeCard("Stop and clear it",
+					populationCost: 1,
+					modifiedByCar: CarType.Workhouse,
+					carModifications: new Dictionary<string, int> {
+						{"MaterialsChange", 1}
+					}
+				),
+				Card.MakeCard("Blow it Away",
+					requiresCar:CarType.Cannon,
+					materialsChange: -1
+				)
+			}
+		},
+		new EventCard {
+			Name = "Mutiny on Train",
+			Options = new Card[] {
+				Card.MakeCard("Stop it by Force",
+					armyChange: -1
+				),
+				Card.MakeCard("Bribe the population",
+					materialsChange: -2,
+					modifiedByCar: CarType.LivingQuarters,
+					carModifications: new Dictionary<string, int> {
+						{"MaterialsChange", 1}
+					}
+				),
+				Card.MakeCard("Organize a counter-militia",
+					materialsChange: -3,
+					armyChange: 1,
+					modifiedByCar: CarType.Armory,
+					carModifications: new Dictionary<string, int> {
+						{"MaterialsChange", 1}
+					}
+				),
+				Card.MakeCard("Enforce Martial Law",
+					populationChange: -1,
+					armyChange: 1
+				)
+			}
+		},
+	}.ToDictionary(keySelector: card => card.Name));
 
 	public static EventCard EventCardForState(TrainState state) {
 		if (state.TotalPopulation < 5) {
@@ -143,9 +232,13 @@ public static class EventCardsCollections {
 
 	private static EventCard smallTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
-			{ "Raiders", 3},
-			{ "Wild animals", 3},
+			{ "Raiders", 2},
+			{ "Wild animals", 2},
 			{ "Minor plague", 1},
+			{ "Trading Caravan", 1},
+			{ "Convoy under Attack", 1},
+			{ "Obstacle on Tracks", 1},
+			{ "Mutiny on Train", 1},
 		}).Shuffle().First();	
 	}
 
