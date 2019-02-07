@@ -8,7 +8,7 @@ using UnityEngine;
 
 public static class TraditionsCollection {
 	private static BaseCollection<Tradition> traditions = new BaseCollection<Tradition>(new Tradition[] {
-		new Tradition("Test"),
+		new Tradition("traditionTest"),
 		new Tradition("Agricultural Tradition",
 			cardToEnhance:"Farming",
 			propertyToEnhance:"MaterialsChange",
@@ -69,7 +69,7 @@ public static class TraditionsCollection {
 
 	private static IEnumerable<Tradition> testDeck () {
 		return traditions.objectForDictionary(new Dictionary<string, int> {
-			{"Test", 1}
+			{"traditionTest", 1}
 		});
 	}
 }

@@ -208,9 +208,6 @@ public class SceneModel : ISceneModel {
 			UnityEngine.SceneManagement.SceneManager.LoadScene("base");
 		}
 		drawNewHand();
-		var lastPopulationCount = trainState.TotalPopulation;
-		trainState = trainState.NextTurnState();
-		populationDiedSubject.OnNext(lastPopulationCount > trainState.TotalPopulation);
 		EventUtils.LogStartTurnEvent(eventCardName(), trainState.ToString(), cards.Hand);
 		playedCards.Clear();
 	}
@@ -248,14 +245,18 @@ public class SceneModel : ISceneModel {
 		locations.MoveNext();
 		var nextLocation = locations.Current;
 		trainState = trainState.Drive(nextLocation);
+		endTurn();
 		cards = cards
 			.LeaveLocation()
+			.ShuffleDiscardToDeck()
 			.EnterLocation(trainState.CurrentLocation);
-		endTurn();
 		sendCompletedState();
 	}
 
-	private void endTurn() { 
+	private void endTurn() {
+		var lastPopulationCount = trainState.TotalPopulation;
+		trainState = trainState.NextTurnState();
+		populationDiedSubject.OnNext(lastPopulationCount > trainState.TotalPopulation);
 		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), trainState.ToString(), cards.Hand);
 		mode = CardHandlingMode.Event;
 		nextEvent = EventCardsCollections.EventCardForState(trainState);

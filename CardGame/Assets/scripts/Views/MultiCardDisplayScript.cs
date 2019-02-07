@@ -8,6 +8,7 @@ using UniRx;
 
 public class MultiCardDisplayScript : MonoBehaviour {
 	public string Description { get { return textMesh.text; } }
+	public GameObject sprite;
 	private TextMeshPro textMesh;
 	private readonly List<CardScript> cardScripts = new List<CardScript>();
 	private CardScriptPool cardPool;
@@ -21,6 +22,7 @@ public class MultiCardDisplayScript : MonoBehaviour {
 			internalRenderer.sortingLayerID = SortingLayer.NameToID("MultiCardDisplay");
 		}
 
+		sprite.transform.localScale = new Vector3(Screen.width, Screen.height, 1);
 	}
 
 	public void InitialSetup(CardScriptPool cardScriptPool) {

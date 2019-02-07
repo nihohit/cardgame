@@ -101,6 +101,7 @@ public class SceneViewController : MonoBehaviour {
 			multiCardDisplay.FinishWork();
 			deck.GetComponent<Collider2D>().enabled = true;
 			discardPile.GetComponent<Collider2D>().enabled = true;
+			textBox.enabled = true;
 		});
 		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair)
 			.Subscribe(setMultiCardDisplayCardSelectionObservation);
@@ -246,6 +247,7 @@ public class SceneViewController : MonoBehaviour {
 		viewModel.setSelectedCardObservation(multiCardDisplay.setup(pair.Key, pair.Value));
 		deck.GetComponent<Collider2D>().enabled = false;
 		discardPile.GetComponent<Collider2D>().enabled = false;
+		textBox.enabled = false;
 	}
 
 	private void updateTraditions(IEnumerable<Tradition> traditions) {

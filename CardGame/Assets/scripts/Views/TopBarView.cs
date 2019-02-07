@@ -54,7 +54,7 @@ public class TopBarView : MonoBehaviour {
 	}
 
 	public void SetDoneButtonText(string text) {
-		doneButton.GetComponentInChildren<Text>().text = text;
+		doneButton.GetComponentInChildren<TextMeshProUGUI>().text = text;
 	}
 
 	public void SetPopulationValue(string value) {
