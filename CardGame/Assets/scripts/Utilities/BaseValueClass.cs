@@ -122,7 +122,7 @@ public static class ValueClassExtensions {
 		var dictionary = source.AsDictionary();
 		values.ForEach(pair => {
 			var value = (int)dictionary.Get(pair.Key, typeof(T).ToString());
-			dictionary[pair.Key] = value + value;
+			dictionary[pair.Key] = value + pair.Value;
 		});
 
 		return dictionary.ToObject<T>();

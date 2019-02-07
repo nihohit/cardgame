@@ -208,6 +208,28 @@ public class BaseValueClassTests {
 	}
 
 	[Test]
+	public void ModifyIntegerValues() {
+		first.IntegerProperty = 2;
+		first.ClassProperty = new ReferenceValue();
+		first.StructProperty = new Value {
+			IntegerValue = 1
+		};
+		first.EnumerableProperty = new object[] { 1 };
+
+		var modificationValue = 3;
+		var result = first.CopyWithModifiedValues(new Dictionary<string, int> { { "IntegerProperty", modificationValue } });
+
+		var expected = new TestValueClass {
+			IntegerProperty = 5,
+			ClassProperty = first.ClassProperty,
+			StructProperty = first.StructProperty,
+			EnumerableProperty = first.EnumerableProperty
+		};
+
+		Assert.AreEqual(expected, result);
+	}
+
+	[Test]
 	public void SetStructValue() {
 		first.IntegerProperty = 2;
 		first.ClassProperty = new ReferenceValue();
