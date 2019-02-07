@@ -125,7 +125,9 @@ public class SceneModel : ISceneModel {
 		switchModeAccordingToCard(card);
 		if (card.CarOptionsToAdd != null) {
 			carCards = carBuildingCards(card)
-				.Select(carBuilding => carBuilding.CopyWithSource(card));
+				.Select(carBuilding => carBuilding
+					.CopyWithSource(card)
+					.MakeExhaustibleCopy());
 			return true;
 		}
 		trainState = trainState.PlayCard(card);
