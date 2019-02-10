@@ -287,7 +287,7 @@ public class CardsStates {
 		);
 		var tradition = new Tradition("foo", "trainTest", "FuelChange", 1);
 		Randomizer.SetTestableRandom(1);
-		var state = CardsState.NewState(new[] { card })
+		var state = CardsState.NewState(card.Yield())
 			.AddTradition(tradition)
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
@@ -307,7 +307,7 @@ public class CardsStates {
 		);
 		var tradition = new Tradition("foo", "trainTest", "FuelChange", 1);
 		Randomizer.SetTestableRandom(1);
-		var state = CardsState.NewState(new[] { card })
+		var state = CardsState.NewState(card.Yield())
 			.AddTradition(tradition)
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
@@ -317,7 +317,7 @@ public class CardsStates {
 		state = state.PlayCard(state.Hand.ToList()[1]);
 
 		CollectionAssert.AreEqual(empty, state.CurrentDeck);
-		CollectionAssert.AreEqual(new[] { card }, state.Hand);
+		CollectionAssert.AreEqual(card.Yield(), state.Hand);
 		CollectionAssert.AreEqual(new[] { Card.MakeCard("trainTest", fuelChange: 1), }, state.DiscardPile);
 	}
 
@@ -359,7 +359,7 @@ public class CardsStates {
 			
 		CollectionAssert.AreEqual(empty, state.CurrentDeck);
 		CollectionAssert.AreEqual(new[] {Card.MakeCard("foo")}, state.Hand);
-		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
+		CollectionAssert.AreEqual(card.Yield(), state.DiscardPile);
 	}
 	
 	[Test]
@@ -370,9 +370,7 @@ public class CardsStates {
 		);
 		var initialCards = new[] {
 			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
-			new[] {
-				card
-			},
+			card.Yield(),
 			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
 			TrainCarsCardCollection.CardsForTrainCar(CarType.Test),
 		}.SelectMany(collection => collection);
@@ -393,7 +391,7 @@ public class CardsStates {
 
 		CollectionAssert.AreEqual(new[] { testCard, testCard }, state.CurrentDeck);
 		CollectionAssert.AreEqual(new Card[] {}, state.Hand);
-		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
+		CollectionAssert.AreEqual(card.Yield(), state.DiscardPile);
 
 		state = state
 			.DrawCardsToHand(1)
@@ -428,14 +426,14 @@ public class CardsStates {
 		var card = Card.MakeCard("hi",
 			numberOfCardsToChooseToDraw: 2);
 
-		var state = CardsState.NewState(new[] { card }.Concat(initialDeck))
+		var state = CardsState.NewState(card.Yield().Concat(initialDeck))
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.PlayCard(card);
 
 		CollectionAssert.AreEqual(initialDeck.Skip(2), state.CurrentDeck);
 		CollectionAssert.AreEqual(initialDeck.Take(2), state.Hand);
-		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
+		CollectionAssert.AreEqual(card.Yield(), state.DiscardPile);
 	}
 
 	[Test]
@@ -444,7 +442,7 @@ public class CardsStates {
 		var card = Card.MakeCard("hi",
 			numberOfCardsToChooseToDraw: 5);
 
-		var state = CardsState.NewState(new[] { card }.Concat(initialDeck))
+		var state = CardsState.NewState(card.Yield().Concat(initialDeck))
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(2)
 			.DiscardCardFromHand(initialDeck[0])
@@ -462,7 +460,7 @@ public class CardsStates {
 			numberOfCardsToChooseToDraw: 1,
 			cardDrawingFilter: checkedCard => checkedCard.Name.Equals("baz"));
 
-		var state = CardsState.NewState(new[] { card }.Concat(initialDeck))
+		var state = CardsState.NewState(card.Yield().Concat(initialDeck))
 			.ShuffleCurrentDeck()
 			.DrawCardsToHand(1)
 			.PlayCard(card);
@@ -470,7 +468,7 @@ public class CardsStates {
 		CollectionAssert.AreEqual(
 			new Card[] { initialDeck[0], initialDeck[1], initialDeck[3] }, 
 			state.CurrentDeck);
-		CollectionAssert.AreEqual(new Card[] { initialDeck[2] }, state.Hand);
-		CollectionAssert.AreEqual(new[] { card }, state.DiscardPile);
+		CollectionAssert.AreEqual(initialDeck[2].Yield(), state.Hand);
+		CollectionAssert.AreEqual(card.Yield(), state.DiscardPile);
 	}
 }

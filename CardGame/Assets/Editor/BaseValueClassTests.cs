@@ -260,7 +260,7 @@ public class BaseValueClassTests {
 		first.StructProperty = new Value {
 			IntegerValue = 1
 		};
-		first.EnumerableProperty = new object[] { 1 };
+		first.EnumerableProperty = 1.Yield<object>();
 
 		var expectedValue = new ReferenceValue {
 			IntegerValue = 5
@@ -285,7 +285,7 @@ public class BaseValueClassTests {
 			IntegerValue = 1
 		};
 
-		var expectedValue = new List<object> { 1 };
+		var expectedValue = 1.Yield<object>();
 		var result = first.CopyWithSetValue("EnumerableProperty", expectedValue);
 
 		var expected = new TestValueClass {
@@ -305,7 +305,7 @@ public class BaseValueClassTests {
 		first.StructProperty = new Value {
 			IntegerValue = 1
 		};
-		first.EnumerableProperty = new object[] { 1 };
+		first.EnumerableProperty = 1.Yield<object>();
 		var copy = first.AsDictionary().ToObject<TestValueClass>();
 
 		Assert.AreEqual(first, copy);
@@ -318,7 +318,7 @@ public class BaseValueClassTests {
 		first.StructProperty = new Value {
 			IntegerValue = 1
 		};
-		first.EnumerableProperty = new object[] { 1 };
+		first.EnumerableProperty = 1.Yield<object>();
 		var dictionary = first.AsDictionary();
 		dictionary.Remove("ClassProperty");
 		var copy = dictionary.ToObject<TestValueClass>();
