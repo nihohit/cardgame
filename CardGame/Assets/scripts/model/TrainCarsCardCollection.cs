@@ -56,7 +56,7 @@ public static class TrainCarsCardCollection {
 			fuelChange: -1,
 			customDescription: "only location cards"
 		),
-	}.ToDictionary(card => card.Name, card => card));
+	}.ToDictionary(keySelector: card => card.Identifier));
 
 
 	public static IEnumerable<Card> BaseCards(IEnumerable<CarType> initialCars) {

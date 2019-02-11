@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Card : BaseValueClass {
   public string Name { get; }
+	public string Identifier { get; }
 	public Card Source { get; }
 	public int PopulationCost { get; }
 	public int FuelChange { get; }
@@ -29,6 +30,7 @@ public class Card : BaseValueClass {
 	public string CustomDescription { get; }
 
 	protected Card(string name,
+		string identifier,
 		Card source,
 		int populationCost,
 		int fuelChange,
@@ -53,6 +55,7 @@ public class Card : BaseValueClass {
 		AssertUtils.AreEqual(ModifiedByCar == CarType.None, 
 			CarModifications == null);
 		Name = name;
+		Identifier = identifier;
 		Source = source;
 		PopulationCost = populationCost;
 		FuelChange = fuelChange;
@@ -78,6 +81,7 @@ public class Card : BaseValueClass {
 
 	public static Card MakeCard(
 		string name,
+		string identifier = null,
 		int populationCost = 0,
 		int fuelChange = 0, 
 		int materialsChange = 0, 
@@ -99,6 +103,7 @@ public class Card : BaseValueClass {
 		Dictionary<string, int> carModifications = null,
 		string customDescription = null) {
 		return new Card(name,
+			identifier ?? name,
 			null,
 			populationCost,
 			fuelChange,

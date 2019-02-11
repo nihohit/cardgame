@@ -125,7 +125,7 @@ public static class LocationBasedCards {
 	}
 		.Select(card => card.MakeExhaustibleCopy())
 		.Select(card => card.MakeLocationLimitedCopy())
-		.ToDictionary(card => card.Name, card => card));
+		.ToDictionary(keySelector: card => card.Identifier));
 
 	public static IEnumerable<Card> CardsForContent(LocationContent content) {
 		return internalCardsForContent(content);
