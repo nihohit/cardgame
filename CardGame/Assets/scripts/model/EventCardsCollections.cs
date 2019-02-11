@@ -104,7 +104,7 @@ public static class EventCardsCollections {
 			}
 		},
 		new EventCard {
-			Name = "Natural disaster1",
+			Name = "Natural Disaster",
 			Options = new Card[] {
 				Card.MakeCard("Rebuild",
 					materialsChange: -5
@@ -252,16 +252,16 @@ public static class EventCardsCollections {
 	private static EventCard mediumTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "plague", 2},
-			{ "Wild animals", 1},
+			{ "Wild Animals", 1},
 			{ "Famine", 1},
-			{ "Natural disaster1", 1},
+			{ "Natural Disaster", 1},
 		}).Shuffle().First();
 	}
 
 	private static EventCard largeTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "Famine", 1},
-			{ "Natural disaster1", 1},
+			{ "Natural Disaster", 1},
 			{ "Animal Attacks", 1},
 		}).Shuffle().First();
 	}
