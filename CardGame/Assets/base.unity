@@ -2405,6 +2405,63 @@ Prefab:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_lineSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_paragraphSpacing
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_text
+      value: 'Only location cards which are
+
+        different line'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_textInfo.characterCount
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_textInfo.spaceCount
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_textInfo.wordCount
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_textInfo.lineCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_enableExtraPadding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: checkPaddingRequired
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_enableAutoSizing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114163570012613158, guid: 6484712b196d06541a9da401f022486f,
+        type: 2}
+      propertyPath: m_fontSize
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6484712b196d06541a9da401f022486f, type: 2}
   m_IsPrefabAsset: 0
