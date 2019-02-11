@@ -42,8 +42,7 @@ public class CardsState : BaseValueClass {
   }
 
   public CardsState ShuffleCurrentDeck() {
-    var deckAsList = PersistentDeck.ToList();
-    return makeState(currentDeck: deckAsList.Shuffle().ToList());
+    return makeState(currentDeck: PersistentDeck.Shuffle().ToList());
   }
 
   public CardsState DiscardCardFromHand(Card card) {
@@ -110,11 +109,41 @@ public class CardsState : BaseValueClass {
 	public CardsState PlayCard(Card card) {
     var state = card.Exhaustible ? ExhaustCardFromHand(card) : DiscardCardFromHand(card);
     return state
-			.AddCardsToDiscard(card.CarToAdd == null ? new Card[0] : TrainCarsCardCollection.CardsForTrainCar(card.CarToAdd.Type))
-	    .removeCards(TrainCarsCardCollection.CardsForTrainCar(card.CarToRemove))
+			.removeCards(cardsToRemove(card))
 			.drawCardsToHand(card.NumberOfCardsToDraw, card.CardDrawingFilter)
+			.AddCardsToDiscard(cardsToAddToDiscard(card))
+			.addCardsToHand(cardsToAddToHand(card))
+			.addCardsToTopOfDeck(cardsToAddToTopOfDeck(card))
 			.addTraditions(TraditionsCollection.TraditionsForDeck(card.AddTradition));
   }
+
+	private IEnumerable<Card> cardsToAddToDiscard(Card card) {
+		var trainCards = card.CarToAdd == null ? Enumerable.Empty<Card>() :
+			TrainCarsCardCollection.CardsForTrainCar(card.CarToAdd.Type);
+		return trainCards
+			.Concat(card.StoryCardsToAddToDiscard.Select(StoryCardsCollection.GetCard));
+	}
+
+	private IEnumerable<Card> cardsToAddToTopOfDeck(Card card) {
+		return card.StoryCardsToAddToTopOfDeck.Select(StoryCardsCollection.GetCard);
+	}
+
+	private IEnumerable<Card> cardsToAddToHand(Card card) {
+		return card.StoryCardsToAddToHand.Select(StoryCardsCollection.GetCard);
+	}
+
+	private IEnumerable<Card> cardsToRemove(Card card) {
+		return TrainCarsCardCollection.CardsForTrainCar(card.CarToRemove)
+			.Concat(card.StoryCardsToRemove.Select(StoryCardsCollection.GetCard));
+	}
+
+	private CardsState addCardsToHand(IEnumerable<Card> cards) {
+		return makeState(hand: Hand.Concat(cards).ToList());
+	}
+
+	private CardsState addCardsToTopOfDeck(IEnumerable<Card> cards) {
+		return makeState(currentDeck: cards.Concat(CurrentDeck).ToList());
+	}
 
 	private CardsState addTraditions(IEnumerable<Tradition> traditions) {
 		var cardState = this;
@@ -190,7 +219,13 @@ public class CardsState : BaseValueClass {
 	}
 
 	public CardsState EnterLocation(Location location) {
-		var newCards = location.Content.SelectMany(content => LocationBasedCards.CardsForContent(content))
+		var storyCardEnumeration = location.StoryEvent
+			.Yield()
+			.Select(StoryCardsCollection.GetCard);
+		var newCards = location.Content
+			.SelectMany(LocationBasedCards.CardsForContent)
+			.Concat(storyCardEnumeration)
+			.Select(card => card.MakeLocationLimitedCopy())
 			.Shuffle();
 		return makeState(currentDeck: CurrentDeck.Interleave(newCards).ToList());
 	}

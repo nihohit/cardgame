@@ -499,4 +499,136 @@ public class CardsStates {
 		CollectionAssert.AreEqual(empty, state.Hand);
 		CollectionAssert.AreEqual(empty, state.DiscardPile);
 	}
+
+	[Test]
+	public void ShouldAddAndRemoveStoryCardsWhenEnteringLocation() {
+		Randomizer.SetTestableRandom(4);
+		var location = new Location("foo", new LocationContent[0],
+			storyEvent: "storyTest");
+
+		var expectedCard = cardWithName("storyTest").MakeLocationLimitedCopy();
+
+		var state = CardsState.NewState(initialDeck)
+			.ShuffleCurrentDeck()
+			.EnterLocation(location);
+
+		var expectedDeck = new[] { expectedCard }.Concat(initialDeck);
+		CollectionAssert.AreEquivalent(expectedDeck, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+
+		state = state.LeaveLocation();
+
+		CollectionAssert.AreEqual(initialDeck, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldAddStoryCardsToHand() {
+		var card = Card.MakeCard("hi",
+			storyCardsToAddToHand: new[] { "storyTest" },
+			exhaustible: true);
+
+		var state = CardsState.NewState(card.Yield())
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(new[] { cardWithName("storyTest") }, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldAddStoryCardsToDiscard() {
+		var card = Card.MakeCard("hi",
+			storyCardsToAddToDiscard: new[] { "storyTest" },
+			exhaustible: true);
+
+		var state = CardsState.NewState(card.Yield())
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(new[] { cardWithName("storyTest") }, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldAddStoryCardsToTopOfDeck() {
+		var card = Card.MakeCard("hi",
+			storyCardsToAddToTopOfDeck: new[] { "storyTest" },
+			exhaustible: true);
+
+		var state = CardsState.NewState(new[] { card, card })
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(1)
+			.PlayCard(card);
+
+		CollectionAssert.AreEqual(new[] { cardWithName("storyTest"), card }, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldRemoveStoryCardsFromHand() {
+		var card = Card.MakeCard("hi",
+			storyCardsToAddToHand: new[] { "storyTest" },
+			exhaustible: true);
+		var removeCard = Card.MakeCard("bye",
+			storyCardsToRemove: new[] { "storyTest" },
+			exhaustible: true);
+
+		var state = CardsState.NewState(new[] { card, removeCard })
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(2)
+			.PlayCard(card)
+			.PlayCard(removeCard);
+
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldRemoveStoryCardsFromDeck() {
+		var card = Card.MakeCard("hi",
+			storyCardsToAddToTopOfDeck: new[] { "storyTest" },
+			exhaustible: true);
+		var removeCard = Card.MakeCard("bye",
+			storyCardsToRemove: new[] { "storyTest" },
+			exhaustible: true);
+
+		var state = CardsState.NewState(new[] { card, removeCard })
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(2)
+			.PlayCard(card)
+			.PlayCard(removeCard);
+
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
+
+	[Test]
+	public void ShouldRemoveStoryCardsFromDiscard() {
+		var card = Card.MakeCard("hi",
+			storyCardsToAddToDiscard: new[] { "storyTest" },
+			exhaustible: true);
+		var removeCard = Card.MakeCard("bye",
+			storyCardsToRemove: new[] { "storyTest" },
+			exhaustible: true);
+
+		var state = CardsState.NewState(new[] { card, removeCard })
+			.ShuffleCurrentDeck()
+			.DrawCardsToHand(2)
+			.PlayCard(card)
+			.PlayCard(removeCard);
+
+		CollectionAssert.AreEqual(empty, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
 }
