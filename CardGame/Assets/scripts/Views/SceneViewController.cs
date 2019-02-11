@@ -103,7 +103,10 @@ public class SceneViewController : MonoBehaviour {
 			discardPile.GetComponent<Collider2D>().enabled = true;
 			textBox.enabled = true;
 		});
-		Observable.Zip(viewModel.CardsInMultiDisplay, viewModel.TextForMultiDisplay, toCardsTextPair)
+		Observable.Zip(viewModel.TitleForMultiDisplay,
+			viewModel.DescriptionForMultiDisplay,
+			viewModel.CardsInMultiDisplay, 
+			multiCardDisplayTuple)
 			.Subscribe(setMultiCardDisplayCardSelectionObservation);
 		viewModel.Traditions
 			.DistinctUntilChanged()
@@ -239,12 +242,14 @@ public class SceneViewController : MonoBehaviour {
 		return deckRight + new Vector3((spacePerCard * index) + (size.x / 2) + spacingPerCard, 0, 0);
 	}
 
-	private KeyValuePair<IEnumerable<CardDisplayModel>, string> toCardsTextPair(IEnumerable<CardDisplayModel> cards, string text) {
-		return new KeyValuePair<IEnumerable<CardDisplayModel>, string>(cards, text);
-	}
+	private Tuple<string, string, IEnumerable<CardDisplayModel>> multiCardDisplayTuple(string title,
+		string description, 
+		IEnumerable<CardDisplayModel> cards) => 
+		new Tuple<string, string, IEnumerable<CardDisplayModel>>(title, description, cards);
 
-	private void setMultiCardDisplayCardSelectionObservation(KeyValuePair<IEnumerable<CardDisplayModel>, string> pair) {
-		viewModel.setSelectedCardObservation(multiCardDisplay.setup(pair.Key, pair.Value));
+	private void setMultiCardDisplayCardSelectionObservation(
+		Tuple<string, string, IEnumerable<CardDisplayModel>> tuple) {
+		viewModel.setSelectedCardObservation(multiCardDisplay.setup(tuple.Item1, tuple.Item2, tuple.Item3));
 		deck.GetComponent<Collider2D>().enabled = false;
 		discardPile.GetComponent<Collider2D>().enabled = false;
 		textBox.enabled = false;

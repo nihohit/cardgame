@@ -7,14 +7,17 @@ using System;
 using UniRx;
 
 public class MultiCardDisplayScript : MonoBehaviour {
-	public string Description { get { return textMesh.text; } }
+	public string Title { get { return titleBox.text; } }
+	public string Description { get { return descriptionBox.text; } }
 	public GameObject sprite;
-	private TextMeshPro textMesh;
+	private TextMeshPro titleBox;
+	private TextMeshPro descriptionBox;
 	private readonly List<CardScript> cardScripts = new List<CardScript>();
 	private CardScriptPool cardPool;
 
 	private void Awake() {
-		textMesh = GetComponentInChildren<TextMeshPro>();
+		titleBox = transform.Find("Title").GetComponent<TextMeshPro>();
+		descriptionBox = transform.Find("Description").GetComponent<TextMeshPro>();
 		foreach (var text in GetComponentsInChildren<TextMeshPro>()) {
 			text.sortingLayerID = SortingLayer.NameToID("MultiCardDisplay");
 		}
@@ -29,9 +32,13 @@ public class MultiCardDisplayScript : MonoBehaviour {
 		cardPool = cardScriptPool;
 	}
 
-	public IObservable<Card> setup(IEnumerable<CardDisplayModel> cards, string description) {
+	public IObservable<Card> setup( 
+		string title,
+		string description,
+		IEnumerable<CardDisplayModel> cards) {
 		gameObject.SetActive(true);
-		textMesh.text = description;
+		titleBox.text = title;
+		descriptionBox.text = description;
 		releaseCards();
 		return setupCardScripts(cards);
 	}

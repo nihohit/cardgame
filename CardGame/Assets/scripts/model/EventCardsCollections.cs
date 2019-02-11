@@ -10,6 +10,7 @@ public static class EventCardsCollections {
 	private static BaseCollection<EventCard> events = new BaseCollection<EventCard>(new EventCard[] {
 		new EventCard {
 			Name = "Raiders",
+			Description = "Small buggies appear over carefully conceled positions, and on them you see several well armed men. They shout over a loudspeaker \"Your fuel or your life\".",
 			Options = new Card[] {
 				Card.MakeCard("Pay them off",
 					fuelChange: -1
@@ -27,7 +28,8 @@ public static class EventCardsCollections {
 			}
 		},
 		new EventCard {
-			Name = "Wild animals",
+			Name = "Wild Animals",
+			Description = "During the latest stop several wolves have been seen around the train. your scouts are afraid that they will be attacked.",
 			Options = new Card[] {
 				Card.MakeCard("Build traps",
 					materialsChange: -2
@@ -45,7 +47,8 @@ public static class EventCardsCollections {
 			}
 		},
 		new EventCard {
-			Name = "Minor plague",
+			Name = "Minor Plague",
+			Description = "Some disease is making the rounds through the train, and will kill scores if not properly contained.",
 			Options = new Card[] {
 				Card.MakeCard("Buy medicine",
 					fuelChange: -2
@@ -79,7 +82,7 @@ public static class EventCardsCollections {
 				),
 				Card.MakeCard("Lose people and productivity",
 					populationChange: -1,
-					materialsChange: -1,
+					populationCost: -1,
 					defaultChoice: true
 				)
 			}
@@ -133,6 +136,7 @@ public static class EventCardsCollections {
 		},
 		new EventCard {
 			Name = "Trading Caravan",
+			Description = "You meet an armed trading caravan. When they hear of your journey, they offer a trade at their best rates.",
 			Options = new Card[] {
 				Card.MakeCard("Pillage Them",
 					armyChange: -3,
@@ -156,8 +160,9 @@ public static class EventCardsCollections {
 		},
 		new EventCard {
 			Name = "Convoy under Attack",
+			Description = "You see a lightly-armed trading caravan attacked by raiders.",
 			Options = new Card[] {
-				Card.MakeCard("Help with Defense",
+				Card.MakeCard("Defend Them",
 					armyChange: -2,
 					materialsChange: 3,
 					modifiedByCar: CarType.Cannon,
@@ -174,6 +179,7 @@ public static class EventCardsCollections {
 		},
 		new EventCard {
 			Name = "Obstacle on Tracks",
+			Description = "An avalanche of trees and rocks is blocking the tracks. You cannot continue without disposing of them in some way.",
 			Options = new Card[] {
 				Card.MakeCard("Ram it through",
 					fuelChange: -2
@@ -192,7 +198,8 @@ public static class EventCardsCollections {
 			}
 		},
 		new EventCard {
-			Name = "Mutiny on Train",
+			Name = "Mutiny!",
+			Description = "Some people on the train have had it with your leadership, and are up at arms! How will you restore control of the train?",
 			Options = new Card[] {
 				Card.MakeCard("Stop it by Force",
 					armyChange: -1
@@ -233,12 +240,12 @@ public static class EventCardsCollections {
 	private static EventCard smallTrainCard() {
 		return events.objectForDictionary(new Dictionary<string, int> {
 			{ "Raiders", 2},
-			{ "Wild animals", 2},
-			{ "Minor plague", 1},
+			{ "Wild Animals", 2},
+			{ "Minor Plague", 1},
 			{ "Trading Caravan", 1},
 			{ "Convoy under Attack", 1},
 			{ "Obstacle on Tracks", 1},
-			{ "Mutiny on Train", 1},
+			{ "Mutiny!", 1},
 		}).Shuffle().First();	
 	}
 

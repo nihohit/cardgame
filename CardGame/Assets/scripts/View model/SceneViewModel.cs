@@ -27,7 +27,8 @@ public interface ISceneViewModel {
 	IObservable<bool> DisplayStayButton { get; }
 	IObservable<bool> DisplayDriveButton { get; }
 	IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay { get; }
-	IObservable<string> TextForMultiDisplay { get; }
+	IObservable<string> TitleForMultiDisplay { get; }
+	IObservable<string> DescriptionForMultiDisplay { get; }
 	IObservable<string> TextForDoneButton { get; }
 	IObservable<Unit> HideMultiDisplay { get; }
 	IObservable<IEnumerable<CardMovementInstruction>> CardMovementInstructions { get; }
@@ -181,11 +182,11 @@ public class SceneViewModel : ISceneViewModel {
 		return state.CurrentModeCards.Select(card => displayModel(card, state.Train));
 	}
 
-	public IObservable<string> TextForMultiDisplay => model.State
+	public IObservable<string> TitleForMultiDisplay => model.State
 		.Where(state => state.Mode != CardHandlingMode.Regular)
-		.Select(stateMultiCardDescription);
+		.Select(stateMultiCardTitle);
 
-	private string stateMultiCardDescription(SceneState state) {
+	private string stateMultiCardTitle(SceneState state) {
 		switch (state.Mode) {
 			case CardHandlingMode.Exhaust:
 				return "Choose cards to exhaust";
@@ -200,6 +201,19 @@ public class SceneViewModel : ISceneViewModel {
 				break;
 		}
 		return null;
+	}
+
+	public IObservable<string> DescriptionForMultiDisplay => model.State
+		.Where(state => state.Mode != CardHandlingMode.Regular)
+		.Select(stateMultiCardTescription);
+
+	private string stateMultiCardTescription(SceneState state) {
+		switch (state.Mode) {
+			case CardHandlingMode.Event:
+				return state.CurrentEvent.Description;
+			default:
+				return string.Empty;
+		}
 	}
 
 	public IObservable<string> TextForDoneButton => model.State
