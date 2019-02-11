@@ -13,27 +13,37 @@ public class CardsState : BaseValueClass {
   public IReadOnlyList<Card> Hand { get; }
 	public IReadOnlyList<Tradition> Traditions { get; }
 
-	private CardsState(IEnumerable<Card> persistentDeck, 
-    IEnumerable<Card> currentDeck = null,
-    IEnumerable<Card> discardPile = null,
-    IEnumerable<Card> hand = null,
-		IEnumerable<Tradition> traditions = null) {
-    PersistentDeck = persistentDeck.ToList();
-    CurrentDeck = (currentDeck ?? Enumerable.Empty<Card>()).ToList();
-    DiscardPile = (discardPile ?? Enumerable.Empty<Card>()).ToList();
-    Hand = (hand ?? Enumerable.Empty<Card>()).ToList();
-		Traditions = (traditions ?? Enumerable.Empty<Tradition>()).ToList();
+	private CardsState(IReadOnlyList<Card> persistentDeck,
+		IReadOnlyList<Card> currentDeck,
+		IReadOnlyList<Card> discardPile,
+		IReadOnlyList<Card> hand,
+		IReadOnlyList<Tradition> traditions) {
+    PersistentDeck = persistentDeck;
+    CurrentDeck = currentDeck;
+    DiscardPile = discardPile;
+    Hand = hand;
+		Traditions = traditions;
+	}
+
+	private CardsState makeState(IReadOnlyList<Card> persistentDeck = null,
+		IReadOnlyList<Card> currentDeck = null,
+		IReadOnlyList<Card> discardPile = null,
+		IReadOnlyList<Card> hand = null,
+		IReadOnlyList<Tradition> traditions = null) {
+		return new CardsState(persistentDeck ?? PersistentDeck,
+			currentDeck ?? CurrentDeck,
+			discardPile ?? DiscardPile,
+			hand ?? Hand,
+			traditions ?? Traditions);
 	}
 
   public static CardsState NewState(IEnumerable<Card> deck) {
-    return new CardsState(deck);
+    return new CardsState(deck.ToList(), new Card[0], new Card[0], new Card[0], new Tradition[0]);
   }
 
   public CardsState ShuffleCurrentDeck() {
     var deckAsList = PersistentDeck.ToList();
-    return new CardsState(PersistentDeck, 
-			currentDeck: deckAsList.Shuffle(),
-			traditions: Traditions);
+    return makeState(currentDeck: deckAsList.Shuffle().ToList());
   }
 
   public CardsState DiscardCardFromHand(Card card) {
@@ -41,14 +51,14 @@ public class CardsState : BaseValueClass {
   }
 
   public CardsState ExhaustCardFromHand(Card card) {
-    var clearedHand = Hand.RemoveSingleCardIdentity(card);
-    return new CardsState(PersistentDeck, CurrentDeck, DiscardPile, clearedHand, Traditions);
+    var clearedHand = Hand.RemoveSingleCardIdentity(card).ToList();
+    return makeState(hand: clearedHand);
   }
 
   public CardsState DiscardHand() {
     var discardList = DiscardPile.ToList();
     discardList.AddRange(Hand);
-    return new CardsState(PersistentDeck, CurrentDeck, discardList , null, Traditions);
+    return makeState(discardPile: discardList , hand: new Card[0]);
   }
 
 	public CardsState DrawCardsToHand(int numberOfCardsToDraw) {
@@ -70,14 +80,13 @@ public class CardsState : BaseValueClass {
 		firstCards.ForEach(card => {
 			currentDeckList.Remove(card);
 		});
-    return new CardsState(PersistentDeck, currentDeckList, DiscardPile, newHand, Traditions);
+    return makeState(currentDeck: currentDeckList,hand: newHand);
   }
 
   public CardsState ShuffleDiscardToDeck() {
-    var discardAsList = DiscardPile.ToList();
     var deckAsList = CurrentDeck.ToList();
-    deckAsList.AddRange(discardAsList);
-    return new CardsState(PersistentDeck, deckAsList.Shuffle(), null, Hand, Traditions);
+    deckAsList.AddRange(DiscardPile.Shuffle());
+    return makeState(currentDeck: deckAsList, discardPile: new Card[0]);
   }
 
   public CardsState AddCardsToDiscard(IEnumerable<Card> cards) {
@@ -130,11 +139,10 @@ public class CardsState : BaseValueClass {
 
 			handAsList = handAsList.RemoveSingleCarEquality(card).ToList();
 		}
-		return new CardsState(PersistentDeck,
-			currentDeckAsList,
-			discardAsList,
-			handAsList,
-			Traditions);
+		return makeState(
+			currentDeck: currentDeckAsList,
+			discardPile: discardAsList,
+			hand: handAsList);
 	}
 
 	public CardsState AddTradition(Tradition tradition) {
@@ -142,10 +150,10 @@ public class CardsState : BaseValueClass {
 		traditions.Add(tradition);
 		var modifyCardFunction = modifyCardWithTradition(tradition, false);
 		return new CardsState(
-			PersistentDeck.Select(modifyCardFunction),
-			CurrentDeck.Select(modifyCardFunction),
-			DiscardPile.Select(modifyCardFunction),
-			Hand.Select(modifyCardFunction),
+			PersistentDeck.Select(modifyCardFunction).ToList(),
+			CurrentDeck.Select(modifyCardFunction).ToList(),
+			DiscardPile.Select(modifyCardFunction).ToList(),
+			Hand.Select(modifyCardFunction).ToList(),
 			traditions);
 	}
 
@@ -167,29 +175,23 @@ public class CardsState : BaseValueClass {
 		traditions.Remove(tradition);
 		var modifyCardFunction = modifyCardWithTradition(tradition, true);
 		return new CardsState(
-			PersistentDeck.Select(modifyCardFunction),
-			CurrentDeck.Select(modifyCardFunction),
-			DiscardPile.Select(modifyCardFunction),
-			Hand.Select(modifyCardFunction),
+			PersistentDeck.Select(modifyCardFunction).ToList(),
+			CurrentDeck.Select(modifyCardFunction).ToList(),
+			DiscardPile.Select(modifyCardFunction).ToList(),
+			Hand.Select(modifyCardFunction).ToList(),
 			traditions);
 	}
 
 	public CardsState LeaveLocation() {
-		return new CardsState(PersistentDeck,
-			CurrentDeck.RemoveLocationCards(),
-			DiscardPile.RemoveLocationCards(),
-			Hand.RemoveLocationCards(),
-			Traditions);
+		return makeState(
+			currentDeck: CurrentDeck.RemoveLocationCards().ToList(),
+			discardPile: DiscardPile.RemoveLocationCards().ToList(),
+			hand: Hand.RemoveLocationCards().ToList());
 	}
 
 	public CardsState EnterLocation(Location location) {
-		var locationCards = location.Content
-			.SelectMany(content => LocationBasedCards.CardsForContent(content));
-		var newCards = modifyCardsWithTraditions(locationCards);
-		return new CardsState(PersistentDeck,
-			CurrentDeck.Interleave(newCards),
-			DiscardPile,
-			Hand,
-			Traditions);
+		var newCards = location.Content.SelectMany(content => LocationBasedCards.CardsForContent(content))
+			.Shuffle();
+		return makeState(currentDeck: CurrentDeck.Interleave(newCards).ToList());
 	}
 }
