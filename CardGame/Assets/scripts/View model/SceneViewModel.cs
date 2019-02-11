@@ -154,7 +154,7 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => {
 			switch (state.Mode) {
 				case CardHandlingMode.Regular:
-					return !state.Train.CanDrive();
+					return !state.Train.CanDrive() && canAdvanceTurn(state);
 				case CardHandlingMode.Exhaust:
 				case CardHandlingMode.Discard:
 				case CardHandlingMode.Event:
@@ -166,12 +166,18 @@ public class SceneViewModel : ISceneViewModel {
 		});
 	
 	public IObservable<bool> DisplayDriveButton => model.State
-		.Select(state => state.Mode == CardHandlingMode.Regular &&
-						state.Train.CanDrive());
-	
+		.Select(state => canDrive(state) && canAdvanceTurn(state));
+
 	public IObservable<bool> DisplayStayButton => model.State
-		.Select(state => state.Mode == CardHandlingMode.Regular &&
-		                 state.Train.CanDrive());
+		.Select(state => canDrive(state) && canAdvanceTurn(state));
+
+	private bool canDrive(SceneState state) {
+		return state.Mode == CardHandlingMode.Regular && state.Train.CanDrive();
+	}
+
+	private bool canAdvanceTurn(SceneState state) {
+		return state.Cards.Hand.None(card => card.TurnEndBlocker);
+	}
 
 	public IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay => model.State
 		.Where(state => state.Mode != CardHandlingMode.Regular)

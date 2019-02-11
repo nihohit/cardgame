@@ -94,6 +94,10 @@ public class CardScript : MonoBehaviour {
 			yield return "Default choice";
 		}
 
+		if (card.TurnEndBlocker) {
+			yield return "Turn Blocker";
+		}
+
 		if (card.Exhaustible) {
 			yield return "Single use";
 		}

@@ -28,6 +28,7 @@ public class Card : BaseValueClass {
 	public CarType ModifiedByCar { get; }
 	public Dictionary<string, int> CarModifications { get; }
 	public string CustomDescription { get; }
+	public bool TurnEndBlocker { get; }
 
 	protected Card(string name,
 		string identifier,
@@ -51,7 +52,8 @@ public class Card : BaseValueClass {
 		CarType requiresCar,
 		CarType modifiedByCar,
 		Dictionary<string, int> carModifications,
-		string customDescription) {
+		string customDescription,
+		bool turnEndBlocker) {
 		AssertUtils.AreEqual(ModifiedByCar == CarType.None, 
 			CarModifications == null);
 		Name = name;
@@ -77,6 +79,7 @@ public class Card : BaseValueClass {
 		ModifiedByCar = modifiedByCar;
 		CarModifications = carModifications;
 		CustomDescription = customDescription;
+		TurnEndBlocker = turnEndBlocker;
 	}
 
 	public static Card MakeCard(
@@ -101,7 +104,8 @@ public class Card : BaseValueClass {
 		CarType requiresCar = CarType.None,
 		CarType modifiedByCar = CarType.None,
 		Dictionary<string, int> carModifications = null,
-		string customDescription = null) {
+		string customDescription = null,
+		bool turnEndBlocker = false) {
 		return new Card(name,
 			identifier ?? name,
 			null,
@@ -123,8 +127,9 @@ public class Card : BaseValueClass {
 			locationLimited,
 			requiresCar,
 			modifiedByCar,
-			carModifications, 
-			customDescription);
+			carModifications,
+			customDescription,
+			turnEndBlocker);
 	}
 
 	public Card MakeExhaustibleCopy() {
