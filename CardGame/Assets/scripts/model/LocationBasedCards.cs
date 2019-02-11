@@ -4,6 +4,7 @@ using System.Linq;
 
 public static class LocationBasedCards {
 	private static BaseCollection<Card> cards = new BaseCollection<Card>(new Card[] {
+		Card.MakeCard("locationTest"),
 		Card.MakeCard("Cut Trees",
 			populationCost: 1,
 			materialsChange: 2
@@ -22,14 +23,14 @@ public static class LocationBasedCards {
 		Card.MakeCard("Abandoned Weapons",
 			armyChange: 1
 		),
-		Card.MakeCard("Mine Materials", 
+		Card.MakeCard("Mine Materials",
 			populationCost:1,
 			materialsChange:2,
 			modifiedByCar: CarType.Workhouse,
 			carModifications: new Dictionary<string, int> {
 				{"MaterialsChange",1}
 			}
-		), 
+		),
 		Card.MakeCard("Mine with Explosives",
 			populationCost:1,
 			materialsChange:4,
@@ -38,12 +39,12 @@ public static class LocationBasedCards {
 			carModifications: new Dictionary<string, int> {
 				{"MaterialsChange",2}
 			}
-		),  
-		Card.MakeCard("Collect Materials", 
+		),
+		Card.MakeCard("Collect Materials",
 			populationCost:1,
 			materialsChange:3
-		),  
-		Card.MakeCard("Drain Fuel Storage", 
+		),
+		Card.MakeCard("Drain Fuel Storage",
 			populationCost:1,
 			fuelChange:3
 		),
@@ -51,7 +52,7 @@ public static class LocationBasedCards {
 			populationCost:1,
 			fuelChange:2
 		),
-		Card.MakeCard("Work for Materials", 
+		Card.MakeCard("Work for Materials",
 			populationCost:1,
 			materialsChange:2,
 			modifiedByCar: CarType.Workhouse,
@@ -59,7 +60,7 @@ public static class LocationBasedCards {
 				{"MaterialsChange",1}
 			}
 		),
-		Card.MakeCard("Work for Fuel", 
+		Card.MakeCard("Work for Fuel",
 			populationCost:1,
 			fuelChange:1,
 			modifiedByCar: CarType.Workhouse,
@@ -75,7 +76,7 @@ public static class LocationBasedCards {
 			fuelChange:-2,
 			armyChange: 3
 		),
-		Card.MakeCard("Trade for Materials", 
+		Card.MakeCard("Trade for Materials",
 			materialsChange:2,
 			fuelChange:-1
 		),
@@ -92,16 +93,16 @@ public static class LocationBasedCards {
 				{"fuelChange",1}
 			}
 		),
-		Card.MakeCard("Small scale Hunt", 
+		Card.MakeCard("Small scale Hunt",
 			populationCost:1,
 			materialsChange:2
 		),
-		Card.MakeCard("Large scale Hunt", 
+		Card.MakeCard("Large scale Hunt",
 			populationCost:1,
 			armyChange:-1,
 			materialsChange:5
 		),
-		Card.MakeCard("Fuel from Feces", 
+		Card.MakeCard("Fuel from Feces",
 			populationCost:1,
 			fuelChange:1,
 			modifiedByCar: CarType.Refinery,
@@ -131,8 +132,10 @@ public static class LocationBasedCards {
 		return internalCardsForContent(content);
 	}
 
-	private static IEnumerable<Card> internalCardsForContent(LocationContent content) { 
+	private static IEnumerable<Card> internalCardsForContent(LocationContent content) {
 		switch (content) {
+			case LocationContent.Test:
+				return testCards();
 			case LocationContent.TrainWreck:
 				return trainWreckCards();
 			case LocationContent.Howitizer:
@@ -143,8 +146,6 @@ public static class LocationBasedCards {
 				return workhouseCards();
 			case LocationContent.OldHouses:
 				return oldHousesCards();
-			case LocationContent.Test:
-				return new Card[0];
 			case LocationContent.Woods:
 				return woodsCards();
 			case LocationContent.WildAnimals:
@@ -162,6 +163,12 @@ public static class LocationBasedCards {
 			default:
 				throw new ArgumentOutOfRangeException(nameof(content), content, null);
 		}
+	}
+
+	private static IEnumerable<Card> testCards() {
+		return cards.objectForDictionary(new Dictionary<string, int> {
+			{"locationTest", 1}
+		}).Shuffle().Take(3);
 	}
 
 	private static IEnumerable<Card> mineCards() {
@@ -289,7 +296,7 @@ public static class LocationBasedCards {
 			.Take(2);
 	}
 
-	private static IEnumerable<Card> addMakeTrainCard(this IEnumerable<Card> cards, 
+	private static IEnumerable<Card> addMakeTrainCard(this IEnumerable<Card> cards,
 		IEnumerable<CarType> possibleCars) {
 		var card = Card.MakeCard("Build Train Car",
 			carOptionsToAdd: possibleCars);

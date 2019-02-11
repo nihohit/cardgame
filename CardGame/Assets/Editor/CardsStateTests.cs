@@ -471,4 +471,32 @@ public class CardsStates {
 		CollectionAssert.AreEqual(initialDeck[2].Yield(), state.Hand);
 		CollectionAssert.AreEqual(card.Yield(), state.DiscardPile);
 	}
+
+	[Test]
+	public void ShouldAddLocationContentCardsAccordingToEnteredLocation() {
+		Randomizer.SetTestableRandom(4);
+		var location = new Location("foo", new[] {
+				LocationContent.Test,
+				LocationContent.Test
+			});
+		var expectedCard = cardWithName("locationTest")
+			.MakeLocationLimitedCopy()
+			.MakeExhaustibleCopy();
+
+		var state = CardsState.NewState(initialDeck)
+			.ShuffleCurrentDeck()
+			.EnterLocation(location);
+
+		var expectedDeck = new[] { expectedCard, expectedCard }
+			.Concat(initialDeck);
+		CollectionAssert.AreEquivalent(expectedDeck, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+
+		state = state.LeaveLocation();
+
+		CollectionAssert.AreEqual(initialDeck, state.CurrentDeck);
+		CollectionAssert.AreEqual(empty, state.Hand);
+		CollectionAssert.AreEqual(empty, state.DiscardPile);
+	}
 }
