@@ -176,7 +176,7 @@ public class SceneViewModel : ISceneViewModel {
 	}
 
 	private bool canAdvanceTurn(SceneState state) {
-		return state.Cards.Hand.None(card => card?.Event.TurnEndBlocker ?? false);
+		return state.Cards.Hand.None(card => card?.EventCard.TurnEndBlocker ?? false);
 	}
 
 	public IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay => model.State

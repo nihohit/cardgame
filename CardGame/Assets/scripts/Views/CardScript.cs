@@ -94,7 +94,7 @@ public class CardScript : MonoBehaviour {
 			yield return "Default choice";
 		}
 
-		if (card.TurnEndBlocker) {
+		if (card?.EventCard.TurnEndBlocker ?? false) {
 			yield return "Turn Blocker";
 		}
 

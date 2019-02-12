@@ -28,7 +28,7 @@ public class Card : BaseValueClass {
 	public CarType ModifiedByCar { get; }
 	public Dictionary<string, int> CarModifications { get; }
 	public string CustomDescription { get; }
-	public EventCard Event { get; }
+	public EventCard EventCard { get; }
 
 	protected Card(string name,
 		string identifier,
@@ -79,7 +79,7 @@ public class Card : BaseValueClass {
 		ModifiedByCar = modifiedByCar;
 		CarModifications = carModifications;
 		CustomDescription = customDescription;
-		Event = eventCard;
+		EventCard = eventCard;
 	}
 
 	public static Card MakeCard(
