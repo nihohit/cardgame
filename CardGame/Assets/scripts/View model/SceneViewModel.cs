@@ -154,24 +154,27 @@ public class SceneViewModel : ISceneViewModel {
 		.Select(state => {
 			switch (state.Mode) {
 				case CardHandlingMode.Regular:
-					return !state.Train.CanDrive();
+					return !canDriveInState(state);
 				case CardHandlingMode.Exhaust:
 				case CardHandlingMode.Discard:
-				case CardHandlingMode.Event:
 					return false;
 				case CardHandlingMode.CarBuilding:
+				case CardHandlingMode.Event:
 					return true;
 			}
 			return false;
 		});
 	
 	public IObservable<bool> DisplayDriveButton => model.State
-		.Select(state => state.Mode == CardHandlingMode.Regular &&
-						state.Train.CanDrive());
+		.Select(canDriveInState);
 	
 	public IObservable<bool> DisplayStayButton => model.State
-		.Select(state => state.Mode == CardHandlingMode.Regular &&
-		                 state.Train.CanDrive());
+		.Select(canDriveInState);
+
+	private bool canDriveInState(SceneState state) {
+		return (state.Mode == CardHandlingMode.Regular && state.Train.CanDrive()) &&
+			state.CurrentEvent == null;
+	}
 
 	public IObservable<IEnumerable<CardDisplayModel>> CardsInMultiDisplay => model.State
 		.Where(state => state.Mode != CardHandlingMode.Regular)
@@ -217,7 +220,12 @@ public class SceneViewModel : ISceneViewModel {
 	}
 
 	public IObservable<string> TextForDoneButton => model.State
-		.Select(state => state.Mode == CardHandlingMode.Regular ? "Stay" : "Done");
+		.Select(state => {
+			if (state.Mode != CardHandlingMode.Regular) {
+				return "Done";
+			}
+			return state.CurrentEvent == null ? "Stay" : "Event";
+		});
 
 	public IObservable<Unit> HideMultiDisplay => model.State
 		.Select(state => state.Mode)

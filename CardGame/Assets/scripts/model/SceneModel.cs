@@ -180,8 +180,8 @@ public class SceneModel : ISceneModel {
 		}
 		trainState = trainState.PlayCard(card);
 		EventUtils.LogEventCardPlayed(card, eventCardName(), trainState.ToString(), cards.Hand);
+		nextEvent = null;
 		mode = CardHandlingMode.Regular;
-		startTurn();
 		return true;
 	}
 
@@ -206,6 +206,7 @@ public class SceneModel : ISceneModel {
 	}
 
 	private void startTurn() {
+		nextEvent = EventCardsCollections.EventCardForState(trainState);
 		if (trainState.TotalPopulation <= 0) {
 			UnityEngine.SceneManagement.SceneManager.LoadScene("base");
 		}
@@ -230,10 +231,16 @@ public class SceneModel : ISceneModel {
 			case CardHandlingMode.Exhaust:
 			case CardHandlingMode.Discard:
 			case CardHandlingMode.CarBuilding:
+			case CardHandlingMode.Event:
 				mode = CardHandlingMode.Regular;
 				break;
 			case CardHandlingMode.Regular:
-				endTurn();
+				if (nextEvent == null) {
+					endTurn();
+					startTurn();
+				} else {
+					mode = CardHandlingMode.Event;
+				}
 				break;
 			default:
 				AssertUtils.UnreachableCode($"Illegal mode: {mode}");
@@ -252,6 +259,7 @@ public class SceneModel : ISceneModel {
 			.LeaveLocation()
 			.ShuffleDiscardToDeck()
 			.EnterLocation(trainState.CurrentLocation);
+		startTurn();
 		sendCompletedState();
 	}
 
@@ -260,8 +268,6 @@ public class SceneModel : ISceneModel {
 		trainState = trainState.NextTurnState();
 		populationDiedSubject.OnNext(lastPopulationCount > trainState.TotalPopulation);
 		EventUtils.LogEndTurnEvent(playedCards, eventCardName(), trainState.ToString(), cards.Hand);
-		mode = CardHandlingMode.Event;
-		nextEvent = EventCardsCollections.EventCardForState(trainState);
 		cards = cards.DiscardHand();
 	}
 
@@ -306,6 +312,6 @@ public class SceneModel : ISceneModel {
 	}
 
 	private string eventCardName() {
-		return nextEvent.Name;
+		return nextEvent?.Name;
 	}
 }
