@@ -220,8 +220,12 @@ public static class EventCardsCollections {
 					}
 				),
 				Card.MakeCard("Enforce Martial Law",
-					populationChange: -1,
+					populationCost: -2,
 					armyChange: 1
+				),
+				Card.MakeCard("Civil War",
+					populationChange: -2,
+					defaultChoice: true
 				)
 			}
 		},
@@ -244,7 +248,7 @@ public static class EventCardsCollections {
 			{ "Minor Plague", 1},
 			{ "Trading Caravan", 1},
 			{ "Convoy under Attack", 1},
-			{ "Obstacle on Tracks", 1},
+			//{ "Obstacle on Tracks", 1},
 			{ "Mutiny!", 1},
 		}).Shuffle().First();	
 	}
