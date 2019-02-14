@@ -8,6 +8,7 @@ using UniRx;
 using System.Linq;
 
 public class CardScript : MonoBehaviour {
+	public InputHandler touchHandler;
 	private bool needsSetup = true;
   private TextMeshPro nameField;
 	private TextMeshPro traitField;
@@ -115,7 +116,8 @@ public class CardScript : MonoBehaviour {
 	}
 
 	public IObservable<Card> ClickObservation() {
-		return this.OnMouseDownAsObservable()
+		return touchHandler.TouchedGameObject
+			.Where(obj => obj == gameObject)
 			.Select(_ => CardModel.Card)
 			.TakeUntil(modelSetSubject);
 	}

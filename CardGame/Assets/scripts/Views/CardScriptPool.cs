@@ -8,13 +8,16 @@ using UnityEngine;
 
 public class CardScriptPool {
 	private List<CardScript> cardPool;
+	private InputHandler touchHandler;
 
 	public CardScriptPool(GameObject cardPrefab, int sizeOfPool) {
+		touchHandler = GameObject.FindObjectOfType<InputHandler>();
 		cardPool = Enumerable.Range(0, sizeOfPool)
 			.Select(_ => GameObject.Instantiate<GameObject>(cardPrefab).GetComponent<CardScript>())
 			.ToList();
 		foreach(var card in cardPool) {
 			card.gameObject.SetActive(false);
+			card.touchHandler = touchHandler;
 		}
 	}
 

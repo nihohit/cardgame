@@ -15,14 +15,16 @@ public class MultiCardDisplayScript : MonoBehaviour {
 	private readonly List<CardScript> cardScripts = new List<CardScript>();
 	private CardScriptPool cardPool;
 
+	private const string kMultiCardLayerName = "MultiCardDisplay";
+
 	private void Awake() {
 		titleBox = transform.Find("Title").GetComponent<TextMeshPro>();
 		descriptionBox = transform.Find("Description").GetComponent<TextMeshPro>();
 		foreach (var text in GetComponentsInChildren<TextMeshPro>()) {
-			text.sortingLayerID = SortingLayer.NameToID("MultiCardDisplay");
+			text.sortingLayerID = SortingLayer.NameToID(kMultiCardLayerName);
 		}
 		foreach (var internalRenderer in GetComponentsInChildren<Renderer>()) {
-			internalRenderer.sortingLayerID = SortingLayer.NameToID("MultiCardDisplay");
+			internalRenderer.sortingLayerID = SortingLayer.NameToID(kMultiCardLayerName);
 		}
 
 		sprite.transform.localScale = new Vector3(Screen.width, Screen.height, 1);
@@ -47,7 +49,7 @@ public class MultiCardDisplayScript : MonoBehaviour {
 		AssertUtils.IsEmpty(cardScripts, "cardScripts");
 		cardScripts.AddRange(cards.Select(card => cardPool.CardForModel(card)));
 		foreach (var cardScript in cardScripts) {
-			setupCardScriptLayers(cardScript, "MultiCardDisplay");
+			setupCardScriptLayers(cardScript, kMultiCardLayerName);
 		}
 		adjustCardsLocations();
 		return cardScripts.Select(cardScript => cardScript.ClickObservation()).Merge();
@@ -88,5 +90,6 @@ public class MultiCardDisplayScript : MonoBehaviour {
 		foreach (var internalRenderer in script.GetComponentsInChildren<Renderer>()) {
 			internalRenderer.sortingLayerID = SortingLayer.NameToID(layerName);
 		}
+		script.gameObject.layer = LayerMask.NameToLayer(layerName);
 	}
 }
