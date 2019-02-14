@@ -220,7 +220,7 @@ public static class EventCardsCollections {
 					}
 				),
 				Card.MakeCard("Enforce Martial Law",
-					populationCost: -2,
+					populationCost: 2,
 					armyChange: 1
 				),
 				Card.MakeCard("Civil War",
