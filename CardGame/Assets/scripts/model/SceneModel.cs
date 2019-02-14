@@ -174,6 +174,7 @@ public class SceneModel : ISceneModel {
 	}
 
 	private bool playEventCard(Card card) {
+		AssertUtils.AssertConditionMet(nextEvent.Options.Contains(card), $"{card} not found in {nextEvent.Name} options {nextEvent.Options.ToJoinedString()}");
 		if (!CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
