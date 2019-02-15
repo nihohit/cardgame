@@ -72,7 +72,7 @@ public class SceneViewController : MonoBehaviour {
 	}
 
 	private void setViewModelInputs() {
-		viewModel.setDeckWasClicked(deck.OnMouseDownAsObservable());
+		viewModel.setDeckWasClicked(deck.OnTouchDownAsObservable());
 		viewModel.setDoneButtonClicked(topBarView.DoneButtonClicked());
 		viewModel.setDriveButtonClicked(topBarView.DriveButtonClicked());
 		viewModel.setStayButtonClicked(topBarView.StayButtonClicked());
