@@ -178,10 +178,10 @@ public static class EventCardsCollections {
 			}
 		},
 		new EventCard {
-			Name = "Obstacle on Tracks",
-			Description = "An avalanche of trees and rocks is blocking the tracks. You cannot continue without disposing of them in some way.",
+			Name = "Avalanche",
+			Description = "An avalanche of trees and rocks has buried some of your scouts, and they can't escape it by themselves.",
 			Options = new Card[] {
-				Card.MakeCard("Ram it through",
+				Card.MakeCard("Ram it",
 					fuelChange: -2
 				),
 				Card.MakeCard("Stop and clear it",
@@ -194,6 +194,10 @@ public static class EventCardsCollections {
 				Card.MakeCard("Blow it Away",
 					requiresCar:CarType.Cannon,
 					materialsChange: -1
+				),
+				Card.MakeCard("Leave them",
+					populationChange: -1,
+					defaultChoice: true
 				)
 			}
 		},
@@ -246,10 +250,10 @@ public static class EventCardsCollections {
 			{ "Raiders", 2},
 			{ "Wild Animals", 2},
 			{ "Minor Plague", 1},
-			{ "Trading Caravan", 1},
-			{ "Convoy under Attack", 1},
-			//{ "Obstacle on Tracks", 1},
-			{ "Mutiny!", 1},
+			{ "Trading Caravan", 2},
+			{ "Convoy under Attack", 2},
+			{ "Avalanche", 2},
+			{ "Mutiny!", 2},
 		}).Shuffle().First();	
 	}
 
