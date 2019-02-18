@@ -16,6 +16,7 @@ public enum CarType {
 public enum CardHandlingMode {
 	Regular,
 	Event,
+	EventFromCard,
 	Discard,
 	Exhaust,
 	CarBuilding

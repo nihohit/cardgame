@@ -160,6 +160,7 @@ public class SceneViewModel : ISceneViewModel {
 					return false;
 				case CardHandlingMode.CarBuilding:
 				case CardHandlingMode.Event:
+				case CardHandlingMode.EventFromCard:
 					return true;
 			}
 			return false;
@@ -196,6 +197,7 @@ public class SceneViewModel : ISceneViewModel {
 			case CardHandlingMode.Discard:
 				return "Choose cards to discard";
 			case CardHandlingMode.Event:
+			case CardHandlingMode.EventFromCard:
 				return state.CurrentEvent.Name;
 			case CardHandlingMode.CarBuilding:
 				return "Choose train car to build";
@@ -213,6 +215,7 @@ public class SceneViewModel : ISceneViewModel {
 	private string stateMultiCardTescription(SceneState state) {
 		switch (state.Mode) {
 			case CardHandlingMode.Event:
+			case CardHandlingMode.EventFromCard:
 				return state.CurrentEvent.Description;
 			default:
 				return string.Empty;

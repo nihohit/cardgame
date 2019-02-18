@@ -32,6 +32,7 @@ public class Card : BaseValueClass {
 	public IEnumerable<string> StoryCardsToAddToDiscard { get; }
 	public IEnumerable<string> StoryCardsToAddToTopOfDeck { get; }
 	public IEnumerable<string> StoryCardsToRemove { get; }
+	public EventCard ContainedEvent { get; }
 
 	protected Card(string name,
 		string identifier,
@@ -59,7 +60,8 @@ public class Card : BaseValueClass {
 		IEnumerable<string> storyCardsToAddToHand,
 		IEnumerable<string> storyCardsToAddToDiscard,
 		IEnumerable<string> storyCardsToAddToTopOfDeck,
-		IEnumerable<string> storyCardsToRemove) {
+		IEnumerable<string> storyCardsToRemove,
+		EventCard containedEvent) {
 		AssertUtils.AreEqual(ModifiedByCar == CarType.None, 
 			CarModifications == null);
 		Name = name;
@@ -89,6 +91,7 @@ public class Card : BaseValueClass {
 		StoryCardsToAddToDiscard = storyCardsToAddToDiscard ?? Enumerable.Empty<string>();
 		StoryCardsToAddToTopOfDeck = storyCardsToAddToTopOfDeck ?? Enumerable.Empty<string>();
 		StoryCardsToRemove = storyCardsToRemove ?? Enumerable.Empty<string>();
+		ContainedEvent = containedEvent;
 	}
 
 	public static Card MakeCard(
@@ -117,7 +120,8 @@ public class Card : BaseValueClass {
 		IEnumerable<string> storyCardsToAddToHand = null,
 		IEnumerable<string> storyCardsToAddToDiscard = null,
 		IEnumerable<string> storyCardsToAddToTopOfDeck = null,
-		IEnumerable<string> storyCardsToRemove = null) {
+		IEnumerable<string> storyCardsToRemove = null,
+		EventCard containedEvent = null) {
 		return new Card(name,
 			identifier ?? name,
 			null,
@@ -144,7 +148,8 @@ public class Card : BaseValueClass {
 			storyCardsToAddToHand,
 			storyCardsToAddToDiscard,
 			storyCardsToAddToTopOfDeck,
-			storyCardsToRemove);
+			storyCardsToRemove,
+			containedEvent);
 	}
 
 	public Card MakeExhaustibleCopy() {
