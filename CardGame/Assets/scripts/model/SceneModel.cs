@@ -124,6 +124,7 @@ public class SceneModel : ISceneModel {
 			return false;
 		}
 		switchModeAccordingToCard(card);
+		trainState = trainState.PlayCard(card);
 		if (mode == CardHandlingMode.CarBuilding) {
 			carCards = carBuildingCards(card)
 				.Select(carBuilding => carBuilding
@@ -141,7 +142,6 @@ public class SceneModel : ISceneModel {
 			});
 			return false;
 		}
-		trainState = trainState.PlayCard(card);
 		cards = cards.PlayCard(card);
 		playedCards.Add(card);
 		return true;
@@ -188,7 +188,7 @@ public class SceneModel : ISceneModel {
 	}
 
 	private bool playEventCard(Card card) {
-		AssertUtils.AssertConditionMet(nextEvent.Options.Contains(card), $"{card} not found in {nextEvent.Name} options {nextEvent.Options.ToJoinedString()}");
+		AssertUtils.AssertConditionMet(nextEvent.Options.Contains(card.Original()), $"{card} not found in {nextEvent.Name} options {nextEvent.Options.ToJoinedString()}");
 		if (!CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
