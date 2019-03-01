@@ -161,7 +161,7 @@ public class SceneViewModel : ISceneViewModel {
 				case CardHandlingMode.CarBuilding:
 				case CardHandlingMode.Event:
 				case CardHandlingMode.EventFromCard:
-					return true;
+					return !state.CurrentEvent.Blocking;
 			}
 			return false;
 		});
