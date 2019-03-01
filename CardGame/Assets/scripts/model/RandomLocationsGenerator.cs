@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class RandomLocationsGenerator :ILocationsGenerator {
+	private bool cavesDone;
+	private bool trainDone;
+	private bool kidsDone;
+
 	public IEnumerable<Location> Locations() {
 		yield return initialLocation();
 
@@ -36,6 +40,8 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 	}
 
 	private Location village() {
+		var story = trainDone ? null : "Train Builders";
+		trainDone = true;
 		return makeLocation("Village",
 			new Dictionary<LocationContent, double> {
 				{LocationContent.Woods, 0.1},
@@ -45,7 +51,8 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.Workhouse, 0.07},
 				{LocationContent.FuelRefinery, 0.05},
 				{LocationContent.ArmyBase, 0.06}
-			});
+			}, 
+			storyEvent: story);
 	}
 	
 	private Location abandonedVillage() {
@@ -64,6 +71,8 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 	}
 
 	private Location emptyWoods() {
+		var story = kidsDone ? null : "Kids";
+		kidsDone = true;
 		return makeLocation("Woods",
 			new Dictionary<LocationContent, double> {
 				{LocationContent.Woods, 0.45},
@@ -74,7 +83,8 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.TrainWreck, 0.07},
 				{LocationContent.FuelStorage, 0.07},
 				{LocationContent.ArmyBase, 0.06}
-			});
+			},
+			storyEvent: story);
 	}
 
 	private Location trainWorkshop() {
@@ -105,6 +115,8 @@ public class RandomLocationsGenerator :ILocationsGenerator {
   }
 
 	private Location mountains() {
+		var story = cavesDone ? null : "Cave People";
+		cavesDone = true;
 		return makeLocation("Mountains region",
 			new Dictionary<LocationContent, double> {
 				{LocationContent.Woods, 0.1},
@@ -116,14 +128,17 @@ public class RandomLocationsGenerator :ILocationsGenerator {
 				{LocationContent.Howitizer, 0.1},
 				{LocationContent.FuelRefinery, 0.1},
 				{LocationContent.ArmyBase, 0.1}
-			});
+			},
+			storyEvent: story);
 	}
 
 	private Location makeLocation(string name, 
 		Dictionary<LocationContent, double> dict, 
-		int contentCount = 3) {
+		int contentCount = 3,
+		string storyEvent = null) {
 		return new Location(name, 
 			Randomizer.ChooseWeightedValues(dict)
-				.Take(contentCount));
+				.Take(contentCount),
+			storyEvent: storyEvent);
 	}
 }

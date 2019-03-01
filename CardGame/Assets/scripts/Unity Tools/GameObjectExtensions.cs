@@ -16,12 +16,18 @@ public static class GameObjectExtensions {
   }
 
   public static IEnumerator MoveOverSpeed(this GameObject objectToMove, Vector3 end, float speed, Action continuation) {
-    // speed should be 1 unit per second
     while (objectToMove.transform.position != end) {
-      objectToMove.transform.position = Vector3.MoveTowards(objectToMove.transform.position, end, speed * Time.deltaTime);
+			objectToMove.MoveTowards(end, speed * Time.deltaTime);
       yield return new WaitForEndOfFrame();
     }
 
     continuation();
   }
+
+	public static void MoveTowards(this GameObject objectToMove, 
+		Vector3 end, 
+		float maxDistanceDelta) {
+		objectToMove.transform.position = 
+			Vector3.MoveTowards(objectToMove.transform.position, end, maxDistanceDelta);
+	}
 }

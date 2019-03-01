@@ -28,6 +28,11 @@ public class Card : BaseValueClass {
 	public CarType ModifiedByCar { get; }
 	public Dictionary<string, int> CarModifications { get; }
 	public string CustomDescription { get; }
+	public IEnumerable<string> StoryCardsToAddToHand { get; }
+	public IEnumerable<string> StoryCardsToAddToDiscard { get; }
+	public IEnumerable<string> StoryCardsToAddToTopOfDeck { get; }
+	public IEnumerable<string> StoryCardsToRemove { get; }
+	public EventCard ContainedEvent { get; }
 
 	protected Card(string name,
 		string identifier,
@@ -51,7 +56,12 @@ public class Card : BaseValueClass {
 		CarType requiresCar,
 		CarType modifiedByCar,
 		Dictionary<string, int> carModifications,
-		string customDescription) {
+		string customDescription,
+		IEnumerable<string> storyCardsToAddToHand,
+		IEnumerable<string> storyCardsToAddToDiscard,
+		IEnumerable<string> storyCardsToAddToTopOfDeck,
+		IEnumerable<string> storyCardsToRemove,
+		EventCard containedEvent) {
 		AssertUtils.AreEqual(ModifiedByCar == CarType.None, 
 			CarModifications == null);
 		Name = name;
@@ -77,6 +87,11 @@ public class Card : BaseValueClass {
 		ModifiedByCar = modifiedByCar;
 		CarModifications = carModifications;
 		CustomDescription = customDescription;
+		StoryCardsToAddToHand = storyCardsToAddToHand ?? Enumerable.Empty<string>();
+		StoryCardsToAddToDiscard = storyCardsToAddToDiscard ?? Enumerable.Empty<string>();
+		StoryCardsToAddToTopOfDeck = storyCardsToAddToTopOfDeck ?? Enumerable.Empty<string>();
+		StoryCardsToRemove = storyCardsToRemove ?? Enumerable.Empty<string>();
+		ContainedEvent = containedEvent;
 	}
 
 	public static Card MakeCard(
@@ -101,7 +116,12 @@ public class Card : BaseValueClass {
 		CarType requiresCar = CarType.None,
 		CarType modifiedByCar = CarType.None,
 		Dictionary<string, int> carModifications = null,
-		string customDescription = null) {
+		string customDescription = null,
+		IEnumerable<string> storyCardsToAddToHand = null,
+		IEnumerable<string> storyCardsToAddToDiscard = null,
+		IEnumerable<string> storyCardsToAddToTopOfDeck = null,
+		IEnumerable<string> storyCardsToRemove = null,
+		EventCard containedEvent = null) {
 		return new Card(name,
 			identifier ?? name,
 			null,
@@ -124,7 +144,12 @@ public class Card : BaseValueClass {
 			requiresCar,
 			modifiedByCar,
 			carModifications, 
-			customDescription);
+			customDescription, 
+			storyCardsToAddToHand,
+			storyCardsToAddToDiscard,
+			storyCardsToAddToTopOfDeck,
+			storyCardsToRemove,
+			containedEvent);
 	}
 
 	public Card MakeExhaustibleCopy() {

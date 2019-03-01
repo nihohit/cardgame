@@ -98,6 +98,7 @@ public class SceneModel : ISceneModel {
 		switch (mode) {
 			case CardHandlingMode.CarBuilding:
 			case CardHandlingMode.Regular:
+			case CardHandlingMode.EventFromCard:
 				succeeded = playRegularCard(card);
 				break;
 			case CardHandlingMode.Event:
@@ -123,14 +124,24 @@ public class SceneModel : ISceneModel {
 			return false;
 		}
 		switchModeAccordingToCard(card);
-		if (card.CarOptionsToAdd != null) {
+		trainState = trainState.PlayCard(card);
+		if (mode == CardHandlingMode.CarBuilding) {
 			carCards = carBuildingCards(card)
 				.Select(carBuilding => carBuilding
 					.CopyWithSource(card)
 					.MakeExhaustibleCopy());
 			return true;
 		}
-		trainState = trainState.PlayCard(card);
+		if (mode == CardHandlingMode.EventFromCard) {
+			sendCompletedState(new EventCard {
+				Name = card.ContainedEvent.Name ?? card.Name,
+				Description = card.ContainedEvent.Description,
+				Options = card.ContainedEvent.Options.Select(option => option
+					.CopyWithSource(card)
+					.MakeExhaustibleCopy())
+			});
+			return false;
+		}
 		cards = cards.PlayCard(card);
 		playedCards.Add(card);
 		return true;
@@ -145,7 +156,10 @@ public class SceneModel : ISceneModel {
 			cardsToHandle = card.NumberOfCardsToChooseToDiscard;
 		} else if (card.CarOptionsToAdd != null) {
 			mode = CardHandlingMode.CarBuilding;
-		} else if (mode == CardHandlingMode.CarBuilding) {
+		} else if (card.ContainedEvent != null) {
+			mode = CardHandlingMode.EventFromCard;
+		} else if (mode == CardHandlingMode.CarBuilding ||
+			mode == CardHandlingMode.EventFromCard) {
 			mode = CardHandlingMode.Regular;
 		}
 	}
@@ -174,7 +188,7 @@ public class SceneModel : ISceneModel {
 	}
 
 	private bool playEventCard(Card card) {
-		AssertUtils.AssertConditionMet(nextEvent.Options.Contains(card), $"{card} not found in {nextEvent.Name} options {nextEvent.Options.ToJoinedString()}");
+		AssertUtils.AssertConditionMet(nextEvent.Options.Contains(card.Original()), $"{card} not found in {nextEvent.Name} options {nextEvent.Options.ToJoinedString()}");
 		if (!CanPlayCard(card)) {
 			Debug.Log($"Can't play {card.Name}");
 			return false;
@@ -233,6 +247,7 @@ public class SceneModel : ISceneModel {
 			case CardHandlingMode.Discard:
 			case CardHandlingMode.CarBuilding:
 			case CardHandlingMode.Event:
+			case CardHandlingMode.EventFromCard:
 				mode = CardHandlingMode.Regular;
 				break;
 			case CardHandlingMode.Regular:
@@ -293,8 +308,12 @@ public class SceneModel : ISceneModel {
 	#endregion
 
 	private void sendCompletedState() {
+		sendCompletedState(nextEvent);
+	}
+
+	private void sendCompletedState(EventCard eventCard) {
 		IEnumerable<Card> currentModeCards = null;
-		switch(mode) {
+		switch (mode) {
 			case CardHandlingMode.CarBuilding:
 				currentModeCards = carCards;
 				break;
@@ -305,11 +324,12 @@ public class SceneModel : ISceneModel {
 			case CardHandlingMode.Regular:
 				break;
 			case CardHandlingMode.Event:
-				currentModeCards = nextEvent.Options;
+			case CardHandlingMode.EventFromCard:
+				currentModeCards = eventCard.Options;
 				break;
 		}
 
-		stateSubject.OnNext(new SceneState(cards, trainState, mode, nextEvent, currentModeCards));
+		stateSubject.OnNext(new SceneState(cards, trainState, mode, eventCard, currentModeCards));
 	}
 
 	private string eventCardName() {
