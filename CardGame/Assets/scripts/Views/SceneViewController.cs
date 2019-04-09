@@ -19,18 +19,12 @@ public class SceneViewController : MonoBehaviour {
 	private MultiCardDisplayScript multiCardDisplay;
 	private TopBarView topBarView;
 	private readonly CardScript[] currentHand = new CardScript[9];
-	private TextMeshProUGUI textBox;
 
 	private CardScriptPool cardPool;
 	private ISceneViewModel viewModel;
 	private List<List<Action>> animationOrders = new List<List<Action>>();
 	private readonly object cardAnimationsLock = new object();
 	private int currentCardAnimationsInProgress;
-	private TraditionScript[] traditionScripts;
-	private TrainViewScript trainView;
-	private Dropdown car1Dropdown;
-	private Dropdown car2Dropdown;
-	private Dropdown car3Dropdown;
 
 	void Start() {
 		setPrivateGameObjects();
@@ -45,14 +39,6 @@ public class SceneViewController : MonoBehaviour {
 		discardPile = GameObject.Find("Discard Pile").GetComponent<DeckScript>();
 		multiCardDisplay = Resources.FindObjectsOfTypeAll<MultiCardDisplayScript>()[0];
 		multiCardDisplay.InitialSetup(cardPool);
-		traditionScripts = FindObjectsOfType<TraditionScript>()
-			.OrderBy(traditionScript => traditionScript.transform.position.x)
-			.ToArray();
-		trainView = FindObjectOfType<TrainViewScript>();
-		textBox = GameObject.Find("MainText").GetComponent<TextMeshProUGUI>();
-		car1Dropdown = GameObject.Find("Car1Dropdown").GetComponent<Dropdown>();
-		car2Dropdown = GameObject.Find("Car2Dropdown").GetComponent<Dropdown>();
-		car3Dropdown = GameObject.Find("Car3Dropdown").GetComponent<Dropdown>();
 	}
 
 	private void setupViews() {
@@ -60,9 +46,6 @@ public class SceneViewController : MonoBehaviour {
 			.Where(type => type != CarType.Test && type != CarType.Engine)
 			.Select(type => new OptionData(ModelGlobal.CarName(type)))
 			.ToList();
-		car1Dropdown.options = options;
-		car2Dropdown.options = options;
-		car3Dropdown.options = options;
 	}
 
 	private void setupViewModel() {
@@ -74,17 +57,14 @@ public class SceneViewController : MonoBehaviour {
 	private void setViewModelInputs() {
 		viewModel.setDeckWasClicked(deck.OnTouchDownAsObservable());
 		viewModel.setDoneButtonClicked(topBarView.DoneButtonClicked());
-		viewModel.setDriveButtonClicked(topBarView.DriveButtonClicked());
-		viewModel.setStayButtonClicked(topBarView.StayButtonClicked());
 	}
 
 	private void osberveViewModelOutputs() {
 		viewModel.MainTextContent.Subscribe(description => {
-			textBox.text = description;
 		});
 		viewModel.PopulationValue.Subscribe(topBarView.SetPopulationValue);
-		viewModel.FuelValue.Subscribe(topBarView.SetFuelValue);
-		viewModel.MaterialsValue.Subscribe(topBarView.SetMaterialsValue);
+		viewModel.GoldValue.Subscribe(topBarView.SetGoldValue);
+		viewModel.KnowledgeValue.Subscribe(topBarView.SetKnowledgeValue);
 		viewModel.ArmyValue.Subscribe(topBarView.SetArmyValue);
 		viewModel.DeckCount.Subscribe(count => {
 			deck.SetCardNumber(count);
@@ -93,15 +73,12 @@ public class SceneViewController : MonoBehaviour {
 			discardPile.SetCardNumber(count);
 		});
 		viewModel.DisplayDoneButton.Subscribe(topBarView.DisplayDoneButton);
-		viewModel.DisplayDriveButton.Subscribe(topBarView.DisplayDriveButton);
-		viewModel.DisplayStayButton.Subscribe(topBarView.DisplayStayButton);
 		viewModel.CardMovementInstructions.Subscribe(moveCards);
 		viewModel.TextForDoneButton.Subscribe(topBarView.SetDoneButtonText);
 		viewModel.HideMultiDisplay.Subscribe(_ => {
 			multiCardDisplay.FinishWork();
 			deck.GetComponent<Collider2D>().enabled = true;
 			discardPile.GetComponent<Collider2D>().enabled = true;
-			textBox.enabled = true;
 		});
 		Observable.Zip(viewModel.TitleForMultiDisplay,
 			viewModel.DescriptionForMultiDisplay,
@@ -111,7 +88,6 @@ public class SceneViewController : MonoBehaviour {
 		viewModel.Traditions
 			.DistinctUntilChanged()
 			.Subscribe(updateTraditions);
-		viewModel.Train.Subscribe(train => trainView.setTrain(train));
 		viewModel.ShowEndGameScreen.Subscribe(endGamePanel.SetActive);
 	}
 
@@ -252,25 +228,14 @@ public class SceneViewController : MonoBehaviour {
 		viewModel.setSelectedCardObservation(multiCardDisplay.setup(tuple.Item1, tuple.Item2, tuple.Item3));
 		deck.GetComponent<Collider2D>().enabled = false;
 		discardPile.GetComponent<Collider2D>().enabled = false;
-		textBox.enabled = false;
 	}
 
 	private void updateTraditions(IEnumerable<Tradition> traditions) {
 		var traditionsAsList = traditions.ToList();
-		AssertUtils.EqualOrLesser(traditionsAsList.Count, traditionScripts.Length);
-		for (int i = 0; i < traditionsAsList.Count; i++) {
-			traditionScripts[i].setTradition(traditionsAsList[i]);
-		}
-		for (int i = traditionsAsList.Count; i < traditionScripts.Length; i++) {
-			traditionScripts[i].setTradition(null);
-		}
 	}
 
 	public void EndGameButtonPressed() {
-		viewModel.StartNewGame(new[]{
-			typeFromChoice(car1Dropdown.value),
-			typeFromChoice(car2Dropdown.value),
-			typeFromChoice(car3Dropdown.value),
+		viewModel.StartNewGame(new CarType[]{ CarType.Armory
 		});
 	}
 

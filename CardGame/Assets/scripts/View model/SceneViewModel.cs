@@ -18,8 +18,8 @@ public interface ISceneViewModel {
 	#region outputs
 	IObservable<string> MainTextContent { get; }
 	IObservable<string> PopulationValue { get; }
-	IObservable<string> FuelValue { get; }
-	IObservable<string> MaterialsValue { get; }
+	IObservable<string> GoldValue { get; }
+	IObservable<string> KnowledgeValue { get; }
 	IObservable<string> ArmyValue { get; }
 	IObservable<int> DeckCount { get; }
 	IObservable<int> DiscardPileCount { get; }
@@ -83,10 +83,10 @@ public class SceneViewModel : ISceneViewModel {
 	public IObservable<string> PopulationValue => model.State
 		.Select(state => $"{state.Train.AvailablePopulation}/{state.Train.TotalPopulation}/{state.Train.LivingSpace}");
 
-	public IObservable<string> FuelValue => model.State
+	public IObservable<string> GoldValue => model.State
 		.Select(state => $"{state.Train.Fuel} ({state.Train.FuelConsumption})");
 
-	public IObservable<string> MaterialsValue => model.State
+	public IObservable<string> KnowledgeValue => model.State
 		.Select(state => $"{state.Train.Materials} ({state.Train.MaterialsConsumption()})");
 
 	public IObservable<string> ArmyValue => model.State
