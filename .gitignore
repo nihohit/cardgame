@@ -54,3 +54,5 @@ CardGame/\.vscode/
 /Executable/
 /CardGame/.vs/
 /Build/
+CardGame/Logs/*
+CardGame/Packages/packages-lock.json
